@@ -10,6 +10,8 @@ import Loading from "../Loading";
 import { digit3 } from "../../store/digit3";
 import pic from "../../assets/hotel2.jpg";
 import Loading2 from "../Loading2";
+import request from "../../api/request";
+import axios from "../../api/axios";
 
 // 달력 현재날짜 고정
 const Today = (nextDay = 0) => {
@@ -23,19 +25,19 @@ const Today = (nextDay = 0) => {
   return `${year}-${month}-${day}`;
 };
 
-const roomInfo = {
-  type: "디럭스",
-  active_status: "ACTIVE",
-  bed_type: "더블베드",
-  standard_capacity: 3,
-  maximum_capacity: 5,
-  view_type: "OCEAN",
-  standard_price: 70000, // 필요할까??
-  adult_fare: 30000,
-  child_fare: 18000,
-  file: pic,
-  hotel_name: "호텔명이전달됩니다.", //누락됨.
-};
+// const roomInfo = {
+//   type: "디럭스",
+//   active_status: "ACTIVE",
+//   bed_type: "더블베드",
+//   standard_capacity: 3,
+//   maximum_capacity: 5,
+//   view_type: "OCEAN",
+//   standard_price: 70000, // 필요할까??
+//   adult_fare: 30000,
+//   child_fare: 18000,
+//   file: pic,
+//   hotel_name: "호텔명이전달됩니다.", //누락됨.
+// };
 
 const ReservationFirst = () => {
   const [isToast, setIsToast] = useState(false);
@@ -46,6 +48,7 @@ const ReservationFirst = () => {
   const [isPopup, setIsPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
+  const [roomInfo, setRoomInfo] = useState({});
   const [isPayInfo, setIsPayInfo] = useState({
     id: "",
     member_id: "",
@@ -126,6 +129,28 @@ const ReservationFirst = () => {
       }
     };
 
+    const fetchData = async () => {
+      try {
+        const responseRoom = await axios({
+          url: request.fetchHotels,
+          method: "get",
+        });
+        const responseOrder = await axios({
+          url: request.fetchOrders,
+          method: "get",
+        });
+        const { rooms } = responseRoom.data.result.content[0];
+        console.log(rooms[0].thumbnails[0].img_url);
+        // setRoomInfo((prevRoomInfo) => ({ ...prevRoomInfo, ...rooms[0], file: rooms[0].thumbnails[0].img_url }));
+        setRoomInfo(rooms[0]);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        console.log("ok");
+      }
+    };
+    fetchData();
+
     return handleCalculate();
   }, [isPayInfo.adult_count, isPayInfo.child_count]);
 
@@ -155,11 +180,13 @@ const ReservationFirst = () => {
       }, 1500);
     }
   };
+  console.log(roomInfo.file);
+
   return (
     <>
       <div className="relative">
         <form className="reservation-write" onSubmit={handleSubmit}>
-          <ul>
+          <ul className="mobile:overflow-hidden mobile:h-0 tablet:overflow-visible tablet:h-[auto]">
             <li>
               <label htmlFor="reser1" className="--title">
                 체크인
@@ -198,10 +225,16 @@ const ReservationFirst = () => {
             </li>
           </ul>
           <div className="grid grid-cols-[1.7fr_1fr] gap-3">
-            <button className="btn-blue xl2 justify-center" onClick={handleReservation}>
+            <button
+              className="btn-blue xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center"
+              onClick={handleReservation}
+            >
               예약하기
             </button>
-            <button className="btn-green-outline xl2 justify-center" onClick={handleCart}>
+            <button
+              className="btn-green-outline xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center"
+              onClick={handleCart}
+            >
               장바구니
             </button>
           </div>

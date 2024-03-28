@@ -17,6 +17,7 @@ import Noimage from "../components/Noimage";
 import Radio from "../components/Radio";
 import Select from "../components/Select";
 import { usehotelListStore } from "../store/hotelListStore";
+import { useRoomStore } from "../store/roomStore";
 import { useVisualStore } from "../store/visualStore";
 
 const where = [
@@ -72,7 +73,7 @@ const HotelWrite = () => {
   const { setTitle } = useVisualStore();
   const navigate = useNavigate();
   const [isImage, setIsImage] = useState("");
-
+  const { rooms, resetRooms } = useRoomStore();
   useEffect(() => {
     setTitle("Hotel Registration", subvisual);
   }, [setTitle]);
@@ -96,12 +97,13 @@ const HotelWrite = () => {
     price: "",
     available: true,
     description: "",
-    check_in: "",
-    check_out: "",
+    check_in: "1:00",
+    check_out: "1:00",
     notSmoking: true,
     noPet: true,
     swimmingpool_open: "",
     swimmingpool_closed: "",
+    rooms: [],
     options: {
       swimming_pool: false,
       break_fast: false,
@@ -135,7 +137,7 @@ const HotelWrite = () => {
 
     setHotelInfo((prevHotelInfo) => ({
       ...prevHotelInfo,
-      nation: selectedText,
+      nation: selectedValue,
     }));
   };
   //가격
@@ -183,7 +185,7 @@ const HotelWrite = () => {
     const selectedValue = e.target.value;
 
     const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
-    setHotelInfo({ ...hotelInfo, check_in: selectedText });
+    setHotelInfo({ ...hotelInfo, check_in: selectedValue });
   };
   const handleCheckOut = (e) => {
     const selectedValue = e.target.value;
@@ -233,7 +235,8 @@ const HotelWrite = () => {
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
-    addHotel(hotelInfo);
+    addHotel({ ...hotelInfo, rooms: [...rooms] });
+    // resetRooms()
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -317,7 +320,7 @@ const HotelWrite = () => {
           </Box>
 
           <Box className={"mt-10"}>
-            <div className="grid gap-5 md:grid-cols-1 2xl:grid-cols-2 ">
+            <div className="grid gap-5 mobile:grid-cols-1 desktop:grid-cols-2 ">
               <div>
                 <Heading tag={"h3"} text={"호텔 편의 시설"} className={"base mb-5"} />
                 <Box className={"white"}>
