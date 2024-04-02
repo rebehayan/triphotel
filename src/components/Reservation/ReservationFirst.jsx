@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../../styles/pages/reservation.css";
 import Input from "../Input";
 import GuestCounter from "../GuestCounter";
@@ -8,10 +8,12 @@ import { useReservationStore } from "../../store/reservationStore";
 import Dialog from "../Dialog";
 import Loading from "../Loading";
 import { digit3 } from "../../store/digit3";
-import pic from "../../assets/hotel2.jpg";
 import Loading2 from "../Loading2";
 import request from "../../api/request";
 import axios from "../../api/axios";
+import { useLoginStore } from "../../store/loginStore";
+import { MdKeyboardDoubleArrowUp } from "react-icons/md";
+import instance from "../../api/axios";
 
 // 달력 현재날짜 고정
 const Today = (nextDay = 0) => {
@@ -25,21 +27,15 @@ const Today = (nextDay = 0) => {
   return `${year}-${month}-${day}`;
 };
 
-// const roomInfo = {
-//   type: "디럭스",
-//   active_status: "ACTIVE",
-//   bed_type: "더블베드",
-//   standard_capacity: 3,
-//   maximum_capacity: 5,
-//   view_type: "OCEAN",
-//   standard_price: 70000, // 필요할까??
-//   adult_fare: 30000,
-//   child_fare: 18000,
-//   file: pic,
-//   hotel_name: "호텔명이전달됩니다.", //누락됨.
-// };
-
 const ReservationFirst = () => {
+  const token = localStorage.getItem("token");
+  const { fetchHotels, fetchOrders } = request; // 필요한 요청 URL을 추출
+  const navigate = useNavigate();
+  const { addInfo, addCartInfo } = useReservationStore();
+  const { id, userName, userEmail, userBirth, userPassword, userCredit } = useLoginStore();
+  const [isWidth, setIsWidth] = useState(window.innerWidth);
+  const ref = useRef();
+  const [isToggle, setIsToggle] = useState(false);
   const [isToast, setIsToast] = useState(false);
   const [isToast2, setIsToast2] = useState(false);
   const [isStart, setIsStart] = useState(Today());
@@ -50,41 +46,50 @@ const ReservationFirst = () => {
   const [isLoading2, setIsLoading2] = useState(false);
   const [roomInfo, setRoomInfo] = useState({});
   const [isPayInfo, setIsPayInfo] = useState({
-    id: "",
-    member_id: "",
-    room_id: "",
-    check_in: "", //체크인
-    check_out: "", //체크아웃
     adult_count: 0, //성인
     child_count: 0, //어린이
     adult_fare: "", //성인요금
     child_fare: "", //어린이요금
     total_price: "", // 총금액
-    file: roomInfo.file, //호텔사진
-    hotel_name: roomInfo.hotel_name, //호텔이름
-    type: roomInfo.type, //호텔룸종류
-    bed_type: roomInfo.bed_type, //호텔침대종류
+    hotelId: "",
   });
-  const navigate = useNavigate();
-  const { addInfo, addCartInfo } = useReservationStore();
+  const [orderFirst, setOrderFirst] = useState({});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const isLoggedIn = () => {
+    const token = localStorage.getItem("token");
+    return !!token;
   };
 
   const handleStart = (check_in) => {
     setIsStart(check_in);
+    setOrderFirst({ ...orderFirst, check_in });
     setIsPayInfo({ ...isPayInfo, check_in });
   };
   const handleEnd = (check_out) => {
     setIsEnd(check_out);
+    setOrderFirst({ ...orderFirst, check_out });
     setIsPayInfo({ ...isPayInfo, check_out });
   };
   const handleAdult = (adult_count) => {
+    setOrderFirst({ ...orderFirst, adult_count });
     setIsPayInfo({ ...isPayInfo, adult_count });
   };
   const handleChildren = (child_count) => {
+    setOrderFirst({ ...orderFirst, child_count });
     setIsPayInfo({ ...isPayInfo, child_count });
+  };
+
+  const handleToggle = (e) => {
+    e.preventDefault();
+
+    setIsToggle(!isToggle);
+    if (isToggle) {
+      ref.current.style.height = "27rem";
+      setIsToggle(false);
+    } else {
+      ref.current.style.height = "0";
+      setIsToggle(true);
+    }
   };
 
   const CheckEmpty = () => {
@@ -110,11 +115,22 @@ const ReservationFirst = () => {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsWidth(window.innerWidth);
+      if (ref.current && window.innerWidth > 1024) {
+        ref.current.removeAttribute("style");
+        setIsToggle(true);
+      }
+    };
+
     const handleCalculate = () => {
       const countMember = parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count);
       const adult_fare = parseInt(isPayInfo.adult_count) * roomInfo.adult_fare;
       const childrenPay = parseInt(isPayInfo.child_count) * roomInfo.child_fare;
-      const total_price = adult_fare + childrenPay;
+      const checkIn = new Date(isPayInfo.check_in);
+      const checkOut = new Date(isPayInfo.check_out);
+      const days = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
+      const total_price = days * (adult_fare + childrenPay);
 
       if (roomInfo.maximum_capacity < countMember) {
         setIsToast(true);
@@ -129,47 +145,80 @@ const ReservationFirst = () => {
       }
     };
 
+    //호텔 정보 가지고오기
     const fetchData = async () => {
       try {
-        const responseRoom = await axios({
-          url: request.fetchHotels,
-          method: "get",
+        const responseRoom = await instance.get(`${fetchHotels}/3`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-        const responseOrder = await axios({
-          url: request.fetchOrders,
-          method: "get",
-        });
-        const { rooms } = responseRoom.data.result.content[0];
-        console.log(rooms[0].thumbnails[0].img_url);
-        // setRoomInfo((prevRoomInfo) => ({ ...prevRoomInfo, ...rooms[0], file: rooms[0].thumbnails[0].img_url }));
+        const responseRoomData = responseRoom.data.result;
+        const { rooms, name, active_status } = responseRoomData;
+        const myRoom = rooms.filter((id) => id);
+
         setRoomInfo(rooms[0]);
+
+        setOrderFirst((prevRoomInfo) => ({
+          ...prevRoomInfo,
+          room_id: rooms[0].id,
+        }));
+        setIsPayInfo((prevInfo) => ({
+          ...prevInfo,
+          hotelId: responseRoomData.id,
+        }));
       } catch (error) {
         console.log(error);
-      } finally {
-        console.log("ok");
       }
     };
     fetchData();
-
-    return handleCalculate();
-  }, [isPayInfo.adult_count, isPayInfo.child_count]);
+    window.addEventListener("resize", handleResize);
+    handleCalculate();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out]);
 
   // 결제완료 넘기기
-  const handleReservation = async () => {
+  const handleReservation = async (e) => {
+    e.preventDefault();
     const isValidCheck = CheckEmpty();
-    if (isValidCheck) {
-      setIsLoading(true);
-      addInfo(isPayInfo);
 
+    // 로그인체크
+    if (!isLoggedIn()) {
+      setIsPopup(true);
+      setErrrorMessage(`예약하기 위해선 로그인이 필요합니다.`);
+      return;
+    } else if (!isValidCheck) return;
+
+    try {
+      setIsLoading2(true);
+      const responseOrder = await instance.post(fetchOrders, orderFirst, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const responseData = { ...responseOrder.data, ...isPayInfo };
+
+      setIsLoading(true);
+      addInfo(responseData); // 예약결과전역상태로 넘기기
+
+      // console.log(responseData); //post이후 병합데이터
+      // console.log(isPayInfo); 로컬 데이터
+    } catch (error) {
+      console.log(`submitReservation :`, error);
+    } finally {
       setTimeout(() => {
         setIsLoading(false);
+        setIsLoading2(false);
         navigate("/reservation");
       }, 1500);
     }
   };
 
   // 장바구니 넘기기
-  const handleCart = async () => {
+  const handleCart = async (e) => {
+    e.preventDefault();
     const isValidCheck = CheckEmpty();
     if (isValidCheck) {
       setIsLoading2(true);
@@ -180,13 +229,19 @@ const ReservationFirst = () => {
       }, 1500);
     }
   };
-  console.log(roomInfo.file);
 
+  // form핸들링
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       <div className="relative">
         <form className="reservation-write" onSubmit={handleSubmit}>
-          <ul className="mobile:overflow-hidden mobile:h-0 tablet:overflow-visible tablet:h-[auto]">
+          <ul
+            ref={ref}
+            className="mobile:overflow-hidden mobile:h-0 tablet:overflow-visible tablet:h-[auto] transition-all duration-300"
+          >
             <li>
               <label htmlFor="reser1" className="--title">
                 체크인
@@ -225,6 +280,14 @@ const ReservationFirst = () => {
             </li>
           </ul>
           <div className="grid grid-cols-[1.7fr_1fr] gap-3">
+            {isWidth < 1024 && (
+              <button
+                onClick={handleToggle}
+                className="absolute left-2/4 -top-9 -translate-x-2/4 w-12 h-10 bg-gray-100 rounded-full flex justify-center pt-[0.3rem] text-2xl"
+              >
+                <MdKeyboardDoubleArrowUp className={`ico-toggle ${!isToggle ? "active" : ""}`} />
+              </button>
+            )}
             <button
               className="btn-blue xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center"
               onClick={handleReservation}
@@ -232,7 +295,7 @@ const ReservationFirst = () => {
               예약하기
             </button>
             <button
-              className="btn-green-outline xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center"
+              className="btn-green-outline xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center whitespace-nowrap"
               onClick={handleCart}
             >
               장바구니

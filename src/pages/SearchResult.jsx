@@ -9,18 +9,21 @@ import Heading from "../components/Heading";
 import HotelList from "../components/Hotel/HotelList";
 import SearchDetail from "../components/Search/SearchDetail";
 import { useVisualStore } from "../store/visualStore";
+import { useSearchStore } from "../store/searchStore";
 
-const HotelAllList = () => {
+const SearchResult = () => {
   const { setTitle } = useVisualStore();
   const [isLoading, setIsLoading] = useState(false);
 
+  const searchResults = useSearchStore((state) => state.searchResults);
+
   useEffect(() => {
     setTitle("Trip Hotel List", subvisual);
-  }, [setTitle]);
+  }, [setTitle, searchResults]);
 
   const handleMore = () => {
     setIsLoading(true);
-    const loading = setTimeout(() => {
+    setTimeout(() => {
       setIsLoading(false);
     }, 3000);
   };
@@ -29,15 +32,15 @@ const HotelAllList = () => {
     <div className="main pb-20">
       <div className="container">
         <Destinations className="sub" />
-        <Heading tag={"h3"} text={"TripHotel 목록"} className={"xl mt-10"} />
+        <Heading tag={"h3"} text={"검색 결과"} className={"xl mt-10"} />
         <div className="flex mobile:flex-col tablet:flex-row justify-between items-center mt-10 mb-5">
           <div className="text-2xl mobile:mb-3 tablet:mb-0">
-            <strong className="">50개</strong>
+            <strong className="">{searchResults.length}개</strong>
             <span className="font-light">의 호텔이 있습니다.</span>
           </div>
           <SearchDetail />
         </div>
-        <HotelList />
+        <HotelList hotels={searchResults} />
         <div className="text-center mt-10">
           <button className="btn-blue xl" onClick={handleMore}>
             {isLoading ? (
@@ -53,4 +56,4 @@ const HotelAllList = () => {
   );
 };
 
-export default HotelAllList;
+export default SearchResult;

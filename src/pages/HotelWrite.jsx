@@ -9,7 +9,7 @@ import Box from "../components/Box";
 import Checkbox from "../components/Checkbox";
 import Dialog from "../components/Dialog";
 import Heading from "../components/Heading";
-import RoomList from "../components/Hotel/RoomList";
+import RoomListFromRegister from "../components/Hotel/components/RoomListsFromRegister";
 import RoomWrite from "../components/Hotel/RoomWrite";
 import Input from "../components/Input";
 import Loading from "../components/Loading";
@@ -23,23 +23,23 @@ import { useVisualStore } from "../store/visualStore";
 const where = [
   {
     value: "select2",
-    text: "태국",
+    text: "THAILAND",
   },
   {
     value: "select3",
-    text: "베트남",
+    text: "VIETNAM",
   },
   {
     value: "select4",
-    text: "필리핀",
+    text: "PHILIPPINES",
   },
   {
     value: "select5",
-    text: "말레이시아",
+    text: "MALAYSIA",
   },
   {
     value: "select6",
-    text: "대만",
+    text: "TAIWAN",
   },
 ];
 
@@ -87,24 +87,23 @@ const HotelWrite = () => {
   const [isRadio3, setIsRadio3] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
   const [locationText, setLocationText] = useState("");
-  const [price, setPrice] = useState("");
+  // const [price, setPrice] = useState("");
   const [isPopup, setIsPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({
     name: "",
-    nation: "태국",
-    price: "",
-    available: true,
+    nation: "THAILAND",
+    active_status: "ACTIVE",
     description: "",
     check_in: "1:00",
     check_out: "1:00",
-    notSmoking: true,
-    noPet: true,
-    swimmingpool_open: "",
-    swimmingpool_closed: "",
+    smoking_rule: "TOTAL_IMPOSSIBLE",
+    pet_rule: "TOTAL_IMPOSSIBLE",
+    pool_opening_time: null,
+    pool_closing_time: null,
     rooms: [],
-    options: {
+    basic_options: {
       swimming_pool: false,
       break_fast: false,
       wireless_internet: false,
@@ -133,7 +132,8 @@ const HotelWrite = () => {
   //호텔위치
   const handleLocationChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedText = where.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      where.find((option) => option.value === selectedValue)?.text || "";
 
     setHotelInfo((prevHotelInfo) => ({
       ...prevHotelInfo,
@@ -141,13 +141,13 @@ const HotelWrite = () => {
     }));
   };
   //가격
-  const handlePrice = (value) => {
-    setHotelInfo({ ...hotelInfo, price: value });
-  };
+  // const handlePrice = (value) => {
+  //   setHotelInfo({ ...hotelInfo, price: value });
+  // };
   console.log(hotelInfo);
   //예약가능
   const handleRadioChange = (value) => {
-    setHotelInfo({ ...hotelInfo, available: value === "예약가능" });
+    setHotelInfo({ ...hotelInfo, active_status: value });
   };
   //호텔안내
   const [content, setContent] = useState("");
@@ -161,8 +161,8 @@ const HotelWrite = () => {
     // options 상태를 업데이트합니다. 해당하는 option의 값을 checked 값으로 설정합니다.
     setHotelInfo((prev) => ({
       ...prev,
-      options: {
-        ...prev.options,
+      basic_options: {
+        ...prev.basic_options,
         [name]: checked, // name을 키로 사용하여 해당 옵션의 값을 업데이트합니다.
       },
     }));
@@ -184,59 +184,88 @@ const HotelWrite = () => {
   const handleCheckIn = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_in: selectedValue });
   };
   const handleCheckOut = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
-    setHotelInfo({ ...hotelInfo, check_out: selectedText });
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    setHotelInfo({ ...hotelInfo, check_out: selectedValue });
   };
   //흡연
   const handleSmoking = (value) => {
-    setHotelInfo({ ...hotelInfo, notSmoking: value === "전객실 불가능" });
+    setHotelInfo({ ...hotelInfo, smoking_rule: value });
   };
+  //애완동물
   const handlePet = (value) => {
-    setHotelInfo({ ...hotelInfo, noPet: value === "전객실 불가능" });
+    setHotelInfo({ ...hotelInfo, pet_rule: value });
   };
   //수영장
   const handlePoolOpen = (e) => {
     const selectedValue = e.target.value;
-    // 'where' 대신 'checkOption' 배열을 사용합니다.
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
-    setHotelInfo({ ...hotelInfo, swimmingpool_open: selectedText });
+
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    setHotelInfo({ ...hotelInfo, pool_opening_time: selectedValue });
   };
   const handlePoolClose = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
-    setHotelInfo({ ...hotelInfo, swimmingpool_closed: selectedText });
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    setHotelInfo({ ...hotelInfo, pool_closing_time: selectedValue });
   };
   //호텔등록
+  const token = localStorage.getItem("token");
+  console.log(token);
   const onSendClick = async (e) => {
-    if (hotelInfo.name == "" || hotelInfo.price == "" || hotelInfo.description == "") {
+    if (
+      hotelInfo.name == "" ||
+      // hotelInfo.price == "" ||
+      hotelInfo.description == ""
+    ) {
       setIsPopup(true);
       setErrorMessage("호텔 기본정보를 모두 입력해 주세요.");
       return;
     } else if (
       hotelInfo.check_in == "" ||
       hotelInfo.check_out == "" ||
-      (hotelInfo.options.swimming_pool === true && hotelInfo.options.swimmingpool_open == "") ||
-      (hotelInfo.options.swimming_pool == true && hotelInfo.options.swimmingpool_closed == "")
+      (hotelInfo.basic_options.swimming_pool === true &&
+        hotelInfo.basic_options.pool_opening_time == "") ||
+      (hotelInfo.basic_options.swimming_pool == true &&
+        hotelInfo.basic_options.pool_closing_time == "")
     ) {
       setIsPopup(true);
       setErrorMessage("호텔 규칙을 모두 입력해 주세요.");
       return;
     }
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(hotelInfo)); // hotelInfo 객체를 문자열로 변환하여 추가
+
     try {
-      const response = await axios.post("/hotels", hotelInfo);
+      const response = await axios.post(
+        "http://52.78.12.252:8080/api/hotels",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
+          },
+        }
+      );
+
+      console.log(response.data); // 응답 데이터 처리
+      alert("호텔 등록 성공!");
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
-    addHotel({ ...hotelInfo, rooms: [...rooms] });
-    // resetRooms()
+
+    // addHotel({ ...hotelInfo, rooms: [...rooms] });
+    resetRooms();
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -249,31 +278,67 @@ const HotelWrite = () => {
         <div className="container mb-32">
           <Heading tag={"h3"} text={"호텔 등록"} className={"xl my-5"} />
           <Box>
-            <Heading tag={"h3"} text={"호텔 대표이미지"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 대표이미지"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-4 gap-5">
                 <li>
-                  <Noimage props={{ image: isImage }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleonChange} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: isImage }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleonChange}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: isImage }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleonChange} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: isImage }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleonChange}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: isImage }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleonChange} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: isImage }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleonChange}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: isImage }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleonChange} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: isImage }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleonChange}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
               </ul>
             </Box>
           </Box>
 
           <Box className={"mt-10"}>
-            <Heading tag={"h3"} text={"호텔 기본정보"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 기본정보"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-5">
                 <li className="grid gap-3">
@@ -282,12 +347,22 @@ const HotelWrite = () => {
                 </li>
                 <li className="grid gap-3">
                   호텔 이름
-                  <Input type={"text"} value={hotelInfo.name} onChange={handleName} />
+                  <Input
+                    type={"text"}
+                    value={hotelInfo.name}
+                    onChange={handleName}
+                  />
                 </li>
                 <li className="grid gap-3">
                   호텔 가격
                   <div className="grid grid-cols-[1fr_min-content] items-center gap-2">
-                    <Input onChange={handlePrice} value={price} type={"text"} price={true} /> 원
+                    {/* <Input
+                      onChange={handlePrice}
+                      value={price}
+                      type={"text"}
+                      price={true}
+                    />{" "} */}
+                    원
                   </div>
                 </li>
                 <li className="grid gap-3">
@@ -295,25 +370,29 @@ const HotelWrite = () => {
                   <div className="flex">
                     <Radio
                       color="blue"
-                      checked={hotelInfo.available}
-                      value="예약가능"
+                      checked={hotelInfo.active_status === "ACTIVE"}
+                      value="예약 가능"
                       id="hotel_reser1"
                       name="reservationAvailability"
-                      onChange={() => handleRadioChange("예약가능")}
+                      onChange={() => handleRadioChange("ACTIVE")}
                     />
                     <Radio
                       color="red ml-5"
-                      checked={!hotelInfo.available}
-                      value="예약불가능"
+                      checked={hotelInfo.active_status === "INACTIVE"}
+                      value="예약 불가능"
                       id="hotel_reser2"
                       name="reservationAvailability"
-                      onChange={() => handleRadioChange("예약불가능")}
+                      onChange={() => handleRadioChange("INACTIVE")}
                     />
                   </div>
                 </li>
                 <li className="grid gap-3 tablet:col-span-3">
                   호텔 안내
-                  <Input type={"textarea"} onChange={handleContent} value={hotelInfo.description} />
+                  <Input
+                    type={"textarea"}
+                    onChange={handleContent}
+                    value={hotelInfo.description}
+                  />
                 </li>
               </ul>
             </Box>
@@ -322,7 +401,11 @@ const HotelWrite = () => {
           <Box className={"mt-10"}>
             <div className="grid gap-5 mobile:grid-cols-1 desktop:grid-cols-2 ">
               <div>
-                <Heading tag={"h3"} text={"호텔 편의 시설"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 편의 시설"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid mobile:grid-cols-2 tablet:grid-cols-3 gap-4">
                     <li>
@@ -331,7 +414,7 @@ const HotelWrite = () => {
                         id="check3_1"
                         name="swimming_pool" // name을 추가하여 핸들러에서 참조할 수 있게 합니다.
                         value="수영장"
-                        checked={hotelInfo.options.swimming_pool}
+                        checked={hotelInfo.basic_options.swimming_pool}
                         onChange={handleCheckbox}
                       >
                         수영장
@@ -343,7 +426,7 @@ const HotelWrite = () => {
                         id="check3_2"
                         name="breakfast"
                         value="조식뷔페"
-                        checked={hotelInfo.options.breakfast}
+                        checked={hotelInfo.basic_options.breakfast}
                         onChange={handleCheckbox}
                       >
                         조식뷔페
@@ -355,7 +438,7 @@ const HotelWrite = () => {
                         id="check3_3"
                         name="wireless_internet"
                         value="무선 인터넷"
-                        checked={hotelInfo.options.wireless_internet}
+                        checked={hotelInfo.basic_options.wireless_internet}
                         onChange={handleCheckbox}
                       >
                         무선 인터넷
@@ -367,7 +450,7 @@ const HotelWrite = () => {
                         id="check3_4"
                         name="dry_cleaning"
                         value="드라이클리닝"
-                        checked={hotelInfo.options.dry_cleaning}
+                        checked={hotelInfo.basic_options.dry_cleaning}
                         onChange={handleCheckbox}
                       >
                         드라이클리닝
@@ -379,7 +462,7 @@ const HotelWrite = () => {
                         id="check3_5"
                         name="storage_service"
                         value="여행가방 보관 서비스"
-                        checked={hotelInfo.options.storage_service}
+                        checked={hotelInfo.basic_options.storage_service}
                         onChange={handleCheckbox}
                       >
                         여행가방 보관 서비스
@@ -391,7 +474,7 @@ const HotelWrite = () => {
                         id="check3_6"
                         name="convenience_store"
                         value="편의점"
-                        checked={hotelInfo.options.convenience_store}
+                        checked={hotelInfo.basic_options.convenience_store}
                         onChange={handleCheckbox}
                       >
                         편의점
@@ -403,7 +486,7 @@ const HotelWrite = () => {
                         id="check3_7"
                         name="ironing_tools"
                         value="다림질도구"
-                        checked={hotelInfo.options.ironing_tools}
+                        checked={hotelInfo.basic_options.ironing_tools}
                         onChange={handleCheckbox}
                       >
                         다림질도구
@@ -415,7 +498,7 @@ const HotelWrite = () => {
                         id="check3_8"
                         name="wakeup_call"
                         value="모닝콜"
-                        checked={hotelInfo.options.wakeup_call}
+                        checked={hotelInfo.basic_options.wakeup_call}
                         onChange={handleCheckbox}
                       >
                         모닝콜
@@ -427,7 +510,7 @@ const HotelWrite = () => {
                         id="check3_9"
                         name="mini_bar"
                         value="미니바"
-                        checked={hotelInfo.options.mini_bar}
+                        checked={hotelInfo.basic_options.mini_bar}
                         onChange={handleCheckbox}
                       >
                         미니바
@@ -439,7 +522,7 @@ const HotelWrite = () => {
                         id="check3_10"
                         name="shower_room"
                         value="샤워실"
-                        checked={hotelInfo.options.shower_room}
+                        checked={hotelInfo.basic_options.shower_room}
                         onChange={handleCheckbox}
                       >
                         샤워실
@@ -451,7 +534,7 @@ const HotelWrite = () => {
                         id="check3_11"
                         name="air_conditioner"
                         value="에어컨"
-                        checked={hotelInfo.options.air_conditioner}
+                        checked={hotelInfo.basic_options.air_conditioner}
                         onChange={handleCheckbox}
                       >
                         에어컨
@@ -463,7 +546,7 @@ const HotelWrite = () => {
                         id="check3_12"
                         name="table"
                         value="책상"
-                        checked={hotelInfo.options.table}
+                        checked={hotelInfo.basic_options.table}
                         onChange={handleCheckbox}
                       >
                         책상
@@ -475,7 +558,7 @@ const HotelWrite = () => {
                         id="check3_13"
                         name="tv"
                         value="TV"
-                        checked={hotelInfo.options.tv}
+                        checked={hotelInfo.basic_options.tv}
                         onChange={handleCheckbox}
                       >
                         TV
@@ -487,7 +570,7 @@ const HotelWrite = () => {
                         id="check3_14"
                         name="safety_deposit_box"
                         value="안전금고"
-                        checked={hotelInfo.options.safety_deposit_box}
+                        checked={hotelInfo.basic_options.safety_deposit_box}
                         onChange={handleCheckbox}
                       >
                         안전금고
@@ -499,7 +582,7 @@ const HotelWrite = () => {
                         id="check3_15"
                         name="welcome_drink"
                         value="웰컴 드링크"
-                        checked={hotelInfo.options.welcome_drink}
+                        checked={hotelInfo.basic_options.welcome_drink}
                         onChange={handleCheckbox}
                       >
                         웰컴 드링크
@@ -511,7 +594,7 @@ const HotelWrite = () => {
                         id="check3_16"
                         name="free_parking"
                         value="무료 주차"
-                        checked={hotelInfo.options.free_parking}
+                        checked={hotelInfo.basic_options.free_parking}
                         onChange={handleCheckbox}
                       >
                         무료 주차
@@ -523,7 +606,7 @@ const HotelWrite = () => {
                         id="check3_17"
                         name="fitness"
                         value="피트니스 시설"
-                        checked={hotelInfo.options.fitness}
+                        checked={hotelInfo.basic_options.fitness}
                         onChange={handleCheckbox}
                       >
                         피트니스 시설
@@ -535,7 +618,7 @@ const HotelWrite = () => {
                         id="check3_18"
                         name="electric_kettle"
                         value="전기주전자"
-                        checked={hotelInfo.options.electric_kettle}
+                        checked={hotelInfo.basic_options.electric_kettle}
                         onChange={handleCheckbox}
                       >
                         전기주전자
@@ -545,7 +628,11 @@ const HotelWrite = () => {
                 </Box>
               </div>
               <div>
-                <Heading tag={"h3"} text={"호텔 규칙"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 규칙"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid gap-5">
                     <li className=" grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
@@ -561,21 +648,27 @@ const HotelWrite = () => {
                       <div className="flex justify-start mobile:whitespace-nowrap mobile:flex-wrap tablet:flex-nowrap">
                         <Radio
                           color={"red"}
-                          checked={hotelInfo.notSmoking === true}
+                          checked={
+                            hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"
+                          }
                           value={"전객실 불가능"}
                           id={"hotel_reser3"}
                           name={"rag2"}
-                          onChange={() => handleSmoking("전객실 불가능")}
+                          onChange={() => handleSmoking("TOTAL_IMPOSSIBLE")}
                         />
                         <Radio
                           color={"green ml-5"}
-                          checked={hotelInfo.notSmoking === false}
+                          checked={hotelInfo.smoking_rule === false}
                           value={"일부객실 가능"}
                           id={"hotel_reser4"}
                           name={"rag2"}
-                          onChange={() => handleSmoking("일부객실 가능")}
+                          onChange={() => handleSmoking("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"}>
+                        <Badge
+                          color={
+                            "red mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"
+                          }
+                        >
                           일부객실 선택시 현장에서 방을 배정합니다.
                         </Badge>
                       </div>
@@ -585,32 +678,42 @@ const HotelWrite = () => {
                       <div className="flex justify-start mobile:whitespace-nowrap mobile:flex-wrap tablet:flex-nowrap">
                         <Radio
                           color={"red"}
-                          checked={hotelInfo.noPet === true}
+                          checked={hotelInfo.pet_rule === "TOTAL_IMPOSSIBLE"}
                           value={"전객실 불가능"}
                           id={"hotel_reser5"}
                           name={"rag3"}
-                          onChange={() => handlePet("전객실 불가능")}
+                          onChange={() => handlePet("TOTAL_IMPOSSIBLE")}
                         />
                         <Radio
                           color={"green ml-5"}
-                          checked={hotelInfo.noPet === false}
+                          checked={hotelInfo.pet_rule === "SOME_POSSIBLE"}
                           value={"일부객실 가능"}
                           id={"hotel_reser6"}
                           name={"rag3"}
-                          onChange={() => handlePet("일부객실 가능")}
+                          onChange={() => handlePet("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red  mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"}>
+                        <Badge
+                          color={
+                            "red  mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"
+                          }
+                        >
                           일부객실 선택시 현장에서 방을 배정합니다.
                         </Badge>
                       </div>
                     </li>
-                    {hotelInfo.options.swimming_pool && (
+                    {hotelInfo.basic_options.swimming_pool && (
                       <li className="grid grid-cols-[8rem_1fr] items-center">
                         <strong>수영장 이용시간</strong>
                         <div className="grid grid-cols-[1fr_2rem_1fr] items-center">
-                          <Select options={checkOption} onChange={handlePoolOpen} />
+                          <Select
+                            options={checkOption}
+                            onChange={handlePoolOpen}
+                          />
                           <span className="justify-self-center">~</span>
-                          <Select options={checkOption} onChange={handlePoolClose} />
+                          <Select
+                            options={checkOption}
+                            onChange={handlePoolClose}
+                          />
                         </div>
                       </li>
                     )}
@@ -623,11 +726,18 @@ const HotelWrite = () => {
           <Box className={"mt-10 room-write"}>
             <div className="flex justify-between items-center">
               <Heading tag={"h3"} text={"객실관리"} className={"base"} />
-              <button className="btn-blue" onClick={() => setIsToggle(!isToggle)}>
+              <button
+                className="btn-blue"
+                onClick={() => setIsToggle(!isToggle)}
+              >
                 객실등록
               </button>
             </div>
-            {isToggle ? <RoomWrite /> : <RoomList edit={true} />}
+            {isToggle ? (
+              <RoomWrite />
+            ) : (
+              <RoomListFromRegister edit={true} roomLists={rooms} />
+            )}
           </Box>
           <div className="flex justify-between mt-10">
             <button className="btn-gray xl">이전</button>
