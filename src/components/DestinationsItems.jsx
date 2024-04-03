@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import category1 from "../assets/category1.jpg";
 import category2 from "../assets/category2.webp";
@@ -16,6 +16,39 @@ const DestinationsItems = () => {
   const [isLoading2, setIsLoading2] = useState(false);
   const navigate = useNavigate();
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
+  const [hotelCountsByCountry, setHotelCountsByCountry] = useState({});
+
+  useEffect(() => {
+    const fetchHotelCounts = async () => {
+      const countries = [
+        "THAILAND",
+        "VIETNAM",
+        "PHILIPPINES",
+        "MALAYSIA",
+        "TAIWAN",
+      ];
+      let counts = {};
+
+      try {
+        await Promise.all(
+          countries.map(async (country) => {
+            const response = await axios.get(
+              `http://52.78.12.252:8080/api/hotels/nation/${country}`
+            );
+            counts[country] = response.data.result.number_of_elements;
+            console.log(country, response.data.result.number_of_elements);
+          })
+        );
+      } catch (error) {
+        console.error("국가별 호텔 개수 불러오기 실패:", error);
+      } finally {
+        setHotelCountsByCountry(counts);
+        setIsLoading2(false); // 데이터 로딩 완료
+      }
+    };
+
+    fetchHotelCounts();
+  }, []);
 
   const handleDestinationClick = async (destination) => {
     setNation(destination.value);
@@ -49,7 +82,7 @@ const DestinationsItems = () => {
         </div>
         <div className="destinations__info">
           <strong>Thailand</strong>
-          <span>1 Hotel</span>
+          <span>{hotelCountsByCountry["THAILAND"] || 0} Hotels</span>
         </div>
       </Link>
       <Link
@@ -62,7 +95,7 @@ const DestinationsItems = () => {
         </div>
         <div className="destinations__info">
           <strong>Vietnam</strong>
-          <span>1 Hotel</span>
+          <span>{hotelCountsByCountry["VIETNAM"] || 0} Hotels</span>
         </div>
       </Link>
       <Link
@@ -75,7 +108,7 @@ const DestinationsItems = () => {
         </div>
         <div className="destinations__info">
           <strong>Philippines</strong>
-          <span>1 Hotel</span>
+          <span>{hotelCountsByCountry["PHILIPPINES"] || 0} Hotels</span>
         </div>
       </Link>
       <Link
@@ -88,7 +121,7 @@ const DestinationsItems = () => {
         </div>
         <div className="destinations__info">
           <strong>Malaysia</strong>
-          <span>1 Hotel</span>
+          <span>{hotelCountsByCountry["MALAYSIA"] || 0} Hotels</span>
         </div>
       </Link>
       <Link
@@ -101,7 +134,7 @@ const DestinationsItems = () => {
         </div>
         <div className="destinations__info">
           <strong>Taiwan</strong>
-          <span>1 Hotel</span>
+          <span>{hotelCountsByCountry["TAIWAN"] || 0} Hotels</span>
         </div>
       </Link>
       {isLoading2 && <Loading2 />}
