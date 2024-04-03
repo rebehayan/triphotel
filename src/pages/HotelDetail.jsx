@@ -34,6 +34,8 @@ const HotelDetail = () => {
   const { totalHotels, deleteHotel } = usehotelListStore();
   const [notices, setNotices] = useState([]); // 공지사항 배열 추가
 
+console.log(hotelId);
+
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const HotelDetail = () => {
         // 예를 들어 response.data.result.notices와 같은 방식으로 가져와서 설정
         setNotices(response.data.result.notices);
       });
+
   }, [hotelId]);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const HotelDetail = () => {
           },
         }
       );
-      console.log(response.data); // 응답 데이터 처리
+      //console.log(response.data); // 응답 데이터 처리
       alert("호텔 삭제 성공!");
     } catch (error) {
       console.error(error);
@@ -121,8 +124,10 @@ const HotelDetail = () => {
                   공지 올리기
                 </button>
               </div>
-              {isWrite && <NoticeWrite onAddNotice={handleAddNotice} className="mt-5" />}
-              {!isWrite && <Notice className="mt-5" notices={notices} />} {/* 공지사항 배열을 props로 전달 */}
+              {isWrite && <NoticeWrite 
+              //onAddNotice={handleAddNotice} 
+              myId={hotelId} className="mt-5" />}
+              {!isWrite && <Notice className="mt-5" myId={hotelId} notices={notices} />} {/* 공지사항 배열을 props로 전달 */}
             </Box>
             <Box>
               <Heading tag="h3" text="편의시설 및 서비스" className="base" />

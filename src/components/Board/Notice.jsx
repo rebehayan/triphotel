@@ -2,25 +2,8 @@ import React, { useState } from "react";
 import NoticeItem from "./NoticeItem";
 import "../../styles/components/board.css";
 
-const Notice = ({ className, ...props }) => {
-  const [noticeItems, setNoticeItems] = useState([
-    {
-      title: "공지사항 제목입니다.1",
-      description: "첫 번째 공지사항입니다.",
-    },
-    {
-      title: "공지사항 제목입니다.2",
-      description: "두 번째 공지사항입니다.",
-    },
-    {
-      title: "공지사항 제목입니다.3",
-      description: "세 번째 공지사항입니다.",
-    },
-    {
-      title: "공지사항 제목입니다.4",
-      description: "네 번째 공지사항입니다.",
-    },
-  ]);
+const Notice = ({ className, notices, myId}) => {
+console.log(notices);
 
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -34,8 +17,9 @@ const Notice = ({ className, ...props }) => {
   return (
     <div>
       <ul className={`notice-list ${className}`}>
-        {noticeItems.map((item, index) => (
+        {notices.map((item, index) => (
           <NoticeItem
+            myId={myId}
             key={index}
             index={index}
             item={item}
