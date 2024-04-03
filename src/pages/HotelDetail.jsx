@@ -24,7 +24,12 @@ import Text from "../components/Text";
 import { usehotelListStore } from "../store/hotelListStore";
 import { useVisualStore } from "../store/visualStore";
 
-const pictures = [{ src: pic1 }, { src: pic2 }, { src: pic3 }, { src: pic4 }];
+const pictures = [
+  { img_url: pic1 },
+  { img_url: pic2 },
+  { img_url: pic3 },
+  { img_url: pic4 },
+];
 
 const HotelDetail = () => {
   const navigate = useNavigate();
@@ -48,9 +53,8 @@ const HotelDetail = () => {
         setHotelInfo(response.data.result);
         // console.log(response.data.result);
       });
-    // setTitle(hotelInfo.name, SubVisual);
   }, []);
-
+  console.log(hotelInfo.thumbnails?.length);
   useEffect(() => {
     if (hotelInfo) {
       setTitle(hotelInfo.name, SubVisual);
@@ -107,7 +111,13 @@ const HotelDetail = () => {
             </div>
           </div>
         </div>
-        <HotelGallery pictures={pictures} className="mt-10" />
+        <HotelGallery
+          pictures={
+            hotelInfo.thumbnails?.length < 4 ? pictures : hotelInfo.thumbnails
+          }
+          // pictures={pictures}
+          className="mt-10"
+        />
         {/* 무조건 4개 삽입  */}
 
         <div className="mobile:block tablet:flex relative gap-8 pt-8">

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import { usehotelListStore } from '../../store/hotelListStore';
-import { useRoomStore } from '../../store/roomStore';
-import Box from '../Box';
-import Input from '../Input';
-import Radio from '../Radio';
-import Select from '../Select';
+import { usehotelListStore } from "../../store/hotelListStore";
+import { useRoomStore } from "../../store/roomStore";
+import Box from "../Box";
+import Input from "../Input";
+import Radio from "../Radio";
+import Select from "../Select";
 
 const viewOption = [
   {
@@ -77,16 +77,15 @@ const RoomWrite = () => {
   const { rooms, addRoom } = useRoomStore();
   const [isRadio, setIsRadio] = useState(false);
   const [roomInfo, setRoomInfo] = useState({
-    type: "스탠다드 룸",
-    active_status: true,
-    bed_type: "싱글/트윈 베드",
+    type: "STANDARD",
+    active_status: "ACTIVE",
+    bed_type: "SINGLE",
     standard_capacity: null,
     maximum_capacity: null,
-    view_type: "오션뷰",
+    view_type: "OCEAN",
     standard_price: null,
-    adult_fare: "",
-    child_fare: "",
-    roomId: "",
+    adult_fare: null,
+    child_fare: null,
   });
   const handleRoomType = (e) => {
     setRoomInfo((prevInfo) => ({

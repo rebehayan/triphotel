@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+
+import axios from "axios";
 
 import room from "../../assets/hotelroom1.jpeg";
 import room2 from "../../assets/hotelroom2.jpeg";
+import { useRoomEditStore } from "../../store/roomEditStore";
 import { useRoomStore } from "../../store/roomStore";
 import RoomEditfromEdit from "./components/RoomEditfromEdit";
 import HotelPrice from "./HotelPrice";
@@ -11,22 +14,43 @@ import RoomPicture from "./RoomPicture";
 
 const RoomListItems = ({ roomLists, edit, ...props }) => {
   const show = { able: "disabled" };
-  const [isEdit, setIsEdit] = useState(false);
+  const { isEdit, getIsEdit, changeEdit } = useRoomEditStore();
+  // const [isEdit, setIsEdit] = useState(false);
   const { rooms, deleteRoom } = useRoomStore();
-  const onDelete = (roomId) => {
+
+  const token = localStorage.getItem("token");
+  const onDelete = async (hotelId, roomId) => {
+    try {
+      const response = await axios.delete(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data); // 응답 데이터 처리
+      alert("객실 삭제 성공!");
+    } catch (error) {
+      console.error(error);
+    }
+
     deleteRoom(roomId);
     console.log(roomId);
   };
   const onEdit = () => {
-    setIsEdit(true);
+    changeEdit(true);
   };
-  // console.log(roomLists);
+
+  console.log(isEdit);
   return (
     <>
       {roomLists?.map((it) => (
         <li {...props} key={it.roomId}>
           {isEdit ? (
-            <RoomEditfromEdit roomData={it} setIsEdit={setIsEdit} />
+            <RoomEditfromEdit setIsEdit={changeEdit} roomData={it} />
           ) : (
             <div>
               <RoomPicture image={room2} />
@@ -52,7 +76,7 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
                   <button
                     className="btn-red-outline"
                     onClick={() => {
-                      onDelete(it.roomId);
+                      onDelete(it.hotel_id, it.id);
                     }}
                   >
                     삭제하기

@@ -24,16 +24,22 @@ const HotelListItems = ({ modify, ...props }) => {
     });
   }, []);
   const totalHotels = usehotelListStore((state) => state.totalHotels);
-
+  // console.log(hotels[8].thumbnails[0].img_url);
   // console.log(totalHotels);
   return (
     <>
       {hotels.map((hotel) => (
         <li
-          key={hotel.name}
+          key={hotel.id}
           className={hotel.active_status === "ACTIVE" ? "" : "disabled"}
         >
-          <HotelPicture link={`/hoteldetail/${hotel.id}`} image={hotel1} />
+          <HotelPicture
+            link={`/hoteldetail/${hotel.id}`}
+            // image={hotel.thumbnails ? hotel.thumbnails[0].img_url : hotel1}
+            image={
+              hotel.thumbnails.length < 4 ? hotel1 : hotel.thumbnails[0].img_url
+            }
+          />
           <div className="hotel__info">
             <HotelLocation location={hotel.nation} />
             <HotelFavorite checked={modify} />
