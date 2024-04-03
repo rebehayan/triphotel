@@ -43,7 +43,7 @@ const where = [
 const viewKind = [
   {
     value: "select 1",
-    text: "객실을 선택하세요",
+    text: "객실을 선택하세요.",
   },
   {
     value: "STANDARD",
@@ -65,7 +65,7 @@ const viewKind = [
 const viewOption = [
   {
     value: "select 1",
-    text: "뷰를 선택하세요",
+    text: "뷰를 선택하세요.",
   },
   {
     value: "OCEAN",
@@ -168,21 +168,18 @@ const Search = ({ ...props }) => {
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    // 지역 필드 검증
     if (!location || location === "NATION") {
       setSearchError("지역을 선택해주세요.");
       setSearchToast(true);
       return;
     }
 
-    // 객실 종류 필드 검증
     if (!roomType || roomType === "select 1") {
       setSearchError("객실 종류를 선택해주세요.");
       setSearchToast(true);
       return;
     }
 
-    // 뷰 종류 필드 검증
     if (!viewType || viewType === "select 1") {
       setSearchError("뷰 종류를 선택해주세요.");
       setSearchToast(true);
