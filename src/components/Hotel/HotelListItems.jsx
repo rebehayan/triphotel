@@ -17,7 +17,7 @@ const HotelListItems = ({ hotel, checkFav }) => {
   const { fetchHotels } = request;
 
   // console.log(checkFav);
-  console.log(hotel.id);
+  // console.log(hotel.id);
   const favData = {
     id: hotel.id,
   };

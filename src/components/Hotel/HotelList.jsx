@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HotelListItems from "./HotelListItems";
 import "../../styles/components/hotel.css";
 import axios from "axios";
