@@ -5,7 +5,7 @@ import RoomPicture from "../../components/Hotel/RoomPicture";
 
 const ReservationHotelInfoItems = (isitem) => {
   const { hotel, adult_count, child_count, check_out, check_in, room, total_price } = isitem;
-  console.log(isitem);
+  // console.log(isitem);
   const formattedPrice = digit3(total_price);
   const photo = room.thumbnails[0].img_url;
 

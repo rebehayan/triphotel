@@ -23,6 +23,8 @@ import SubVisual from "../components/SubVisual";
 import Text from "../components/Text";
 import { usehotelListStore } from "../store/hotelListStore";
 import { useVisualStore } from "../store/visualStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const pictures = [{ src: pic1 }, { src: pic2 }, { src: pic3 }, { src: pic4 }];
 
@@ -30,6 +32,8 @@ const HotelDetail = () => {
   const navigate = useNavigate();
   let { hotelId } = useParams();
   const { setTitle } = useVisualStore();
+  const [isFav, setIsFav] = useState(false);
+  const { fetchHotels } = request;
 
   const [isWrite, setIsWrite] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({});
@@ -42,12 +46,10 @@ const HotelDetail = () => {
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
   // console.log("detail", thisHotel);
   useEffect(() => {
-    axios
-      .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
-      .then((response) => {
-        setHotelInfo(response.data.result);
-        // console.log(response.data.result);
-      });
+    axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`).then((response) => {
+      setHotelInfo(response.data.result);
+      // console.log(response.data.result);
+    });
     // setTitle(hotelInfo.name, SubVisual);
   }, []);
 
@@ -87,6 +89,28 @@ const HotelDetail = () => {
     navigate(`/hoteledit/${hotelId}`);
   };
 
+  // 즐겨찾기
+  const favData = {
+    id: hotelId,
+  };
+
+  const handleFavorite = async () => {
+    setIsFav(!isFav);
+    let myfav = "";
+    try {
+      const isfavs = await instance.post(`${fetchHotels}/${hotelId}/favorite`, favData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      myfav = isfavs;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(myfav);
+    }
+  };
+
   return (
     <div className="main mb-24">
       <div className="container">
@@ -97,7 +121,7 @@ const HotelDetail = () => {
             </div>
             <div>
               {/* <HotelPrice price={digit3(hotelInfo.rooms[0]?.standard_price)} /> */}
-              <HotelFavorite />
+              <HotelFavorite onClick={handleFavorite} checked={isFav} />
               <button className="btn-blue -mr-2" onClick={toEdit}>
                 수정
               </button>
@@ -125,42 +149,23 @@ const HotelDetail = () => {
                   공지 올리기
                 </button>
               </div>
-              {!isWrite ? (
-                <Notice className={"mt-5"} />
-              ) : (
-                <NoticeWrite className={"mt-5"} />
-              )}
+              {!isWrite ? <Notice className={"mt-5"} /> : <NoticeWrite className={"mt-5"} />}
             </Box>
             <Box>
-              <Heading
-                tag={"h3"}
-                text={"편의시설 및 서비스"}
-                className={"base"}
-              />
-              <ServiceList
-                options={hotelInfo.basic_options}
-                className={"mt-5"}
-              />
+              <Heading tag={"h3"} text={"편의시설 및 서비스"} className={"base"} />
+              <ServiceList options={hotelInfo.basic_options} className={"mt-5"} />
             </Box>
             <Box>
               <Heading tag={"h3"} text={"호텔 객실 규칙"} className={"base"} />
               <HotelRules thisHotel={hotelInfo} className={"mt-5"} />
             </Box>
             <Box>
-              <Heading
-                tag={"h3"}
-                text={"예약 가능한 객실"}
-                className={"base"}
-              />
+              <Heading tag={"h3"} text={"예약 가능한 객실"} className={"base"} />
               <RoomListToRead roomLists={hotelInfo?.rooms} className={"mt-5"} />
             </Box>
           </div>
           <div className="mobile:fixed mobile:top-[inherit] mobile:bottom-0 z-50 mobile:left-0 tablet:left-[inherit] tablet:bottom-[inherit] tablet:sticky tablet:top-28 self-start mobile:w-full tablet:w-[25rem] desktop:w-[30rem] mobile:mt-0 tablet:mt-0">
-            <Box
-              className={
-                "mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"
-              }
-            >
+            <Box className={"mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"}>
               <ReservationFirst />
             </Box>
           </div>
