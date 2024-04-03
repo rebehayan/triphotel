@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import pic1 from "../assets/img1.webp";
 import pic2 from "../assets/img2.webp";
 import pic3 from "../assets/img3.webp";
@@ -28,48 +26,46 @@ const pictures = [{ src: pic1 }, { src: pic2 }, { src: pic3 }, { src: pic4 }];
 
 const HotelDetail = () => {
   const navigate = useNavigate();
-  let { hotelId } = useParams();
+  const { hotelId } = useParams();
   const { setTitle } = useVisualStore();
-
   const [isWrite, setIsWrite] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const handleWrite = () => {
-    setIsWrite(!isWrite);
-  };
   const { totalHotels, deleteHotel } = usehotelListStore();
+  const [notices, setNotices] = useState([]); // 공지사항 배열 추가
 
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
-  // console.log("detail", thisHotel);
+
   useEffect(() => {
     axios
       .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
       .then((response) => {
         setHotelInfo(response.data.result);
-        // console.log(response.data.result);
+        // 공지사항 데이터를 가져와서 설정
+        // 예를 들어 response.data.result.notices와 같은 방식으로 가져와서 설정
+        setNotices(response.data.result.notices);
       });
-    // setTitle(hotelInfo.name, SubVisual);
-  }, []);
+  }, [hotelId]);
 
   useEffect(() => {
     if (hotelInfo) {
       setTitle(hotelInfo.name, SubVisual);
     }
   }, [hotelInfo, setTitle]);
+
   const token = localStorage.getItem("token");
+
   const onDelete = async () => {
     setIsLoading(true);
     try {
       const response = await axios.delete(
         `http://52.78.12.252:8080/api/hotels/${hotelId}`,
-
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
       console.log(response.data); // 응답 데이터 처리
       alert("호텔 삭제 성공!");
     } catch (error) {
@@ -77,14 +73,17 @@ const HotelDetail = () => {
     }
     deleteHotel(hotelId);
     navigate("/");
-    // setTimeout(() => {
-    //   setIsLoading(false);
-
-    // }, 1500);
   };
 
   const toEdit = () => {
     navigate(`/hoteledit/${hotelId}`);
+  };
+
+  const handleAddNotice = (newNotice) => {
+    // 새로운 공지사항을 기존 공지사항 배열에 추가
+    const updatedNotices = [...notices, newNotice];
+    setNotices(updatedNotices);
+    setIsWrite(false); // 공지 작성 창 닫기
   };
 
   return (
@@ -93,10 +92,9 @@ const HotelDetail = () => {
         <div className="hotel-detail mt-10">
           <div className="hotel-detail__header">
             <div>
-              <HotelLocation className={"xl"} location={hotelInfo.nation} />
+              <HotelLocation className="xl" location={hotelInfo.nation} />
             </div>
             <div>
-              {/* <HotelPrice price={digit3(hotelInfo.rooms[0]?.standard_price)} /> */}
               <HotelFavorite />
               <button className="btn-blue -mr-2" onClick={toEdit}>
                 수정
@@ -108,47 +106,35 @@ const HotelDetail = () => {
           </div>
         </div>
         <HotelGallery pictures={pictures} className="mt-10" />
-        {/* 무조건 4개 삽입  */}
-
         <div className="mobile:block tablet:flex relative gap-8 pt-8">
           <div className="min-h-lvh flex-1 flex gap-8  flex-col">
             <Box>
-              <Heading tag={"h3"} text={"호텔 안내"} className={"base"} />
-              <Text className={"mt-5"} type={1}>
+              <Heading tag="h3" text="호텔 안내" className="base" />
+              <Text className="mt-5" type={1}>
                 {hotelInfo.description}
               </Text>
             </Box>
             <Box>
               <div className="flex items-center justify-between">
-                <Heading tag={"h3"} text={"호텔 공지"} className={"base"} />
-                <button className="btn-blue sm" onClick={handleWrite}>
+                <Heading tag="h3" text="호텔 공지" className="base" />
+                <button className="btn-blue sm" onClick={() => setIsWrite(true)}>
                   공지 올리기
                 </button>
               </div>
-              {!isWrite ? <Notice className={"mt-5"} /> : <NoticeWrite className={"mt-5"} />}
+              {isWrite && <NoticeWrite onAddNotice={handleAddNotice} className="mt-5" />}
+              {!isWrite && <Notice className="mt-5" notices={notices} />} {/* 공지사항 배열을 props로 전달 */}
             </Box>
             <Box>
-              <Heading
-                tag={"h3"}
-                text={"편의시설 및 서비스"}
-                className={"base"}
-              />
-              <ServiceList
-                options={hotelInfo.basic_options}
-                className={"mt-5"}
-              />
+              <Heading tag="h3" text="편의시설 및 서비스" className="base" />
+              <ServiceList options={hotelInfo.basic_options} className="mt-5" />
             </Box>
             <Box>
-              <Heading tag={"h3"} text={"호텔 객실 규칙"} className={"base"} />
-              <HotelRules thisHotel={hotelInfo} className={"mt-5"} />
+              <Heading tag="h3" text="호텔 객실 규칙" className="base" />
+              <HotelRules thisHotel={hotelInfo} className="mt-5" />
             </Box>
             <Box>
-              <Heading
-                tag={"h3"}
-                text={"예약 가능한 객실"}
-                className={"base"}
-              />
-              <RoomListToRead roomLists={hotelInfo?.rooms} className={"mt-5"} />
+              <Heading tag="h3" text="예약 가능한 객실" className="base" />
+              <RoomListToRead roomLists={hotelInfo?.rooms} className="mt-5" />
             </Box>
           </div>
           <div className="mobile:fixed mobile:top-[inherit] mobile:bottom-0 z-50 mobile:left-0 tablet:left-[inherit] tablet:bottom-[inherit] tablet:sticky tablet:top-28 self-start mobile:w-full tablet:w-[25rem] desktop:w-[30rem] mobile:mt-0 tablet:mt-0">
@@ -168,3 +154,4 @@ const HotelDetail = () => {
 };
 
 export default HotelDetail;
+
