@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 const Mypage = () => {
   const { setTitle } = useVisualStore();
   const { userRole } = useLoginStore();
-  console.log(userRole);
+  // console.log(userRole);
 
   useEffect(() => {
     setTitle("My Page", subvisual);

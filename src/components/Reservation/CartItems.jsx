@@ -1,20 +1,17 @@
 import React from "react";
 import RoomPicture from "../Hotel/RoomPicture";
 import { Link, useNavigate } from "react-router-dom";
-// import room from "../../assets/hotelroom3.jpeg";
 import { digit3 } from "../../store/digit3";
 import { useReservationStore } from "../../store/reservationStore";
 
-const CartItems = ({ close, items, onDeleteItem, onDelid }) => {
+const CartItems = ({ close, items, onDelid }) => {
   const { room, adult_count, child_count, check_out, hotel, check_in, total_price, id } = items;
 
   const navigate = useNavigate();
-  const { addInfo } = useReservationStore();
   const photo = room.thumbnails[0].img_url;
   // console.log(items);
 
   const handleOnClick = () => {
-    // addInfo(items);
     navigate(`/reservation/?${id}`);
     close();
   };
@@ -51,7 +48,6 @@ const CartItems = ({ close, items, onDeleteItem, onDelid }) => {
           <button onClick={handleOnClick} className="btn-blue-outline sm">
             예약
           </button>
-          {/* <button className="btn-red-outline sm" onClick={() => onDeleteItem(id)}> */}
           <button className="btn-red-outline sm" onClick={() => onDelid(id)}>
             삭제
           </button>

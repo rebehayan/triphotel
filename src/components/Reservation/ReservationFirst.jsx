@@ -218,8 +218,6 @@ const ReservationFirst = () => {
       } finally {
         setIsLoading2(false);
       }
-
-      // addCartInfo(isPayInfo);
     }
   };
 

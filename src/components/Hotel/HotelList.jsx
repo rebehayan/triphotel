@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import HotelListItems from "./HotelListItems";
-import "../../styles/components/hotel.css";
 import axios from "axios";
-import { usehotelListStore } from "../../store/hotelListStore";
+import "../../styles/components/hotel.css";
 
 const HotelList = ({ className, ...props }) => {
-  const data = { state: "disabled" };
-
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
     axios.get("http://52.78.12.252:8080/api/hotels").then((response) => {

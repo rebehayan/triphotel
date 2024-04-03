@@ -5,7 +5,6 @@ import instance from "../../api/axios";
 import request from "../../api/request";
 
 const HotelFavoriteList = ({ className, ...props }) => {
-  const data = { state: "disabled" };
   const token = localStorage.getItem("token");
   const { fetchMembersMyFav } = request;
   const [myFavList, setmyFavList] = useState([]);

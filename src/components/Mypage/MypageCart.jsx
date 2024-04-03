@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
-import { useReservationStore } from "../../store/reservationStore";
 import MypageCartItem from "./MypageCartItem";
 import request from "../../api/request";
 import instance from "../../api/axios";
 
 const MypageCart = () => {
-  const { cartInfos } = useReservationStore();
   const token = localStorage.getItem("token");
-  const { fetchMembersMyCart } = request; // 필요한 요청 URL을 추출
+  const { fetchMembersMyCart } = request;
   const [myCart, setMyCart] = useState([]);
 
   useEffect(() => {
@@ -62,7 +60,7 @@ const MypageCart = () => {
             </tbody>
           </table>
         </div>
-        {/* <div className="bg-white rounded-xl p-10 self-start">
+        {/* <div className="bg-white rounded-xl p-10 self-start mt-5">
           <Heading tag={"h4"} className={"sm"} text={"주문 요약"} />
           <div className="cart-price">
             <ul className="grid gap-2">
@@ -79,11 +77,6 @@ const MypageCart = () => {
                 </span>
               </li>
             </ul>
-            <div className="grid pt-5">
-              <Link to="/reservation" className="btn-blue xl !font-normal">
-                결재하기
-              </Link>
-            </div>
           </div>
         </div> */}
       </div>

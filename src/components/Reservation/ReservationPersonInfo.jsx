@@ -15,12 +15,10 @@ const ReservationPersonInfo = (isitem) => {
   const navigate = useNavigate();
 
   const { member, total_price, id } = isitem;
-  const { deleteCart } = useReservationStore();
   // console.log(isitem);
 
   const token = localStorage.getItem("token");
   const { fetchOrders } = request;
-
   const [isRule, setIsRule] = useState(false);
   const [isAddress, setIsAddress] = useState("");
   const [isCountry, setIsCountry] = useState("");
