@@ -41,7 +41,7 @@ const Main = () => {
             <HotelList className={"mt-8"} data-aos="fade-up" data-aos-delay="500" />
           </div>
         </div>
-        <Advertisement data-aos="fade-in" data-aos-delay="500" />
+        <Advertisement />
       </div>
     </>
   );
