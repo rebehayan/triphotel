@@ -56,25 +56,6 @@ const HotelListItems = ({ modify, ...props }) => {
           </div>
         </li>
       ))}
-      {totalHotels.map((hotel) => (
-        <li key={hotel.name} className={hotel.available ? "" : "disabled"}>
-          <HotelPicture link={`/hoteldetail/${hotel.id}`} image={hotel1} />
-          <div className="hotel__info">
-            <HotelLocation location={hotel.nation} />
-            <HotelFavorite checked={modify} />
-            <HotelTitle link={`/hoteldetail/${hotel.id}`} title={hotel.name} />
-            <HotelPrice price={hotel.price} />
-            {hotel.available ? (
-              <HotelBooking text={"HotelBooking"} />
-            ) : (
-              <>
-                <HotelBooking disabled text={"Sold Out"} />
-                <Badge color={"red"}>Sold Out</Badge>
-              </>
-            )}
-          </div>
-        </li>
-      ))}
     </>
   );
 };

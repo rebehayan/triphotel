@@ -71,22 +71,23 @@ const viewKind = [
     text: "스위트 룸",
   },
 ];
-const RoomWrite = () => {
+const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
   const { hotelId } = useParams();
   const { totalHotels, addHotel } = usehotelListStore();
   const { rooms, addRoom } = useRoomStore();
   const [isRadio, setIsRadio] = useState(false);
-  const [roomInfo, setRoomInfo] = useState({
-    type: "STANDARD",
-    active_status: "ACTIVE",
-    bed_type: "SINGLE",
-    standard_capacity: null,
-    maximum_capacity: null,
-    view_type: "OCEAN",
-    standard_price: null,
-    adult_fare: null,
-    child_fare: null,
-  });
+
+  // const [roomInfo, setRoomInfo] = useState({
+  //   type: "STANDARD",
+  //   active_status: "ACTIVE",
+  //   bed_type: "SINGLE",
+  //   standard_capacity: null,
+  //   maximum_capacity: null,
+  //   view_type: "OCEAN",
+  //   standard_price: null,
+  //   adult_fare: null,
+  //   child_fare: null,
+  // });
   const handleRoomType = (e) => {
     setRoomInfo((prevInfo) => ({
       ...prevInfo,
@@ -121,7 +122,9 @@ const RoomWrite = () => {
     addRoom(roomInfo);
   };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
-
+  const handleFileChange = (value) => {
+    setFile(value);
+  };
   // console.log(roomInfo);
   return (
     <>
@@ -202,10 +205,7 @@ const RoomWrite = () => {
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">
               객실 사진
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
+              <Input type={"file"} onChange={handleFileChange} />
             </li>
           </ul>
         </form>

@@ -115,7 +115,6 @@ const HotelEdit = () => {
   // console.log(options);
 
   useEffect(() => {
-    // hotelData가 업데이트 된 후 hotelInfo 상태를 업데이트합니다.
     if (Object.keys(hotelData).length > 0) {
       setHotelInfo({
         name: hotelData.name,
@@ -149,27 +148,31 @@ const HotelEdit = () => {
           electric_kettle: options?.electric_kettle,
         },
         rooms: hotelData.rooms,
-        // 기타 필드
       });
-      console.log(hotelData.thumbnails[0].img_url);
-      // setImageFile1(hotelData.thumbnails[0].img_url);
+      setImageFile1(hotelData.thumbnails[0].img_url);
+      setImageFile2(hotelData.thumbnails[1].img_url);
+      setImageFile3(hotelData.thumbnails[2].img_url);
+      setImageFile4(hotelData.thumbnails[3].img_url);
     }
   }, [hotelData]);
+  console.log("edit", hotelData);
+  console.log("edithotelInfo", hotelInfo);
 
-  console.log("edit", hotelInfo);
+  console.log("edit", hotelData);
   const addHotel = usehotelListStore((state) => state.addHotel);
   //이미지
   const handleFileChange1 = (file) => {
-    setImageFile1(file);
+    setImageFile1(URL.createObjectURL(file));
   };
+
   const handleFileChange2 = (file) => {
-    setImageFile2(file);
+    setImageFile2(URL.createObjectURL(file));
   };
   const handleFileChange3 = (file) => {
-    setImageFile3(file);
+    setImageFile3(URL.createObjectURL(file));
   };
   const handleFileChange4 = (file) => {
-    setImageFile4(file);
+    setImageFile4(URL.createObjectURL(file));
   };
   //호텔이름
   const handleName = (value) => {
@@ -293,10 +296,11 @@ const HotelEdit = () => {
     if (imageFile2) formData.append("file", imageFile2);
     if (imageFile3) formData.append("file", imageFile3);
     if (imageFile4) formData.append("file", imageFile4);
+    console.log("FD", formData);
     try {
       const response = await axios.patch(
         `http://52.78.12.252:8080/api/hotels/${hotelId}`,
-        hotelInfo,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -331,31 +335,35 @@ const HotelEdit = () => {
               <ul className="grid grid-cols-4 gap-5">
                 <li>
                   <Noimage
+                    bringImage={true}
                     props={{ image: imageFile1 }}
                     className={"mb-3 bg-gray-50"}
                   />
-                  <Input type={"file"} onChange={handleonChange} />
+                  <Input type={"file"} onChange={handleFileChange1} />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: imageFile1 }}
+                    bringImage={true}
+                    props={{ image: imageFile2 }}
                     className={"mb-3 bg-gray-50"}
                   />
-                  <Input type={"file"} onChange={handleonChange} />
+                  <Input type={"file"} onChange={handleFileChange2} />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: imageFile1 }}
+                    bringImage={true}
+                    props={{ image: imageFile3 }}
                     className={"mb-3 bg-gray-50"}
                   />
-                  <Input type={"file"} onChange={handleonChange} />
+                  <Input type={"file"} onChange={handleFileChange3} />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: imageFile1 }}
+                    bringImage={true}
+                    props={{ image: imageFile4 }}
                     className={"mb-3 bg-gray-50"}
                   />
-                  <Input type={"file"} onChange={handleonChange} />
+                  <Input type={"file"} onChange={handleFileChange4} />
                 </li>
               </ul>
             </Box>

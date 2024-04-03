@@ -102,6 +102,7 @@ const HotelWrite = () => {
   const [isRadio3, setIsRadio3] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
   const [locationText, setLocationText] = useState("");
+  const [file, setFile] = useState();
   // const [price, setPrice] = useState("");
   const [isPopup, setIsPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -138,6 +139,17 @@ const HotelWrite = () => {
       fitness: false,
       electric_kettle: false,
     },
+  });
+  const [roomInfo, setRoomInfo] = useState({
+    type: "STANDARD",
+    active_status: "ACTIVE",
+    bed_type: "SINGLE",
+    standard_capacity: null,
+    maximum_capacity: null,
+    view_type: "OCEAN",
+    standard_price: null,
+    adult_fare: null,
+    child_fare: null,
   });
   const addHotel = usehotelListStore((state) => state.addHotel);
   //호텔이름
@@ -264,6 +276,10 @@ const HotelWrite = () => {
     if (imageFile3) formData.append("file", imageFile3);
     if (imageFile4) formData.append("file", imageFile4);
     formData.append("request", JSON.stringify(hotelInfo));
+    console.log("Form", formData);
+    const roomFormData = new FormData();
+    if (file) roomFormData.append("file", file);
+    roomFormData.append("request", JSON.stringify(roomInfo));
     try {
       const response = await axios.post(
         "http://52.78.12.252:8080/api/hotels",
@@ -275,8 +291,18 @@ const HotelWrite = () => {
           },
         }
       );
+      const hotelId = response.data.result.id;
 
-      console.log("성공", response); // 응답 데이터 처리
+      const roomResponse = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
+        roomFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
+          },
+        }
+      );
       alert("호텔 등록 성공!");
     } catch (error) {
       console.error("Error sending POST request:", error);
@@ -751,7 +777,12 @@ const HotelWrite = () => {
                 객실등록
               </button>
             </div>
-            <RoomWrite />
+            <RoomWrite
+              file={file}
+              setFile={setFile}
+              roomInfo={roomInfo}
+              setRoomInfo={setRoomInfo}
+            />
           </Box>
           <div className="flex justify-between mt-10">
             <button className="btn-gray xl">이전</button>
