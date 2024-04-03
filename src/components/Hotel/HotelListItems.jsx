@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import hotel1 from "../../assets/hotel1.jpg";
 import { digit3 } from "../../store/digit3";
 import Badge from "../Badge";

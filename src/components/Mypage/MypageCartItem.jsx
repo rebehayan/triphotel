@@ -6,7 +6,6 @@ import { digit3 } from "../../store/digit3";
 import { useReservationStore } from "../../store/reservationStore";
 import request from "../../api/request";
 import instance from "../../api/axios";
-import axios from "axios";
 
 const MypageCartItem = ({ items }) => {
   const { adult_count, child_count, check_out, hotel, check_in, total_price, room, id } = items;
@@ -22,8 +21,8 @@ const MypageCartItem = ({ items }) => {
   };
 
   const handleDeleteCart = async () => {
-    console.log(id);
-    console.log(token);
+    // console.log(id);
+    // console.log(token);
     try {
       await instance.patch(`${fetchMembersMyCart}/${id}`, null, {
         headers: {

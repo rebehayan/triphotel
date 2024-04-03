@@ -5,7 +5,6 @@ import { digit3 } from "../../store/digit3";
 
 const MypageAllReservationItems = ({ items }) => {
   const { hotel, room, adult_count, child_count, check_in, check_out, total_price, created_at, member } = items;
-  const reservationDaty = created_at.split(" ")[0];
   const photo = room.thumbnails[0].img_url;
 
   // console.log(items);

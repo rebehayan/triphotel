@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "../../styles/components/cart.css";
 import CartItems from "./CartItems";
 import Badge from "../Badge";
-import { useReservationStore } from "../../store/reservationStore";
 import { digit3 } from "../../store/digit3";
 import request from "../../api/request";
 import instance from "../../api/axios";
@@ -56,14 +55,6 @@ const Cart = ({ mypage, close, show }) => {
     }
   };
 
-  // const handleDelete = (delId) => {
-  //   console.log(delId);
-  //   const myCartItem = isCartItmes.find((item) => {
-  //     item.id === delId;
-  //   });
-  //   console.log(isCartItmes);
-  // };
-
   return (
     <div className="w-[22rem]">
       {!mypage && (
@@ -79,13 +70,7 @@ const Cart = ({ mypage, close, show }) => {
       <form onSubmit={handleSubmit}>
         <ul className="cart__list">
           {isCartItmes.map((items, index) => (
-            <CartItems
-              close={handleCart}
-              key={index}
-              items={items}
-              onDelid={handleDelete}
-              // onDeleteItem={handleDeleteItem}
-            />
+            <CartItems close={handleCart} key={index} items={items} onDelid={handleDelete} />
           ))}
         </ul>
         <div className="cart-price">

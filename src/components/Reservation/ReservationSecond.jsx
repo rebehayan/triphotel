@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useVisualStore } from "../../store/visualStore";
 import ReservationHotelInfo from "./ReservationHotelInfo";
 import ReservationPersonInfo from "./ReservationPersonInfo";
-import "../../styles/pages/reservation.css";
 import subvisual from "../../assets/subvisual3.png";
 import request from "../../api/request";
 import instance from "../../api/axios";
 import { useLocation } from "react-router-dom";
+import "../../styles/pages/reservation.css";
 
 const ReservationSecond = () => {
   const token = localStorage.getItem("token");

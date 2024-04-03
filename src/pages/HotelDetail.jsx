@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import pic1 from "../assets/img1.webp";
 import pic2 from "../assets/img2.webp";
 import pic3 from "../assets/img3.webp";

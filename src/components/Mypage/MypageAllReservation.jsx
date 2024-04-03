@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
 import MypageAllReservationItems from "./MypageAllReservationItems";
-import { useReservationStore } from "../../store/reservationStore";
 import request from "../../api/request";
 import instance from "../../api/axios";
 
 const { fetchOrdersList } = request; // 필요한 요청 URL을 추출
 
 const MypageAllReservation = () => {
-  const { totalInfos } = useReservationStore();
   const token = localStorage.getItem("token");
   const [isMyOrders, setIsMyOrders] = useState([]);
 
