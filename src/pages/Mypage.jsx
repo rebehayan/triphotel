@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 const Mypage = () => {
   const { setTitle } = useVisualStore();
   const { userRole } = useLoginStore();
+  console.log(userRole);
 
   useEffect(() => {
     setTitle("My Page", subvisual);
@@ -71,7 +72,7 @@ const Mypage = () => {
                 나의 예약내역
               </Link>
             </li>
-            {!userRole === "USER" && (
+            {userRole === "MASTER" && (
               <li>
                 <Link
                   to="/mypage/all-reservation"
