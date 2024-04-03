@@ -42,7 +42,7 @@ const DestinationsItems = () => {
         console.error("국가별 호텔 개수 불러오기 실패:", error);
       } finally {
         setHotelCountsByCountry(counts);
-        setIsLoading2(false); // 데이터 로딩 완료
+        setIsLoading2(false);
       }
     };
 
