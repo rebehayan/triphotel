@@ -11,7 +11,6 @@ import { IoIosLogOut } from "react-icons/io";
 import { RiMenu3Fill } from "react-icons/ri";
 import { useSearchStore } from "../../store/searchStore";
 import { useLoginStore } from "../../store/loginStore";
-import useFetchHotels from "../../hooks/useFetchHotels";
 import Loading2 from "../../components/Loading2";
 import Toast from "../../components/Toast";
 import Avatar from "../../components/Avatar";
@@ -23,18 +22,17 @@ const Utillity = ({ ...props }) => {
   const [isPopup2, setIsPopup2] = useState(false);
   const [isPopup3, setIsPopup3] = useState(false);
   const [isPopup4, setIsPopup4] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
 
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(false);
-  const { setSearchTerm, setSearchResults } = useSearchStore();
-  const { isLoading, fetchHotels } = useFetchHotels();
-
+  const { setSearchTerm } = useSearchStore();
+  const [isLoading2, setIsLoading2] = useState(false);
   const navigate = useNavigate();
   const logout = useLoginStore((state) => state.logout);
-  const { login, userName } = useLoginStore((state) => ({
+  const { login, userName, userProfileImage } = useLoginStore((state) => ({
     login: state.login,
     userName: state.userName,
+    userProfileImage: state.userProfileImage,
   }));
 
   const handleLogin = () => {
@@ -43,7 +41,6 @@ const Utillity = ({ ...props }) => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    fetchHotels();
   };
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -67,13 +64,8 @@ const Utillity = ({ ...props }) => {
       </button>
       {login ? (
         <>
-          <Link
-            to="/mypage"
-            className="flex items-center gap-1 mr-2 avatar-name"
-          >
-            <Avatar
-              className={"mobile:w-8 mobile:h-8 tablet:w-10 tablet:h-10"}
-            />
+          <Link to="/mypage/account" className="flex items-center gap-1 mr-2 avatar-name">
+            <Avatar profileImage={userProfileImage} className={"mobile:w-8 mobile:h-8 tablet:w-10 tablet:h-10"} />
             <div className="mobile:hidden tablet:block">
               <strong className="whitespace-nowrap">{userName}</strong>님
             </div>
@@ -94,10 +86,7 @@ const Utillity = ({ ...props }) => {
           </Link>
         </>
       ) : (
-        <button
-          className="btn-blue mobile:h-8 mobile:px-2 tablet:h-10 tablet:px-3"
-          onClick={handleLogin}
-        >
+        <button className="btn-blue mobile:h-8 mobile:px-2 tablet:h-10 tablet:px-3" onClick={handleLogin}>
           <GoPerson />
           <span className="mobile:hidden desktop:inline-block">Log In</span>
         </button>
@@ -112,28 +101,16 @@ const Utillity = ({ ...props }) => {
       <Dialog open={isPopup} close={() => setIsPopup(false)}>
         <Login close={() => setIsPopup(false)} />
       </Dialog>
-      <SearchPopup
-        open={isPopup2}
-        close={() => setIsPopup2(false)}
-        onSearch={handleSearch}
-      />
-      {isLoading && <Loading2 />}
+      <SearchPopup open={isPopup2} close={() => setIsPopup2(false)} onSearch={handleSearch} />
+      {isLoading2 && <Loading2 />}
       <Toast onOpen={showToast} onClose={setShowToast} color="red">
         {error}
       </Toast>
-      <Dialog
-        className={"cart"}
-        open={isPopup3}
-        close={() => setIsPopup3(false)}
-      >
-        <Cart close={() => setIsPopup3(false)} />
+      <Dialog className={"cart"} open={isPopup3} close={() => setIsPopup3(false)}>
+        <Cart show={isPopup3} close={() => setIsPopup3(false)} />
       </Dialog>
 
-      <Dialog
-        className={"mobile-gnb"}
-        open={isPopup4}
-        close={() => setIsPopup4(false)}
-      >
+      <Dialog className={"mobile-gnb"} open={isPopup4} close={() => setIsPopup4(false)}>
         <MobileGnb close={() => setIsPopup4(false)} />
       </Dialog>
     </div>

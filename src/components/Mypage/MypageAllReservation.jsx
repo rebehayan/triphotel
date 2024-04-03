@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
 import MypageAllReservationItems from "./MypageAllReservationItems";
-import { useReservationStore } from "../../store/reservationStore";
+import request from "../../api/request";
+import instance from "../../api/axios";
+
+const { fetchOrdersList } = request; // 필요한 요청 URL을 추출
 
 const MypageAllReservation = () => {
-  const { totalInfos } = useReservationStore();
+  const token = localStorage.getItem("token");
+  const [isMyOrders, setIsMyOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseOrder = await instance.get(`${fetchOrdersList}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setIsMyOrders(responseOrder.data.result.content);
+      // console.log(responseOrder);
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="bg-white rounded-xl p-10">
@@ -33,8 +51,8 @@ const MypageAllReservation = () => {
             </tr>
           </thead>
           <tbody>
-            {totalInfos.length > 0 ? (
-              totalInfos.map((items, index) => <MypageAllReservationItems key={index} items={items} />)
+            {isMyOrders.length > 0 ? (
+              isMyOrders.map((items, index) => <MypageAllReservationItems key={index} items={items} />)
             ) : (
               <tr>
                 <td colSpan={8} className="!py-10">

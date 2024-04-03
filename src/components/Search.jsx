@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SlLocationPin } from "react-icons/sl";
 import { GoPeople } from "react-icons/go";
 import { LuSearch } from "react-icons/lu";
@@ -11,7 +11,8 @@ import Guest from "./Guest";
 import "../styles/components/search.css";
 import Loading2 from "./Loading2";
 import { useSearchStore } from "../store/searchStore";
-// import { Today } from "../store/todayStore";
+import { useNavigate } from "react-router-dom";
+import Toast from "./Toast";
 
 const where = [
   {
@@ -41,6 +42,10 @@ const where = [
 ];
 const viewKind = [
   {
+    value: "select 1",
+    text: "객실을 선택하세요.",
+  },
+  {
     value: "STANDARD",
     text: "스탠다드 룸",
   },
@@ -58,6 +63,10 @@ const viewKind = [
   },
 ];
 const viewOption = [
+  {
+    value: "select 1",
+    text: "뷰를 선택하세요.",
+  },
   {
     value: "OCEAN",
     text: "오션뷰",
@@ -110,53 +119,42 @@ const priceOption = [
   },
 ];
 
-const Today = (nextDay = 0) => {
-  const year = new Date().getFullYear();
-  let month = new Date().getMonth() + 1;
-  let day = new Date().getDate() + nextDay;
-
-  month = month < 10 ? "0" + month : month;
-  day = day < 10 ? "0" + day : day;
-
-  return `${year}-${month}-${day}`;
-};
-
 const Search = ({ ...props }) => {
-  const [isStart, setIsStart] = useState(Today());
-  const [isEnd, setIsEnd] = useState(Today(1));
   const [location, setLocation] = useState("");
   const [roomType, setRoomType] = useState("");
   const [viewType, setViewType] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [guestNumber, setGuestNumber] = useState("");
-  const [hotelList, setHotelList] = useState([]);
   const [isLoading2, setIsLoading2] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [searchToast, setSearchToast] = useState(false);
+  const navigate = useNavigate();
 
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
-
-  const handleStart = (value) => {
-    console.log(value);
-    setIsStart(value);
-  };
-  const handleEnd = (value) => {
-    console.log(value);
-    setIsEnd(value);
-  };
-
-  // 결과값
-  // console.log(`isStart ${isStart}`);
-  // console.log(`isEnd ${isEnd}`);
+  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 
   const handleLocation = (e) => {
-    setLocation(e.target.value);
+    const selectedLocationText = e.target.value;
+    const selectedLocationOption = where.find(
+      (option) => option.text === selectedLocationText
+    );
+    setLocation(selectedLocationOption.value);
   };
 
   const handleRoomType = (e) => {
-    setRoomType(e.target.value);
+    const selectedRoomTypeText = e.target.value;
+    const selectedRoomTypeOption = viewKind.find(
+      (option) => option.text === selectedRoomTypeText
+    );
+    setRoomType(selectedRoomTypeOption.value);
   };
 
   const handleViewType = (e) => {
-    setViewType(e.target.value);
+    const selectedViewTypeText = e.target.value;
+    const selectedViewTypeOption = viewOption.find(
+      (option) => option.text === selectedViewTypeText
+    );
+    setViewType(selectedViewTypeOption.value);
   };
 
   const handlePriceRange = (e) => {
@@ -169,11 +167,42 @@ const Search = ({ ...props }) => {
   // 호텔 검색하기
   const handleSearch = async (e) => {
     e.preventDefault();
+
+    if (!location || location === "NATION") {
+      setSearchError("지역을 선택해주세요.");
+      setSearchToast(true);
+      return;
+    }
+
+    if (!roomType || roomType === "select 1") {
+      setSearchError("객실 종류를 선택해주세요.");
+      setSearchToast(true);
+      return;
+    }
+
+    if (!viewType || viewType === "select 1") {
+      setSearchError("뷰 종류를 선택해주세요.");
+      setSearchToast(true);
+      return;
+    }
+
     setIsLoading2(true);
+
     try {
-      const response = await axios.get("http://52.78.12.252:8080/api/hotels");
-      setSearchResults(response.data.hotels);
-      console.log(response.data.hotels);
+      const response = await axios.get(
+        `http://52.78.12.252:8080/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`
+      );
+      if (response.data.result.content.length === 0) {
+        alert("검색 결과가 없습니다.");
+        return;
+      } else {
+        setSearchResults(response.data.result.content);
+        const selectedWhereOption = where.find(
+          (option) => option.value === location
+        );
+        setSearchTerm(selectedWhereOption ? selectedWhereOption.text : "");
+        navigate("/search/result");
+      }
     } catch (error) {
       console.error("호텔 검색에 실패했습니다:", error);
       setSearchResults([]);
@@ -250,6 +279,13 @@ const Search = ({ ...props }) => {
         <LuSearch />
         Search
       </button>
+      <Toast
+        color={"red"}
+        onOpen={searchToast}
+        onClose={() => setSearchToast(false)}
+      >
+        {searchError}
+      </Toast>
     </form>
   );
 };

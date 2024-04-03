@@ -1,10 +1,7 @@
 import "../styles/pages/login.css";
-
 import React, { useState } from "react";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import Dialog from "../components/Dialog";
 import Input from "../components/Input";
 import Loading2 from "../components/Loading2";
@@ -128,12 +125,40 @@ const Login = ({ close, ...props }) => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading2(true);
+
+    const yearValid = birthYear.length === 4 && /^\d{4}$/.test(birthYear);
+    if (!yearValid) {
+      setRegisterError("년도는 4자리 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
+
+    const monthValid =
+      birthMonth >= 1 && birthMonth <= 12 && /^\d{2}$/.test(birthMonth);
+    if (!monthValid) {
+      setRegisterError("월은 01-12 사이의 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
+
+    const dayValid =
+      birthDay >= 1 && birthDay <= 31 && /^\d{2}$/.test(birthDay);
+    if (!dayValid) {
+      setRegisterError("일은 01-31 사이의 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
+
     if (registerPassword !== confirmPassword) {
       setRegisterError("비밀번호가 일치하지 않습니다.");
       setRegisterToast(true);
       setIsLoading2(false);
       return;
     }
+
     const requestData = {
       name,
       email: registerEmail,

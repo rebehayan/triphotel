@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { digit3 } from "../../store/digit3";
 
 const MypageAllReservationItems = ({ items }) => {
-  const { file, hotel_name, type, adult_count, child_count, check_in, check_out, total_price } = items.userInfo[0];
+  const { hotel, room, adult_count, child_count, check_in, check_out, total_price, created_at, member } = items;
+  const photo = room.thumbnails[0].img_url;
 
-  const { name } = items;
+  // console.log(items);
 
   return (
     <>
@@ -16,19 +17,19 @@ const MypageAllReservationItems = ({ items }) => {
         </td>
         <td className="mobile:before:content-['호텔정보'] tablet:before:hidden mobile:!grid tablet:!table-cell mobile:grid-cols-[6rem_1fr] mobile:before:font-bold">
           <div className="grid items-center grid-cols-[min-content_1fr] gap-1 text-left">
-            <Link to="/hoteldetail">
-              <RoomPicture image={file} size={"sm"} />
+            <Link to={`/hoteldetail/${hotel.id}`}>
+              <RoomPicture image={photo} size={"sm"} />
             </Link>
-            <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2">
-              {hotel_name}
+            <Link to={`/hoteldetail/${hotel.id}`} className=" group-hover:text-blue-700 line-clamp-2">
+              {hotel.name}
             </Link>
           </div>
         </td>
         <td className="mobile:before:content-['예약자'] tablet:before:hidden mobile:!grid tablet:!table-cell mobile:grid-cols-[6rem_1fr] mobile:before:font-bold">
-          {name}
+          {member.name}
         </td>
         <td className="mobile:before:content-['룸정보'] tablet:before:hidden mobile:!grid tablet:!table-cell mobile:grid-cols-[6rem_1fr] mobile:before:font-bold">
-          {type}
+          {room.type}
         </td>
         <td className="mobile:before:content-['성인'] tablet:before:hidden mobile:!grid tablet:!table-cell mobile:grid-cols-[6rem_1fr] mobile:before:font-bold">
           {adult_count}

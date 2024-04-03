@@ -3,12 +3,10 @@ import Heading from "../Heading";
 import MypageReservationItems from "./MypageReservationItems";
 import request from "../../api/request";
 import instance from "../../api/axios";
-import { useLoginStore } from "../../store/loginStore";
 
-const { fetchMembersMyOrder } = request; // 필요한 요청 URL을 추출
+const { fetchMembersMyOrder } = request;
 
 const MypageReservation = () => {
-  const { userName, userCredit, userId, userEmail, address, city, nation, zip_code, profile_image } = useLoginStore();
   const token = localStorage.getItem("token");
   const [isMyOrders, setIsMyOrders] = useState([]);
 
@@ -20,12 +18,10 @@ const MypageReservation = () => {
         },
       });
       setIsMyOrders(responseOrder.data.result.content);
+      console.log(responseOrder);
     };
     fetchData();
   }, []);
-
-  // const myOrders = isMyOrders.find((user) => user.member.id === userId);
-  console.log(isMyOrders);
 
   return (
     <div>
