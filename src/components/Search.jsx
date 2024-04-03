@@ -43,7 +43,7 @@ const where = [
 const viewKind = [
   {
     value: "select 1",
-    text: "----",
+    text: "객실을 선택하세요",
   },
   {
     value: "STANDARD",
@@ -65,7 +65,7 @@ const viewKind = [
 const viewOption = [
   {
     value: "select 1",
-    text: "----",
+    text: "뷰를 선택하세요",
   },
   {
     value: "OCEAN",
