@@ -9,23 +9,26 @@ const NoticeWrite = ({ myId, onAddNotice }) => {
   const [description, setDescription] = useState("");
   const hotelId = parseInt(myId);
   const boardData = {
-    title:title,
-    message:description,
-  }
+    title: title,
+    message: description,
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices`, boardData, {
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices`,
+        boardData,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-        console.log(response);
+        }
+      );
+      console.log(response);
     } catch (error) {
       console.error("공지사항 추가 실패:", error);
-    }finally{
+    } finally {
       //onAddNotice({ title, description }); // 부모 컴포넌트로 새로운 공지사항 전달
       setTitle(""); // 입력값 초기화
       setDescription("");
@@ -42,9 +45,13 @@ const NoticeWrite = ({ myId, onAddNotice }) => {
         내용
         <Input type="textarea" value={description} onChange={(value) => setDescription(value)} />
       </div>
-      <div className="flex justify-center gap-2 mt-6">
-        <button type="submit" className="btn-blue">작성</button>
-        <button type="button" className="btn-gray" onClick={() => {}}>취소</button>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+        <button type="submit" className="btn-blue">
+          작성
+        </button>
+        <button type="button" className="btn-gray" onClick={() => {}}>
+          취소
+        </button>
       </div>
     </form>
   );

@@ -32,9 +32,7 @@ const HotelDetail = () => {
   const [hotelInfo, setHotelInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const { totalHotels, deleteHotel } = usehotelListStore();
-  const [notices, setNotices] = useState([]); // 공지사항 배열 추가
-
-console.log(hotelId);
+  const [notices, setNotices] = useState([]);
 
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
 
@@ -43,11 +41,8 @@ console.log(hotelId);
       .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
       .then((response) => {
         setHotelInfo(response.data.result);
-        // 공지사항 데이터를 가져와서 설정
-        // 예를 들어 response.data.result.notices와 같은 방식으로 가져와서 설정
         setNotices(response.data.result.notices);
       });
-
   }, [hotelId]);
 
   useEffect(() => {
@@ -69,7 +64,6 @@ console.log(hotelId);
           },
         }
       );
-      //console.log(response.data); // 응답 데이터 처리
       alert("호텔 삭제 성공!");
     } catch (error) {
       console.error(error);
@@ -83,10 +77,13 @@ console.log(hotelId);
   };
 
   const handleAddNotice = (newNotice) => {
-    // 새로운 공지사항을 기존 공지사항 배열에 추가
     const updatedNotices = [...notices, newNotice];
     setNotices(updatedNotices);
-    setIsWrite(false); // 공지 작성 창 닫기
+    setIsWrite(false);
+  };
+
+  const handleWriteNotice = () => {
+    setIsWrite(true);
   };
 
   return (
@@ -120,14 +117,14 @@ console.log(hotelId);
             <Box>
               <div className="flex items-center justify-between">
                 <Heading tag="h3" text="호텔 공지" className="base" />
-                <button className="btn-blue sm" onClick={() => setIsWrite(true)}>
-                  공지 올리기
-                </button>
+                {!isWrite && (
+                  <button className="btn-blue sm" onClick={handleWriteNotice}>
+                    공지 올리기
+                  </button>
+                )}
               </div>
-              {isWrite && <NoticeWrite 
-              //onAddNotice={handleAddNotice} 
-              myId={hotelId} className="mt-5" />}
-              {!isWrite && <Notice className="mt-5" myId={hotelId} notices={notices} />} {/* 공지사항 배열을 props로 전달 */}
+              {isWrite && <NoticeWrite myId={hotelId} className="mt-5" />}
+              {!isWrite && <Notice className="mt-5" myId={hotelId} notices={notices} />}
             </Box>
             <Box>
               <Heading tag="h3" text="편의시설 및 서비스" className="base" />
