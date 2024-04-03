@@ -16,6 +16,7 @@ const SearchResult = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const searchResults = useSearchStore((state) => state.searchResults);
+  const searchTerm = useSearchStore((state) => state.searchTerm);
 
   useEffect(() => {
     setTitle("Trip Hotel List", subvisual);
@@ -32,7 +33,11 @@ const SearchResult = () => {
     <div className="main pb-20">
       <div className="container">
         <Destinations className="sub" />
-        <Heading tag={"h3"} text={"검색 결과"} className={"xl mt-10"} />
+        <Heading
+          tag={"h3"}
+          text={searchTerm || "검색 결과"}
+          className={"xl mt-10"}
+        />
         <div className="flex mobile:flex-col tablet:flex-row justify-between items-center mt-10 mb-5">
           <div className="text-2xl mobile:mb-3 tablet:mb-0">
             <strong className="">{searchResults.length}개</strong>

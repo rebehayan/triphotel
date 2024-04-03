@@ -123,8 +123,14 @@ const MypageAccount = () => {
 
   const handleChange = async (e) => {
     e.preventDefault();
+    setIsLoading2(true);
     const token = localStorage.getItem("token");
 
+    if (!password || !confirmPassword) {
+      alert("비밀번호를 입력해주세요.");
+      setIsLoading2(false);
+      return;
+    }
     if (password !== confirmPassword) {
       setRegisterError("비밀번호가 일치하지 않습니다.");
       setRegisterToast(true);
@@ -154,16 +160,17 @@ const MypageAccount = () => {
         birth,
         password,
         credit: userCredit,
-        profile_image: profileImage,
         address,
         city,
         nation,
         zip_code: zipCode,
       };
-      console.log(updatedUser);
       setUserInfo(updatedUser);
+      useLoginStore.getState().setAddressInfo(address, city, zipCode, nation);
+      setIsLoading2(false);
     } catch (error) {
       console.error("Error updating user information:", error);
+      setIsLoading2(false);
     }
   };
 

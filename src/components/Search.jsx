@@ -43,7 +43,7 @@ const where = [
 const viewKind = [
   {
     value: "select 1",
-    text: "----",
+    text: "객실을 선택하세요",
   },
   {
     value: "STANDARD",
@@ -65,7 +65,7 @@ const viewKind = [
 const viewOption = [
   {
     value: "select 1",
-    text: "----",
+    text: "뷰를 선택하세요",
   },
   {
     value: "OCEAN",
@@ -131,6 +131,7 @@ const Search = ({ ...props }) => {
   const navigate = useNavigate();
 
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
+  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 
   const handleLocation = (e) => {
     const selectedLocationText = e.target.value;
@@ -199,6 +200,10 @@ const Search = ({ ...props }) => {
         return;
       } else {
         setSearchResults(response.data.result.content);
+        const selectedWhereOption = where.find(
+          (option) => option.value === location
+        );
+        setSearchTerm(selectedWhereOption ? selectedWhereOption.text : "");
         navigate("/search/result");
       }
     } catch (error) {

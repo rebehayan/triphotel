@@ -30,7 +30,10 @@ const SearchPopup = ({ open, close, onSearch, ...props }) => {
         `http://52.78.12.252:8080/api/hotels/name/${searchTerm}`
       );
       setSearchResults(response.data.result.content);
+
       navigate("/search/result");
+      setSearchTerm(searchTerm);
+      if (onSearch) onSearch(searchTerm);
       ref.current.close();
       setSearchTerm("");
     } catch (error) {
