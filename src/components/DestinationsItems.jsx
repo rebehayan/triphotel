@@ -36,7 +36,6 @@ const DestinationsItems = () => {
               `http://52.78.12.252:8080/api/hotels/nation/${country}`
             );
             counts[country] = response.data.result.number_of_elements;
-            console.log(country, response.data.result.number_of_elements);
           })
         );
       } catch (error) {
@@ -60,7 +59,6 @@ const DestinationsItems = () => {
         `http://52.78.12.252:8080/api/hotels/nation/${destination.value}`
       );
       setSearchResults(response.data.result.content);
-      console.log(response.data.result.content);
       navigate("/search/result");
     } catch (error) {
       console.error("호텔 검색에 실패했습니다:", error);
