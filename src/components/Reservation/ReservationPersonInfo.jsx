@@ -7,7 +7,6 @@ import Dialog from "../Dialog";
 import ReservationRule from "../ReservationRule";
 import { useReservationStore } from "../../store/reservationStore";
 import Loading from "../Loading";
-import { useLoginStore } from "../../store/loginStore";
 import Loading2 from "../Loading2";
 import request from "../../api/request";
 import instance from "../../api/axios";
@@ -25,7 +24,7 @@ const ReservationPersonInfo = (isitem) => {
   const [isRule, setIsRule] = useState(false);
   const [isAddress, setIsAddress] = useState("");
   const [isCountry, setIsCountry] = useState("");
-  const [isCity, setIsCity] = useState(member?.city);
+  const [isCity, setIsCity] = useState("");
   const [isPostCode, setIsPostCode] = useState("");
   const [isRequestText, setIsRequestText] = useState("");
   const [isPopup, setIsPopup] = useState(false);
@@ -34,9 +33,9 @@ const ReservationPersonInfo = (isitem) => {
   const [isLoading2, setIsLoading2] = useState(false);
   const [persnalInfo, setPersnalInfo] = useState({
     name: "",
-    email: member?.email,
+    email: "",
     address: "",
-    city: member?.city,
+    city: "",
     nation: "",
     zip_code: "",
     comment: "",

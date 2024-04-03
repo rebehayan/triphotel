@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 
 const ReservationSecond = () => {
   const token = localStorage.getItem("token");
-  const { fetchMembersMyCart } = request; // 필요한 요청 URL을 추출
+  const { fetchMembersMyCart } = request;
   const { setTitle } = useVisualStore();
   const [data, setData] = useState([]);
   const [isitem, setIsItem] = useState(null);

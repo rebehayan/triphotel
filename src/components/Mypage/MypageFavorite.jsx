@@ -1,10 +1,10 @@
 import React from "react";
-import HotelList from "../Hotel/HotelList";
+import HotelFavoriteList from "../Hotel/HotelFavoriteList";
 
 const MypageFavorite = () => {
   return (
     <div>
-      <HotelList modify={true} />
+      <HotelFavoriteList />
     </div>
   );
 };
