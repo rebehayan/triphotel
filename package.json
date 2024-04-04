@@ -30,7 +30,6 @@
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "msw": "^2.2.9",
     "nsw": "^0.1.0",
     "postcss": "^8.4.35",
     "postcss-import": "^16.0.1",
