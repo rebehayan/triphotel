@@ -19,5 +19,5 @@
     <div align= "center">  </div> 
     </div>
 
-    ## 숙박 예약 서비스 플랫폼
+    
     
