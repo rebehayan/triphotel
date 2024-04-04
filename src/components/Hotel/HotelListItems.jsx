@@ -11,11 +11,15 @@ import HotelLocation from "./HotelLocation";
 import HotelPicture from "./HotelPicture";
 import HotelPrice from "./HotelPrice";
 import HotelTitle from "./HotelTitle";
+import { useReservationStore } from "../../store/reservationStore";
 
 const HotelListItems = ({ hotel, checkFav }) => {
   const token = localStorage.getItem("token");
   const [isFav, setIsFav] = useState(hotel.favorite || checkFav);
   const { fetchHotels } = request;
+  const { addInfo } = useReservationStore();
+
+  // console.log(hotel);
 
   const favData = {
     id: hotel.id,
@@ -37,9 +41,13 @@ const HotelListItems = ({ hotel, checkFav }) => {
     }
   };
 
+  const handleResetStore = () => {
+    addInfo("");
+  };
+
   return (
     <>
-      <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"}>
+      <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"} onClick={handleResetStore}>
         <HotelPicture
           link={`/hoteldetail/${hotel.id}`}
           image={hotel.thumbnails?.length < 4 ? hotel1 : hotel.thumbnails?.[0].img_url}
