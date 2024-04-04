@@ -27,7 +27,7 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   };
 
   useEffect(() => {
-    axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`).then((response) => {
+    axios.get(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`).then((response) => {
       setRoomsInfo(response.data.result.rooms);
     });
   }, []);
@@ -52,20 +52,10 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
             />
             <HotelTitle title={it.type} />
             <HotelPrice price={digit3(it.standard_price)} />
-            <RoomOptions
-              bedtype={it.bed_type}
-              capacity={it.standard_capacity}
-              maximum={it.maximum_capacity}
-              view={it.view_type}
-              adult_fare={it.adult_fare}
-              child_fare={it.child_fare}
-            />
+            <RoomOptions bedtype={it.bed_type} capacity={it.standard_capacity} maximum={it.maximum_capacity} view={it.view_type} adult_fare={it.adult_fare} child_fare={it.child_fare} />
             {!edit ? (
               <div className="flex gap-2">
-                <button
-                  onClick={() => clickToReserve(it.id, it.type)}
-                  className="btn-blue-outline mobile:flex-1 tablet:flex-none justify-center"
-                >
+                <button onClick={() => clickToReserve(it.id, it.type)} className="btn-blue-outline mobile:flex-1 tablet:flex-none justify-center">
                   {it.active_status === "INACTIVE" ? "Sold Out" : "예약하기"}
                 </button>
               </div>

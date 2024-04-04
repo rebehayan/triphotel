@@ -142,25 +142,19 @@ const Search = ({ ...props }) => {
 
   const handleLocation = (e) => {
     const selectedLocationText = e.target.value;
-    const selectedLocationOption = where.find(
-      (option) => option.text === selectedLocationText
-    );
+    const selectedLocationOption = where.find((option) => option.text === selectedLocationText);
     setLocation(selectedLocationOption.value);
   };
 
   const handleRoomType = (e) => {
     const selectedRoomTypeText = e.target.value;
-    const selectedRoomTypeOption = viewKind.find(
-      (option) => option.text === selectedRoomTypeText
-    );
+    const selectedRoomTypeOption = viewKind.find((option) => option.text === selectedRoomTypeText);
     setRoomType(selectedRoomTypeOption.value);
   };
 
   const handleViewType = (e) => {
     const selectedViewTypeText = e.target.value;
-    const selectedViewTypeOption = viewOption.find(
-      (option) => option.text === selectedViewTypeText
-    );
+    const selectedViewTypeOption = viewOption.find((option) => option.text === selectedViewTypeText);
     setViewType(selectedViewTypeOption.value);
   };
 
@@ -196,9 +190,7 @@ const Search = ({ ...props }) => {
     setIsLoading2(true);
 
     try {
-      const response = await axios.get(
-        `http://52.78.12.252:8080/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`
-      );
+      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`);
       if (response.data.result.content.length === 0) {
         alert(`검색 결과가 없습니다.`);
         // setErrrorMessage(`검색 결과가 없습니다.`);
@@ -206,9 +198,7 @@ const Search = ({ ...props }) => {
         return;
       } else {
         setSearchResults(response.data.result.content);
-        const selectedWhereOption = where.find(
-          (option) => option.value === location
-        );
+        const selectedWhereOption = where.find((option) => option.value === location);
         setSearchTerm(selectedWhereOption ? selectedWhereOption.value : "");
         navigate("/search/result");
       }
@@ -230,11 +220,7 @@ const Search = ({ ...props }) => {
           </span>
           <b>지역</b>
         </div>
-        <Select
-          options={where}
-          onChange={handleLocation}
-          className={"mobile:!w-full tablet:!w-auto"}
-        />
+        <Select options={where} onChange={handleLocation} className={"mobile:!w-full tablet:!w-auto"} />
       </div>
       <div>
         <div className="search__title">
@@ -243,11 +229,7 @@ const Search = ({ ...props }) => {
           </span>
           <b>객실 종류</b>
         </div>
-        <Select
-          options={viewKind}
-          onChange={handleRoomType}
-          className={"mobile:!w-full tablet:!w-auto"}
-        />
+        <Select options={viewKind} onChange={handleRoomType} className={"mobile:!w-full tablet:!w-auto"} />
       </div>
       <div>
         <div className="search__title">
@@ -256,11 +238,7 @@ const Search = ({ ...props }) => {
           </span>
           <b>뷰 종류</b>
         </div>
-        <Select
-          options={viewOption}
-          onChange={handleViewType}
-          className={"mobile:!w-full tablet:!w-auto"}
-        />
+        <Select options={viewOption} onChange={handleViewType} className={"mobile:!w-full tablet:!w-auto"} />
       </div>
       <div>
         <div className="search__title">
@@ -269,11 +247,7 @@ const Search = ({ ...props }) => {
           </span>
           <b>1박당 요금</b>
         </div>
-        <Select
-          options={priceOption}
-          onChange={handlePriceRange}
-          className={"mobile:!w-full tablet:!w-auto"}
-        />
+        <Select options={priceOption} onChange={handlePriceRange} className={"mobile:!w-full tablet:!w-auto"} />
       </div>
       <div>
         <div className="search__title">
@@ -288,11 +262,7 @@ const Search = ({ ...props }) => {
         <LuSearch />
         Search
       </button>
-      <Toast
-        color={"red"}
-        onOpen={searchToast}
-        onClose={() => setSearchToast(false)}
-      >
+      <Toast color={"red"} onOpen={searchToast} onClose={() => setSearchToast(false)}>
         {searchError}
       </Toast>
       <Dialog open={isPopup} close={() => setIsPopup(false)}>

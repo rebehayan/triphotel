@@ -28,9 +28,7 @@ const SearchPopup = ({ open, close, onSearch, ...props }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get(
-        `http://52.78.12.252:8080/api/hotels/name/${searchTerm}`
-      );
+      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/name/${searchTerm}`);
       setSearchResults(response.data.result.content);
 
       navigate("/search/result");
@@ -56,12 +54,7 @@ const SearchPopup = ({ open, close, onSearch, ...props }) => {
       <div>
         <div className="search-popup__wrap">
           <form onSubmit={handleSearch}>
-            <input
-              type="search"
-              placeholder="호텔명을 입력하세요."
-              value={searchTerm}
-              onChange={handleChange}
-            />
+            <input type="search" placeholder="호텔명을 입력하세요." value={searchTerm} onChange={handleChange} />
             <button type="submit">
               <FiSearch />
             </button>

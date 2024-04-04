@@ -21,21 +21,13 @@ const DestinationsItems = () => {
 
   useEffect(() => {
     const fetchHotelCounts = async () => {
-      const countries = [
-        "THAILAND",
-        "VIETNAM",
-        "PHILIPPINES",
-        "MALAYSIA",
-        "TAIWAN",
-      ];
+      const countries = ["THAILAND", "VIETNAM", "PHILIPPINES", "MALAYSIA", "TAIWAN"];
       let counts = {};
 
       try {
         await Promise.all(
           countries.map(async (country) => {
-            const response = await axios.get(
-              `http://52.78.12.252:8080/api/hotels/nation/${country}`
-            );
+            const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/nation/${country}`);
             counts[country] = response.data.result.number_of_elements;
           })
         );
@@ -56,9 +48,7 @@ const DestinationsItems = () => {
     setIsLoading2(true);
 
     try {
-      const response = await axios.get(
-        `http://52.78.12.252:8080/api/hotels/nation/${destination.value}`
-      );
+      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/nation/${destination.value}`);
       setSearchResults(response.data.result.content);
       navigate("/search/result");
     } catch (error) {
@@ -71,11 +61,7 @@ const DestinationsItems = () => {
 
   return (
     <>
-      <Link
-        onClick={() =>
-          handleDestinationClick({ value: "THAILAND", text: "태국" })
-        }
-      >
+      <Link onClick={() => handleDestinationClick({ value: "THAILAND", text: "태국" })}>
         <div className="destinations__thumbnail">
           <img src={category1} alt="태국" />
         </div>
@@ -84,11 +70,7 @@ const DestinationsItems = () => {
           <span>{hotelCountsByCountry["THAILAND"] || 0} Hotels</span>
         </div>
       </Link>
-      <Link
-        onClick={() =>
-          handleDestinationClick({ value: "VIETNAM", text: "베트남" })
-        }
-      >
+      <Link onClick={() => handleDestinationClick({ value: "VIETNAM", text: "베트남" })}>
         <div className="destinations__thumbnail">
           <img src={category2} alt="베트남" />
         </div>
@@ -97,11 +79,7 @@ const DestinationsItems = () => {
           <span>{hotelCountsByCountry["VIETNAM"] || 0} Hotels</span>
         </div>
       </Link>
-      <Link
-        onClick={() =>
-          handleDestinationClick({ value: "PHILIPPINES", text: "필리핀" })
-        }
-      >
+      <Link onClick={() => handleDestinationClick({ value: "PHILIPPINES", text: "필리핀" })}>
         <div className="destinations__thumbnail">
           <img src={category3} alt="필리핀" />
         </div>
@@ -110,11 +88,7 @@ const DestinationsItems = () => {
           <span>{hotelCountsByCountry["PHILIPPINES"] || 0} Hotels</span>
         </div>
       </Link>
-      <Link
-        onClick={() =>
-          handleDestinationClick({ value: "MALAYSIA", text: "말레이시아" })
-        }
-      >
+      <Link onClick={() => handleDestinationClick({ value: "MALAYSIA", text: "말레이시아" })}>
         <div className="destinations__thumbnail">
           <img src={category4} alt="말레이시아" />
         </div>
@@ -123,11 +97,7 @@ const DestinationsItems = () => {
           <span>{hotelCountsByCountry["MALAYSIA"] || 0} Hotels</span>
         </div>
       </Link>
-      <Link
-        onClick={() =>
-          handleDestinationClick({ value: "TAIWAN", text: "대만" })
-        }
-      >
+      <Link onClick={() => handleDestinationClick({ value: "TAIWAN", text: "대만" })}>
         <div className="destinations__thumbnail">
           <img src={category5} alt="대만" />
         </div>

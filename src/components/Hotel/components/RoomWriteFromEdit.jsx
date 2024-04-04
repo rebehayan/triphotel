@@ -95,9 +95,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   });
 
   const handleRoomType = (e) => {
-    const selectedOption = roomOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = roomOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -107,9 +105,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleBed = (e) => {
-    const selectedOption = bedOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = bedOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -119,9 +115,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleView = (e) => {
-    const selectedOption = viewOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = viewOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -158,15 +152,11 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     formData.append("file", image);
 
     try {
-      const response = await axios.post(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
@@ -208,12 +198,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
                   price={true}
                   onChange={handlePrice}
                 />{" "} */}
-                <Input
-                  type={"number"}
-                  value={roomInfo.standard_price}
-                  onChange={handlePrice}
-                />{" "}
-                원
+                <Input type={"number"} value={roomInfo.standard_price} onChange={handlePrice} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
@@ -243,22 +228,8 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
             <li className="grid gap-3">
               객실 예약여부
               <div className="flex">
-                <Radio
-                  color={"blue"}
-                  checked={roomInfo.active_status === "ACTIVE"}
-                  value={"예약가능"}
-                  id={"room_reser1"}
-                  name={"roomrag1"}
-                  onChange={() => handleRadioChange("ACTIVE")}
-                />
-                <Radio
-                  color={"red ml-5"}
-                  checked={roomInfo.active_status === "INACTIVE"}
-                  value={"예약 불가능"}
-                  id={"room_reser2"}
-                  name={"roomrag1"}
-                  onChange={() => handleRadioChange("INACTIVE")}
-                />
+                <Radio color={"blue"} checked={roomInfo.active_status === "ACTIVE"} value={"예약가능"} id={"room_reser1"} name={"roomrag1"} onChange={() => handleRadioChange("ACTIVE")} />
+                <Radio color={"red ml-5"} checked={roomInfo.active_status === "INACTIVE"} value={"예약 불가능"} id={"room_reser2"} name={"roomrag1"} onChange={() => handleRadioChange("INACTIVE")} />
               </div>
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">

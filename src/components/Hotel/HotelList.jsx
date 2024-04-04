@@ -21,15 +21,10 @@ const HotelList = ({ className, ...props }) => {
       setIsLoading(false);
     }, 3000);
     axios
-      .get(
-        `http://52.78.12.252:8080/api/hotels?page=${currentPage}&size=${pageSize}`
-      )
+      .get(`https://be7-team4.r-e.kr/api/hotels?page=${currentPage}&size=${pageSize}`)
       .then((response) => {
         const newHotels = response.data.result.content;
-        setHotels((prevHotels) => [
-          ...prevHotels,
-          ...response.data.result.content,
-        ]);
+        setHotels((prevHotels) => [...prevHotels, ...response.data.result.content]);
         // 페이지 번호 증가
         setCurrentPage((prevPage) => prevPage + 1);
         setHasMore(newHotels.length === pageSize);
@@ -41,13 +36,11 @@ const HotelList = ({ className, ...props }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await axios
-        .get(`http://52.78.12.252:8080/api/hotels?page=0&size=${pageSize}`)
-        .then((response) => {
-          const initialHotels = response.data.result.content;
-          setHotels(response.data.result.content);
-          setHasMore(initialHotels.length === pageSize);
-        });
+      await axios.get(`https://be7-team4.r-e.kr/api/hotels?page=0&size=${pageSize}`).then((response) => {
+        const initialHotels = response.data.result.content;
+        setHotels(response.data.result.content);
+        setHasMore(initialHotels.length === pageSize);
+      });
     };
     fetchData();
   }, []);
@@ -62,11 +55,7 @@ const HotelList = ({ className, ...props }) => {
       <div className="text-center mt-10">
         {hasMore && (
           <button className="btn-blue xl" onClick={handleMore}>
-            {isLoading ? (
-              <TbRotateClockwise2 className="animate-spin" />
-            ) : (
-              <FaArrowDownShortWide />
-            )}
+            {isLoading ? <TbRotateClockwise2 className="animate-spin" /> : <FaArrowDownShortWide />}
             {isLoading ? "Loading..." : "호텔 더보기"}
           </button>
         )}

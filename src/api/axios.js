@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://52.78.12.252:8080",
+  baseURL: "https://be7-team4.r-e.kr",
   params: {
     api_key: "",
   },

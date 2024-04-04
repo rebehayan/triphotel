@@ -15,7 +15,7 @@ const NoticeWrite = ({ myId }) => {
       message: description,
     };
     try {
-      await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/notices`, boardData, {
+      await axios.post(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices`, boardData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,4 +53,3 @@ const NoticeWrite = ({ myId }) => {
 };
 
 export default NoticeWrite;
-

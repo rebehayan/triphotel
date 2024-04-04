@@ -25,7 +25,7 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
   const onDelete = async (hotelId, roomId) => {
     try {
       const response = await axios.delete(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomId}`,
+        `https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms/${roomId}`,
 
         {
           headers: {
@@ -48,36 +48,18 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
   return (
     <>
       {roomLists?.map((it) => (
-        <li
-          {...props}
-          key={it.id}
-          className={it.active_status === "INACTIVE" ? "disabled" : ""}
-        >
+        <li {...props} key={it.id} className={it.active_status === "INACTIVE" ? "disabled" : ""}>
           {isEdit ? (
             <RoomEditfromEdit setIsEdit={changeEdit} roomData={it} />
           ) : (
             <div>
-              <RoomPicture
-                image={
-                  it.thumbnails?.length > 0 ? it.thumbnails[0].img_url : room2
-                }
-              />
+              <RoomPicture image={it.thumbnails?.length > 0 ? it.thumbnails[0].img_url : room2} />
               <HotelTitle title={it.type} />
               <HotelPrice price={it.standard_price} />
-              <RoomOptions
-                bedtype={it.bed_type}
-                capacity={it.standard_capacity}
-                maximum={it.maximum_capacity}
-                view={it.view_type}
-                adult_fare={it.adult_fare}
-                child_fare={it.child_fare}
-              />
+              <RoomOptions bedtype={it.bed_type} capacity={it.standard_capacity} maximum={it.maximum_capacity} view={it.view_type} adult_fare={it.adult_fare} child_fare={it.child_fare} />
               {!edit ? (
                 <div className="flex gap-2">
-                  <button className="btn-blue-outline">
-                    {" "}
-                    {it.active_status === "INACTIVE" ? "Sold Out" : "예약하기"}
-                  </button>
+                  <button className="btn-blue-outline"> {it.active_status === "INACTIVE" ? "Sold Out" : "예약하기"}</button>
                 </div>
               ) : (
                 <div className="flex gap-2">

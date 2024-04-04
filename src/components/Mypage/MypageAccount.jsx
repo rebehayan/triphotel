@@ -27,19 +27,7 @@ const MypageAccount = () => {
     }
   }, [navigate]);
 
-  const {
-    userId,
-    userName,
-    userEmail,
-    userBirth,
-    userCredit,
-    userProfileImage,
-    userAddress,
-    userCity,
-    userZipCode,
-    userNation,
-    setUserInfo,
-  } = useLoginStore();
+  const { userId, userName, userEmail, userBirth, userCredit, userProfileImage, userAddress, userCity, userZipCode, userNation, setUserInfo } = useLoginStore();
 
   const birthYear = userBirth?.slice(0, 4);
   const birthMonth = userBirth?.slice(4, 6);
@@ -73,25 +61,14 @@ const MypageAccount = () => {
     setCity(userCity || "");
     setZipCode(userZipCode || "");
     setNation(userNation || "");
-  }, [
-    userName,
-    userEmail,
-    userBirth,
-    userId,
-    userProfileImage,
-    userAddress,
-    userCity,
-    userZipCode,
-    userNation,
-  ]);
+  }, [userName, userEmail, userBirth, userId, userProfileImage, userAddress, userCity, userZipCode, userNation]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const setUserProfileImage =
-          useLoginStore.getState().setUserProfileImage;
+        const setUserProfileImage = useLoginStore.getState().setUserProfileImage;
         setUserProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
@@ -142,7 +119,7 @@ const MypageAccount = () => {
     }
     try {
       const response = await axios.patch(
-        "http://52.78.12.252:8080/api/members/my-info",
+        "https://be7-team4.r-e.kr/api/members/my-info",
         {
           password,
           address,
@@ -182,20 +159,14 @@ const MypageAccount = () => {
       <div className="bg-white rounded-xl whitespace-nowrap p-10 self-start text-center">
         <Heading tag={"h4"} className={"sm mb-5"} text={"개인정보"} />
         {/* <Avatar /> */}
-        <Avatar
-          add
-          profileImage={profileImage}
-          onImageUpload={handleImageUpload}
-        />
+        <Avatar add profileImage={profileImage} onImageUpload={handleImageUpload} />
         <div className="mb-5 mt-1">
           <b>{name}</b>님
           <br /> 반갑습니다.
         </div>
         잔여캐시
         <br />
-        <strong className="text-2xl mr-1 text-blue-700 tracking-tight">
-          {digit3(userCredit)}
-        </strong>
+        <strong className="text-2xl mr-1 text-blue-700 tracking-tight">{digit3(userCredit)}</strong>
         <span>원</span>
       </div>
       <form type="onSubmit" className="bg-white rounded-xl  p-10 relative">
@@ -220,19 +191,11 @@ const MypageAccount = () => {
           </div>
           <div>
             비밀번호
-            <Input
-              type={"password"}
-              defaultValue={password}
-              onChange={handlePassword}
-            />
+            <Input type={"password"} defaultValue={password} onChange={handlePassword} />
           </div>
           <div>
             비밀번호 확인
-            <Input
-              type={"password"}
-              defaultValue={confirmPassword}
-              onChange={handleConfirmPassword}
-            />
+            <Input type={"password"} defaultValue={confirmPassword} onChange={handleConfirmPassword} />
           </div>
         </div>
         <hr className="mt-10" />
@@ -261,11 +224,7 @@ const MypageAccount = () => {
           </button>
         </div>
       </form>
-      <Toast
-        color={"red"}
-        onOpen={registerToast}
-        onClose={() => setRegisterToast(false)}
-      >
+      <Toast color={"red"} onOpen={registerToast} onClose={() => setRegisterToast(false)}>
         {registerError}
       </Toast>
     </div>

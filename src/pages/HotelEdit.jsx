@@ -82,9 +82,7 @@ const HotelEdit = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await axios.get(
-          `http://52.78.12.252:8080/api/hotels/${hotelId}`
-        );
+        const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`);
         setHotelData(response.data.result);
       } catch (error) {
         console.log(error);
@@ -256,15 +254,13 @@ const HotelEdit = () => {
   const handleCheckIn = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText =
-      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_in: selectedValue });
   };
   const handleCheckOut = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText =
-      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_out: selectedValue });
   };
   //흡연
@@ -278,26 +274,20 @@ const HotelEdit = () => {
   const handlePoolOpen = (e) => {
     const selectedValue = e.target.value;
     // 'where' 대신 'checkOption' 배열을 사용합니다.
-    const selectedText =
-      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_opening_time: selectedValue });
   };
   const handlePoolClose = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText =
-      checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_closing_time: selectedValue });
   };
 
   //수정저장
   const token = localStorage.getItem("token");
   const saveHotel = async () => {
-    if (
-      hotelInfo.name == "" ||
-      hotelInfo.price == "" ||
-      hotelInfo.description == ""
-    ) {
+    if (hotelInfo.name == "" || hotelInfo.price == "" || hotelInfo.description == "") {
       setIsPopup(true);
       setErrorMessage("호텔 기본정보를 모두 입력해 주세요.");
       return;
@@ -308,15 +298,11 @@ const HotelEdit = () => {
     // if (imageFile4) formData.append("file", imageFile4);
 
     try {
-      const response = await axios.patch(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}`,
-        hotelInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`, hotelInfo, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       await setErrorMessage("호텔수정이 완료되었습니다.");
       await setIsPopup2(true);
@@ -348,15 +334,11 @@ const HotelEdit = () => {
     setIndexImage(index);
 
     try {
-      const response = await axios.patch(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/thumbnails/${thumbnailId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/thumbnails/${thumbnailId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error("실패", error);
     }
@@ -378,67 +360,34 @@ const HotelEdit = () => {
         <div className="container mb-32">
           <Heading tag={"h3"} text={"호텔 수정"} className={"xl my-5"} />
           <Box>
-            <Heading
-              tag={"h3"}
-              text={"호텔 대표이미지"}
-              className={"base mb-5"}
-            />
+            <Heading tag={"h3"} text={"호텔 대표이미지"} className={"base mb-5"} />
             <Box className={"white"}>
               <ul className="grid tablet:grid-cols-2  desktop:grid-cols-4 gap-5">
                 <li>
-                  <Noimage
-                    bringImage={bringImage1}
-                    props={{ image: imageFile1 }}
-                    imgurl={imageFile1}
-                    className={"mb-3 bg-gray-50"}
-                  />
+                  <Noimage bringImage={bringImage1} props={{ image: imageFile1 }} imgurl={imageFile1} className={"mb-3 bg-gray-50"} />
                   <Input type={"file"} onChange={handleFileChange1} />
-                  <button
-                    className="btn-blue btn-blue mt-1"
-                    onClick={() => saveImage(0)}
-                  >
+                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(0)}>
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage
-                    bringImage={bringImage2}
-                    props={{ image: imageFile2 }}
-                    className={"mb-3 bg-gray-50"}
-                  />
+                  <Noimage bringImage={bringImage2} props={{ image: imageFile2 }} className={"mb-3 bg-gray-50"} />
                   <Input type={"file"} onChange={handleFileChange2} />
-                  <button
-                    className="btn-blue btn-blue mt-1"
-                    onClick={() => saveImage(1)}
-                  >
+                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(1)}>
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage
-                    bringImage={bringImage3}
-                    props={{ image: imageFile3 }}
-                    className={"mb-3 bg-gray-50"}
-                  />
+                  <Noimage bringImage={bringImage3} props={{ image: imageFile3 }} className={"mb-3 bg-gray-50"} />
                   <Input type={"file"} onChange={handleFileChange3} />
-                  <button
-                    className="btn-blue btn-blue mt-1"
-                    onClick={() => saveImage(2)}
-                  >
+                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(2)}>
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage
-                    bringImage={bringImage4}
-                    props={{ image: imageFile4 }}
-                    className={"mb-3 bg-gray-50"}
-                  />
+                  <Noimage bringImage={bringImage4} props={{ image: imageFile4 }} className={"mb-3 bg-gray-50"} />
                   <Input type={"file"} onChange={handleFileChange4} />
-                  <button
-                    className="btn-blue btn-blue mt-1"
-                    onClick={() => saveImage(3)}
-                  >
+                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(3)}>
                     이미지 저장
                   </button>
                 </li>
@@ -447,28 +396,16 @@ const HotelEdit = () => {
           </Box>
 
           <Box className={"mt-10"}>
-            <Heading
-              tag={"h3"}
-              text={"호텔 기본정보"}
-              className={"base mb-5"}
-            />
+            <Heading tag={"h3"} text={"호텔 기본정보"} className={"base mb-5"} />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-5">
                 <li className="grid gap-3">
                   호텔 위치
-                  <Select
-                    selectValue={hotelInfo.nation}
-                    options={where}
-                    onChange={handleLocationChange}
-                  />
+                  <Select selectValue={hotelInfo.nation} options={where} onChange={handleLocationChange} />
                 </li>
                 <li className="grid gap-3">
                   호텔 이름
-                  <Input
-                    type={"text"}
-                    value={hotelInfo?.name}
-                    onChange={handleName}
-                  />
+                  <Input type={"text"} value={hotelInfo?.name} onChange={handleName} />
                 </li>
                 {/* <li className="grid gap-3">
                   호텔 가격
@@ -484,14 +421,7 @@ const HotelEdit = () => {
                 <li className="grid gap-3">
                   호텔 예약여부
                   <div className="flex">
-                    <Radio
-                      color="blue"
-                      checked={hotelInfo.active_status === "ACTIVE"}
-                      value="예약가능"
-                      id="hotel_reser1"
-                      name="reservationAvailability"
-                      onChange={() => handleRadioChange("ACTIVE")}
-                    />
+                    <Radio color="blue" checked={hotelInfo.active_status === "ACTIVE"} value="예약가능" id="hotel_reser1" name="reservationAvailability" onChange={() => handleRadioChange("ACTIVE")} />
                     <Radio
                       color="red ml-5"
                       checked={hotelInfo.active_status === "INACTIVE"}
@@ -504,11 +434,7 @@ const HotelEdit = () => {
                 </li>
                 <li className="grid gap-3 col-span-3">
                   호텔 안내
-                  <Input
-                    type={"textarea"}
-                    onChange={handleContent}
-                    value={hotelInfo.description}
-                  />
+                  <Input type={"textarea"} onChange={handleContent} value={hotelInfo.description} />
                 </li>
               </ul>
             </Box>
@@ -517,226 +443,96 @@ const HotelEdit = () => {
           <Box className={"mt-10"}>
             <div className="grid gap-5 mobile:grid-cols-1 desktop:grid-cols-2 ">
               <div>
-                <Heading
-                  tag={"h3"}
-                  text={"호텔 편의 시설"}
-                  className={"base mb-5"}
-                />
+                <Heading tag={"h3"} text={"호텔 편의 시설"} className={"base mb-5"} />
                 <Box className={"white"}>
                   <ul className="grid mobile:grid-cols-2 tablet:grid-cols-3 gap-4">
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_1"
-                        name="swimming_pool"
-                        value="수영장"
-                        checked={hotelInfo.basic_options?.swimming_pool}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_1" name="swimming_pool" value="수영장" checked={hotelInfo.basic_options?.swimming_pool} onChange={handleCheckbox}>
                         수영장
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_2"
-                        name="breakfast"
-                        value="조식뷔페"
-                        checked={hotelInfo.basic_options?.breakfast}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_2" name="breakfast" value="조식뷔페" checked={hotelInfo.basic_options?.breakfast} onChange={handleCheckbox}>
                         조식뷔페
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_3"
-                        name="wireless_internet"
-                        value="무선 인터넷"
-                        checked={hotelInfo.basic_options?.wireless_internet}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_3" name="wireless_internet" value="무선 인터넷" checked={hotelInfo.basic_options?.wireless_internet} onChange={handleCheckbox}>
                         무선 인터넷
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_4"
-                        name="dry_cleaning"
-                        value="드라이클리닝"
-                        checked={hotelInfo.basic_options?.dry_cleaning}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_4" name="dry_cleaning" value="드라이클리닝" checked={hotelInfo.basic_options?.dry_cleaning} onChange={handleCheckbox}>
                         드라이클리닝
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_5"
-                        name="storage_service"
-                        value="여행가방 보관 서비스"
-                        checked={hotelInfo.basic_options?.storage_service}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_5" name="storage_service" value="여행가방 보관 서비스" checked={hotelInfo.basic_options?.storage_service} onChange={handleCheckbox}>
                         여행가방 보관 서비스
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_6"
-                        name="convenience_store"
-                        value="편의점"
-                        checked={hotelInfo.basic_options?.convenience_store}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_6" name="convenience_store" value="편의점" checked={hotelInfo.basic_options?.convenience_store} onChange={handleCheckbox}>
                         편의점
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_7"
-                        name="ironing_tools"
-                        value="다림질도구"
-                        checked={hotelInfo.basic_options?.ironing_tools}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_7" name="ironing_tools" value="다림질도구" checked={hotelInfo.basic_options?.ironing_tools} onChange={handleCheckbox}>
                         다림질도구
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_8"
-                        name="wakeup_call"
-                        value="모닝콜"
-                        checked={hotelInfo.basic_options?.wakeup_call}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_8" name="wakeup_call" value="모닝콜" checked={hotelInfo.basic_options?.wakeup_call} onChange={handleCheckbox}>
                         모닝콜
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_9"
-                        name="mini_bar"
-                        value="미니바"
-                        checked={hotelInfo.basic_options?.mini_bar}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_9" name="mini_bar" value="미니바" checked={hotelInfo.basic_options?.mini_bar} onChange={handleCheckbox}>
                         미니바
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_10"
-                        name="shower_room"
-                        value="샤워실"
-                        checked={hotelInfo.basic_options?.shower_room}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_10" name="shower_room" value="샤워실" checked={hotelInfo.basic_options?.shower_room} onChange={handleCheckbox}>
                         샤워실
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_11"
-                        name="air_conditioner"
-                        value="에어컨"
-                        checked={hotelInfo.basic_options?.air_conditioner}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_11" name="air_conditioner" value="에어컨" checked={hotelInfo.basic_options?.air_conditioner} onChange={handleCheckbox}>
                         에어컨
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_12"
-                        name="table"
-                        value="책상"
-                        checked={hotelInfo.basic_options?.table}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_12" name="table" value="책상" checked={hotelInfo.basic_options?.table} onChange={handleCheckbox}>
                         책상
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_13"
-                        name="tv"
-                        value="TV"
-                        checked={hotelInfo.basic_options?.tv}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_13" name="tv" value="TV" checked={hotelInfo.basic_options?.tv} onChange={handleCheckbox}>
                         TV
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_14"
-                        name="safety_deposit_box"
-                        value="안전금고"
-                        checked={hotelInfo.basic_options?.safety_deposit_box}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_14" name="safety_deposit_box" value="안전금고" checked={hotelInfo.basic_options?.safety_deposit_box} onChange={handleCheckbox}>
                         안전금고
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_15"
-                        name="welcome_drink"
-                        value="웰컴 드링크"
-                        checked={hotelInfo.basic_options?.welcome_drink}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_15" name="welcome_drink" value="웰컴 드링크" checked={hotelInfo.basic_options?.welcome_drink} onChange={handleCheckbox}>
                         웰컴 드링크
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_16"
-                        name="free_parking"
-                        value="무료 주차"
-                        checked={hotelInfo.basic_options?.free_parking}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_16" name="free_parking" value="무료 주차" checked={hotelInfo.basic_options?.free_parking} onChange={handleCheckbox}>
                         무료 주차
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_17"
-                        name="fitness"
-                        value="피트니스 시설"
-                        checked={hotelInfo.basic_options?.fitness}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_17" name="fitness" value="피트니스 시설" checked={hotelInfo.basic_options?.fitness} onChange={handleCheckbox}>
                         피트니스 시설
                       </Checkbox>
                     </li>
                     <li>
-                      <Checkbox
-                        color="blue"
-                        id="check3_18"
-                        name="electric_kettle"
-                        value="전기주전자"
-                        checked={hotelInfo.basic_options?.electric_kettle}
-                        onChange={handleCheckbox}
-                      >
+                      <Checkbox color="blue" id="check3_18" name="electric_kettle" value="전기주전자" checked={hotelInfo.basic_options?.electric_kettle} onChange={handleCheckbox}>
                         전기주전자
                       </Checkbox>
                     </li>
@@ -744,37 +540,23 @@ const HotelEdit = () => {
                 </Box>
               </div>
               <div>
-                <Heading
-                  tag={"h3"}
-                  text={"호텔 규칙"}
-                  className={"base mb-5"}
-                />
+                <Heading tag={"h3"} text={"호텔 규칙"} className={"base mb-5"} />
                 <Box className={"white"}>
                   <ul className="grid gap-5">
                     <li className=" grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>체크인</strong>
-                      <Select
-                        selectValue={hotelInfo.check_in}
-                        options={checkOption}
-                        onChange={handleCheckIn}
-                      />
+                      <Select selectValue={hotelInfo.check_in} options={checkOption} onChange={handleCheckIn} />
                     </li>
                     <li className="grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>체크아웃</strong>
-                      <Select
-                        selectValue={hotelInfo.check_out}
-                        options={checkOption}
-                        onChange={handleCheckOut}
-                      />
+                      <Select selectValue={hotelInfo.check_out} options={checkOption} onChange={handleCheckOut} />
                     </li>
                     <li className="grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>흡연</strong>
                       <div className="flex justify-start mobile:whitespace-nowrap mobile:flex-wrap tablet:flex-nowrap">
                         <Radio
                           color={"red"}
-                          checked={
-                            hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"
-                          }
+                          checked={hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"}
                           value={"전객실 불가능"}
                           id={"hotel_reser3"}
                           name={"rag2"}
@@ -788,9 +570,7 @@ const HotelEdit = () => {
                           name={"rag2"}
                           onChange={() => handleSmoking("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red ml-2"}>
-                          일부객실 선택시 현장에서 방을 배정합니다.
-                        </Badge>
+                        <Badge color={"red ml-2"}>일부객실 선택시 현장에서 방을 배정합니다.</Badge>
                       </div>
                     </li>
                     <li className="grid grid-cols-[8rem_1fr] items-center">
@@ -812,26 +592,16 @@ const HotelEdit = () => {
                           name={"rag3"}
                           onChange={() => handlePet("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red ml-2"}>
-                          일부객실 선택시 현장에서 방을 배정합니다.
-                        </Badge>
+                        <Badge color={"red ml-2"}>일부객실 선택시 현장에서 방을 배정합니다.</Badge>
                       </div>
                     </li>
                     {hotelInfo.basic_options?.swimming_pool && (
                       <li className="grid grid-cols-[8rem_1fr] items-center">
                         <strong>수영장 이용시간</strong>
                         <div className="grid grid-cols-[1fr_2rem_1fr] items-center">
-                          <Select
-                            selectValue={hotelInfo.pool_opening_time}
-                            options={checkOption}
-                            onChange={handlePoolOpen}
-                          />
+                          <Select selectValue={hotelInfo.pool_opening_time} options={checkOption} onChange={handlePoolOpen} />
                           <span className="justify-self-center">~</span>
-                          <Select
-                            selectValue={hotelInfo.pool_closing_time}
-                            options={checkOption}
-                            onChange={handlePoolClose}
-                          />
+                          <Select selectValue={hotelInfo.pool_closing_time} options={checkOption} onChange={handlePoolClose} />
                         </div>
                       </li>
                     )}
@@ -845,19 +615,12 @@ const HotelEdit = () => {
             <div className="flex justify-between items-center">
               <Heading tag={"h3"} text={"객실관리"} className={"base"} />
               {!isToggle && !isEdit && (
-                <button
-                  className="btn-blue"
-                  onClick={() => setIsToggle(!isToggle)}
-                >
+                <button className="btn-blue" onClick={() => setIsToggle(!isToggle)}>
                   객실등록
                 </button>
               )}
             </div>
-            {isToggle ? (
-              <RoomWriteFromEdit setIsToggle={setIsToggle} />
-            ) : (
-              <RoomList edit={true} roomLists={hotelInfo?.rooms} />
-            )}
+            {isToggle ? <RoomWriteFromEdit setIsToggle={setIsToggle} /> : <RoomList edit={true} roomLists={hotelInfo?.rooms} />}
           </Box>
           <div className="flex justify-between mt-10">
             <button onClick={toPrevious} className="btn-gray xl">

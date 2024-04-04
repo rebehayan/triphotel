@@ -143,15 +143,11 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     formData.append("request", JSON.stringify(roomInfo));
 
     try {
-      const response = await axios.patch(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms/${roomInfo.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       alert("객실 수정 성공!");
     } catch (error) {
@@ -215,22 +211,8 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
             <li className="grid gap-3">
               객실 예약여부
               <div className="flex">
-                <Radio
-                  color={"blue"}
-                  checked={roomInfo.active_status === "ACTIVE"}
-                  value={"예약가능"}
-                  id={"room_reser1"}
-                  name={"roomrag1"}
-                  onChange={() => handleRadioChange("ACTIVE")}
-                />
-                <Radio
-                  color={"red ml-5"}
-                  checked={roomInfo.active_status === "INACTIVE"}
-                  value={"예약 불가능"}
-                  id={"room_reser2"}
-                  name={"roomrag1"}
-                  onChange={() => handleRadioChange("INACTIVE")}
-                />
+                <Radio color={"blue"} checked={roomInfo.active_status === "ACTIVE"} value={"예약가능"} id={"room_reser1"} name={"roomrag1"} onChange={() => handleRadioChange("ACTIVE")} />
+                <Radio color={"red ml-5"} checked={roomInfo.active_status === "INACTIVE"} value={"예약 불가능"} id={"room_reser2"} name={"roomrag1"} onChange={() => handleRadioChange("INACTIVE")} />
               </div>
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">

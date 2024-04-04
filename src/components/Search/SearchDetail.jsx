@@ -69,13 +69,9 @@ const SearchDetail = () => {
 
     setIsLoading2(true);
     try {
-      const response = await axios.get(
-        `http://52.78.12.252:8080/api/hotels/?name=${hotelName}&nation=${selectedNation}`
-      );
+      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/?name=${hotelName}&nation=${selectedNation}`);
       setSearchResults(response.data.result.content);
-      setSearchTerm(
-        where.find((option) => option.value === selectedNation)?.value || ""
-      );
+      setSearchTerm(where.find((option) => option.value === selectedNation)?.value || "");
       navigate("/search/result");
     } catch (error) {
       console.error("호텔 검색에 실패했습니다:", error);
@@ -93,12 +89,7 @@ const SearchDetail = () => {
     <form className=" mobile:w-full tablet:w-auto" onSubmit={handleSubmit}>
       <div className="mobile:grid mobile:grid-cols-1 tablet:flex gap-2 relative">
         <Select options={where} onChange={handleNation} />
-        <Input
-          type={"text"}
-          placeholder="호텔명을 입력하세요."
-          value={hotelName}
-          onChange={handleType}
-        />
+        <Input type={"text"} placeholder="호텔명을 입력하세요." value={hotelName} onChange={handleType} />
         <button type="submit" className="btn-blue xl">
           <IoSearch />
         </button>

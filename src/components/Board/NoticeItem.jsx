@@ -28,15 +28,11 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
     };
     setIsEditing(false);
     try {
-      const response = await axios.patch(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`,
-        boardData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices/${noticeId}`, boardData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(response);
       window.location.reload(); // 저장 후 페이지를 새로고침
     } catch (error) {
@@ -59,7 +55,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
   const handleConfirmDelete = async () => {
     setIsPopup(false); // 팝업 닫기
     try {
-      await axios.delete(`http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`, {
+      await axios.delete(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices/${noticeId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,12 +74,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
     <li {...props} className="bg-white">
       <button onClick={() => handleItem(index)} className={index === activeIndex ? "active " : ""}>
         {isEditing ? (
-          <Input
-            type={"text"}
-            value={editedTitle}
-            onChange={(value) => setEditedTitle(value)}
-            style={{ width: "calc(100% - 1rem)" }}
-          />
+          <Input type={"text"} value={editedTitle} onChange={(value) => setEditedTitle(value)} style={{ width: "calc(100% - 1rem)" }} />
         ) : (
           // 읽기 전용 모드에서는 공지사항 제목을 표시
           item.title
@@ -103,12 +94,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
           {isEditing ? (
             // 수정 모드에서는 입력 폼을 렌더링하고, 저장 및 취소 버튼을 표시
             <div>
-              <Input
-                type={"textarea"}
-                value={editedDescription}
-                onChange={(value) => setEditedDescription(value)}
-                className="!w-full flex"
-              />
+              <Input type={"textarea"} value={editedDescription} onChange={(value) => setEditedDescription(value)} className="!w-full flex" />
               <div className="flex justify-end gap-2 mt-3">
                 <button className="btn-green-label sm" onClick={handleSave}>
                   저장
