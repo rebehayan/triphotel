@@ -46,7 +46,14 @@ const HotelListItems = ({ hotel }) => {
   return (
     <>
       <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"}>
-        <HotelPicture link={`/hoteldetail/${hotel.id}`} image={hotel1} />
+        <HotelPicture
+          link={`/hoteldetail/${hotel.id}`}
+          image={
+            hotel.thumbnails?.length < 4
+              ? hotel1
+              : hotel.thumbnails?.[0].img_url
+          }
+        />
         <div className="hotel__info">
           <HotelLocation location={hotel.nation} />
           <HotelFavorite onClick={handleFavorite} checked={isFav} />

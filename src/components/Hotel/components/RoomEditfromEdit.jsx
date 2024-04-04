@@ -92,12 +92,15 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     standard_price: roomData.standard_price,
     adult_fare: roomData.adult_fare,
     child_fare: roomData.child_fare,
-    thumbnailId: roomData.thumbnails[0].id,
+    // thumbnailId: roomData.thumbnails?.[0]?.id,
   });
-  console.log(roomData);
+  console.log(roomData.thumbnails);
   useEffect(() => {
-    setImage(roomData.thumbnails[0].img_url);
+    setImage(
+      roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url
+    );
   }, []);
+
   const handleRoomType = (e) => {
     setRoomInfo((prevInfo) => ({
       ...prevInfo,
@@ -131,14 +134,18 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const onSubmit = () => {
     addRoom(roomInfo);
   };
+  const handleFileChange = (file) => {
+    setImage(file);
+  };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
 
   // console.log(roomData);
   const token = localStorage.getItem("token");
   const onSave = async () => {
     const formData = new FormData();
-    formData.append("request", JSON.stringify(roomInfo));
     if (image) formData.append("file", image);
+    formData.append("request", JSON.stringify(roomInfo));
+    console.log(formData);
     try {
       const response = await axios.patch(
         `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}`,
@@ -149,15 +156,6 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
           },
         }
       );
-      // const imageResponse = await axios.patch(
-      //   `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}/thumbnails/${roomInfo.thumbnailId}`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
 
       alert("객실 수정 성공!");
     } catch (error) {
@@ -170,7 +168,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const onCancel = () => {
     setIsEdit(false);
   };
-  const handleFileChange = () => {};
+
   return (
     <>
       <Box className={"white mt-5"}>

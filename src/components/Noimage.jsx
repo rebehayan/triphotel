@@ -2,7 +2,8 @@ import React from "react";
 
 import { PiImageLight } from "react-icons/pi";
 
-const Noimage = ({ props, className, bringImage }) => {
+const Noimage = ({ props, className, bringImage, imgurl }) => {
+  console.log("imgurlZ", imgurl);
   return (
     <div
       className={
@@ -17,6 +18,7 @@ const Noimage = ({ props, className, bringImage }) => {
           className="absolute inset-0 w-full h-full object-cover "
         />
       )}
+
       <div>
         <PiImageLight />
       </div>

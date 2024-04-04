@@ -1,6 +1,7 @@
 import React from "react";
 
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import room2 from "../../assets/hotelroom2.jpeg";
 import { useRoomEditStore } from "../../store/roomEditStore";
@@ -16,7 +17,7 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
   const { isEdit, getIsEdit, changeEdit } = useRoomEditStore();
   // const [isEdit, setIsEdit] = useState(false);
   const { rooms, deleteRoom } = useRoomStore();
-
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const onDelete = async (hotelId, roomId) => {
     try {
@@ -37,6 +38,7 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
     }
 
     deleteRoom(roomId);
+    navigate(`/hoteldetail/${hotelId}`);
     console.log(roomId);
   };
   const onEdit = () => {

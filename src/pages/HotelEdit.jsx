@@ -80,11 +80,19 @@ const HotelEdit = () => {
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
 
   useEffect(() => {
-    axios
-      .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
-      .then((response) => {
+    const fetch = async () => {
+      try {
+        const response = await axios.get(
+          `http://52.78.12.252:8080/api/hotels/${hotelId}`
+        );
+        console.log(response);
         setHotelData(response.data.result);
-      });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetch();
   }, []);
 
   useEffect(() => {
@@ -94,7 +102,7 @@ const HotelEdit = () => {
   const handleonChange = (file) => {
     setIsImage(file);
   };
-
+  const img1 = hotelData.thumbnails?.[0].img_url;
   const [isRadio, setIsRadio] = useState(false);
   const [isRadio2, setIsRadio2] = useState(false);
   const [isRadio3, setIsRadio3] = useState(false);
@@ -105,14 +113,20 @@ const HotelEdit = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({});
-  const [imageFile1, setImageFile1] = useState(null);
-  const [imageFile2, setImageFile2] = useState(null);
-  const [imageFile3, setImageFile3] = useState(null);
-  const [imageFile4, setImageFile4] = useState(null);
+  const [imageFile1, setImageFile1] = useState();
+  const [imageFile2, setImageFile2] = useState();
+  // hotelData.thumbnails[1]?.img_url
+  const [imageFile3, setImageFile3] = useState();
+  // hotelData.thumbnails[2]?.img_url
+  const [imageFile4, setImageFile4] = useState();
+  // hotelData.thumbnails[3]?.img_url
   const [indexImage, setIndexImage] = useState();
   const options = hotelData?.basic_options;
   // console.log(options);
-
+  const [bringImage1, setBringImage1] = useState(true);
+  const [bringImage2, setBringImage2] = useState(true);
+  const [bringImage3, setBringImage3] = useState(true);
+  const [bringImage4, setBringImage4] = useState(true);
   useEffect(() => {
     if (Object.keys(hotelData).length > 0) {
       setHotelInfo({
@@ -154,22 +168,26 @@ const HotelEdit = () => {
       setImageFile4(hotelData?.thumbnails?.[3]?.img_url);
     }
   }, [hotelData]);
-
+  console.log("이미지파일" + imageFile1);
   const addHotel = usehotelListStore((state) => state.addHotel);
   //이미지
 
   const handleFileChange1 = (file) => {
-    setImageFile1(URL.createObjectURL(file));
+    setBringImage1(false);
+    setImageFile1(file);
   };
 
   const handleFileChange2 = (file) => {
-    setImageFile2(URL.createObjectURL(file));
+    setBringImage2(false);
+    setImageFile2(file);
   };
   const handleFileChange3 = (file) => {
-    setImageFile3(URL.createObjectURL(file));
+    setBringImage3(false);
+    setImageFile3(file);
   };
   const handleFileChange4 = (file) => {
-    setImageFile4(URL.createObjectURL(file));
+    setBringImage4(false);
+    setImageFile4(file);
   };
   //호텔이름
   const handleName = (value) => {
@@ -313,7 +331,7 @@ const HotelEdit = () => {
   };
 
   const saveImage = async (index) => {
-    console.log("이미지", imageFile2);
+    // console.log("이미지", imageFile2);
     const formData = new FormData();
     if (index === 0) {
       if (imageFile1) formData.append("file", imageFile1);
@@ -340,13 +358,16 @@ const HotelEdit = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       // console.log(response);
       alert("이미지 수정 성공!");
     } catch (error) {
       console.error("성공", error);
     }
     // navigate("/")
+  };
+  const toPrevious = () => {
+    navigate(`/hoteldetail/${hotelId}`);
   };
   return (
     <>
@@ -363,8 +384,9 @@ const HotelEdit = () => {
               <ul className="grid grid-cols-4 gap-5">
                 <li>
                   <Noimage
-                    bringImage={true}
+                    bringImage={bringImage1}
                     props={{ image: imageFile1 }}
+                    imgurl={imageFile1}
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange1} />
@@ -377,7 +399,7 @@ const HotelEdit = () => {
                 </li>
                 <li>
                   <Noimage
-                    bringImage={true}
+                    bringImage={bringImage2}
                     props={{ image: imageFile2 }}
                     className={"mb-3 bg-gray-50"}
                   />
@@ -391,7 +413,7 @@ const HotelEdit = () => {
                 </li>
                 <li>
                   <Noimage
-                    bringImage={true}
+                    bringImage={bringImage3}
                     props={{ image: imageFile3 }}
                     className={"mb-3 bg-gray-50"}
                   />
@@ -405,7 +427,7 @@ const HotelEdit = () => {
                 </li>
                 <li>
                   <Noimage
-                    bringImage={true}
+                    bringImage={bringImage4}
                     props={{ image: imageFile4 }}
                     className={"mb-3 bg-gray-50"}
                   />
@@ -835,7 +857,7 @@ const HotelEdit = () => {
             )}
           </Box>
           <div className="flex justify-between mt-10">
-            <button onClick={() => {}} className="btn-gray xl">
+            <button onClick={toPrevious} className="btn-gray xl">
               이전
             </button>
             <div className="flex  gap-3">

@@ -92,7 +92,7 @@ const HotelDetail = () => {
   const handleWriteNotice = () => {
     setIsWrite(true);
   };
-
+  console.log(hotelInfo.thumbnails);
   return (
     <div className="main mb-24">
       <div className="container">
@@ -112,7 +112,12 @@ const HotelDetail = () => {
             </div>
           </div>
         </div>
-        <HotelGallery pictures={pictures} className="mt-10" />
+        <HotelGallery
+          pictures={
+            hotelInfo.thumbnails?.length < 4 ? pictures : hotelInfo.thumbnails
+          }
+          className="mt-10"
+        />
         <div className="mobile:block tablet:flex relative gap-8 pt-8">
           <div className="min-h-lvh flex-1 flex gap-8  flex-col">
             <Box>
