@@ -4,7 +4,7 @@
 
 ## 🏠 배포 링크
 
-[<TripHotel>](https://triphotel.netlify.app/)
+[ 『TripHotel』 ](https://triphotel.netlify.app/)
 
 <br>
 <br>
