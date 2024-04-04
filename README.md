@@ -44,7 +44,7 @@
 
 <h4>► BE</h4>
 
-|   김경호   |   여관구   |   황찬희   |
+|   [김경호](https://github.com/kyungho1224)   |   [여관구](https://github.com/Yeo-gwan-gu)   |   [황찬희](https://github.com/chanbi741)   |
 |-----------|----------|----------|
 |    • 유저플로우 및 DB설계<br> • Git<br> • Member, Security<br> • Test Code, CI/CD  |    • 유저플로우 및 DB설계<br> • Git<br> • Reservation, Payment<br> • Test Code    |    • 유저플로우 및 DB설계<br> • 회의록 및 노션 업데이트<br> • ShoppingCart, Bookmark<br> • Presentation    |
 
