@@ -147,9 +147,8 @@ const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
               객실 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
                 <Input
-                  type={"text"}
+                  type={"number"}
                   value={roomInfo.standard_price}
-                  price={true}
                   onChange={handlePrice}
                 />{" "}
                 원
@@ -158,28 +157,25 @@ const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
             <li className="grid gap-3 self-start">
               성인 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input type={"text"} price={true} onChange={handleAdultFare} />{" "}
-                원
+                <Input type={"number"} onChange={handleAdultFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               어린이 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input type={"text"} price={true} onChange={handleChildFare} />{" "}
-                원
+                <Input type={"number"} onChange={handleChildFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 기준인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input type={"text"} price={true} onChange={handleCapacity} />{" "}
-                명
+                <Input type={"number"} onChange={handleCapacity} /> 명
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 최대인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input type={"text"} price={true} onChange={handleMax} /> 명
+                <Input type={"number"} onChange={handleMax} /> 명
               </div>
             </li>
             <li className="grid gap-3">

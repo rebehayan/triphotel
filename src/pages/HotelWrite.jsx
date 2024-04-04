@@ -299,6 +299,7 @@ const HotelWrite = () => {
           },
         }
       );
+      console.log(roomResponse);
       alert("호텔 등록 성공!");
     } catch (error) {
       console.error("Error sending POST request:", error);
