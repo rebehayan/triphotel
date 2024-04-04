@@ -84,9 +84,7 @@ const HotelEdit = () => {
       .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
       .then((response) => {
         setHotelData(response.data.result);
-        console.log(response.data.result);
       });
-    console.log(hotelData);
   }, []);
 
   useEffect(() => {
@@ -111,6 +109,7 @@ const HotelEdit = () => {
   const [imageFile2, setImageFile2] = useState(null);
   const [imageFile3, setImageFile3] = useState(null);
   const [imageFile4, setImageFile4] = useState(null);
+  const [indexImage, setIndexImage] = useState();
   const options = hotelData?.basic_options;
   // console.log(options);
 
@@ -149,18 +148,16 @@ const HotelEdit = () => {
         },
         rooms: hotelData.rooms,
       });
-      setImageFile1(hotelData.thumbnails[0].img_url);
-      setImageFile2(hotelData.thumbnails[1].img_url);
-      setImageFile3(hotelData.thumbnails[2].img_url);
-      setImageFile4(hotelData.thumbnails[3].img_url);
+      setImageFile1(hotelData?.thumbnails?.[0]?.img_url);
+      setImageFile2(hotelData?.thumbnails?.[1]?.img_url);
+      setImageFile3(hotelData?.thumbnails?.[2]?.img_url);
+      setImageFile4(hotelData?.thumbnails?.[3]?.img_url);
     }
   }, [hotelData]);
-  console.log("edit", hotelData);
-  console.log("edithotelInfo", hotelInfo);
 
-  console.log("edit", hotelData);
   const addHotel = usehotelListStore((state) => state.addHotel);
   //이미지
+
   const handleFileChange1 = (file) => {
     setImageFile1(URL.createObjectURL(file));
   };
@@ -289,18 +286,14 @@ const HotelEdit = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("request", JSON.stringify(hotelInfo));
+    // if (imageFile2) formData.append("file", imageFile2);
+    // if (imageFile3) formData.append("file", imageFile3);
+    // if (imageFile4) formData.append("file", imageFile4);
 
-    if (imageFile1) formData.append("file", imageFile1);
-    if (imageFile2) formData.append("file", imageFile2);
-    if (imageFile3) formData.append("file", imageFile3);
-    if (imageFile4) formData.append("file", imageFile4);
-    console.log("FD", formData);
     try {
       const response = await axios.patch(
         `http://52.78.12.252:8080/api/hotels/${hotelId}`,
-        formData,
+        hotelInfo,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -308,7 +301,6 @@ const HotelEdit = () => {
         }
       );
 
-      console.log(response.data); // 응답 데이터 처리
       alert("호텔 수정 성공!");
     } catch (error) {
       console.error(error);
@@ -320,6 +312,42 @@ const HotelEdit = () => {
     }, 1500);
   };
 
+  const saveImage = async (index) => {
+    console.log("이미지", imageFile2);
+    const formData = new FormData();
+    if (index === 0) {
+      if (imageFile1) formData.append("file", imageFile1);
+    }
+    if (index === 1) {
+      if (imageFile2) formData.append("file", imageFile2);
+    }
+    if (index === 2) {
+      if (imageFile3) formData.append("file", imageFile3);
+    }
+    if (index === 3) {
+      if (imageFile4) formData.append("file", imageFile4);
+    }
+    const thumbnailId = hotelData?.thumbnails[index].id;
+    setIndexImage(index);
+
+    try {
+      const response = await axios.patch(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/thumbnails/${thumbnailId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      // console.log(response);
+      alert("이미지 수정 성공!");
+    } catch (error) {
+      console.error("성공", error);
+    }
+    // navigate("/")
+  };
   return (
     <>
       <div className="main">
@@ -340,6 +368,12 @@ const HotelEdit = () => {
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange1} />
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(0)}
+                  >
+                    이미지 저장
+                  </button>
                 </li>
                 <li>
                   <Noimage
@@ -348,6 +382,12 @@ const HotelEdit = () => {
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange2} />
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(1)}
+                  >
+                    이미지 저장
+                  </button>
                 </li>
                 <li>
                   <Noimage
@@ -356,6 +396,12 @@ const HotelEdit = () => {
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange3} />
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(2)}
+                  >
+                    이미지 저장
+                  </button>
                 </li>
                 <li>
                   <Noimage
@@ -364,6 +410,12 @@ const HotelEdit = () => {
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange4} />
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(3)}
+                  >
+                    이미지 저장
+                  </button>
                 </li>
               </ul>
             </Box>

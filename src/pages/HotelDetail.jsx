@@ -59,7 +59,7 @@ const HotelDetail = () => {
       });
     // setTitle(hotelInfo.name, SubVisual);
   }, []);
-  console.log(hotelInfo.thumbnails?.length);
+  // console.log(hotelInfo);
   useEffect(() => {
     if (hotelInfo) {
       setTitle(hotelInfo.name, SubVisual);
@@ -91,7 +91,7 @@ const HotelDetail = () => {
 
     // }, 1500);
   };
-
+  // console.log(hotelInfo);
   const toEdit = () => {
     navigate(`/hoteledit/${hotelId}`);
   };

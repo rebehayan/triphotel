@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -79,7 +79,8 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const [isRadio, setIsRadio] = useState(false);
   const thisRoom = rooms.find((it) => it.roomId === roomId);
   const navigate = useNavigate();
-  console.log(roomData);
+  // console.log(roomData);
+  const [image, setImage] = useState();
   const [roomInfo, setRoomInfo] = useState({
     id: roomData.id,
     type: roomData.type,
@@ -91,7 +92,12 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     standard_price: roomData.standard_price,
     adult_fare: roomData.adult_fare,
     child_fare: roomData.child_fare,
+    thumbnailId: roomData.thumbnails[0].id,
   });
+  console.log(roomData);
+  useEffect(() => {
+    setImage(roomData.thumbnails[0].img_url);
+  }, []);
   const handleRoomType = (e) => {
     setRoomInfo((prevInfo) => ({
       ...prevInfo,
@@ -120,34 +126,39 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     setRoomInfo({ ...roomInfo, maximum_capacity: value });
   };
   const handleRadioChange = (value) => {
-    setRoomInfo({ ...roomInfo, active_status: value === "예약가능" });
+    setRoomInfo({ ...roomInfo, active_status: value });
   };
   const onSubmit = () => {
     addRoom(roomInfo);
   };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
-  // const roomLists = thisHotel.rooms;
-  console.log(roomData);
+
+  // console.log(roomData);
   const token = localStorage.getItem("token");
   const onSave = async () => {
-    // const index = roomLists.findIndex((it) => it.roomId === roomData.roomId);
-    // console.log(index);
-    // roomLists[index] = { ...roomInfo };
-    // // saveEditHotel({ rooms: roomLists });
-    // saveEditedRoom(roomLists);
-    // console.log(roomLists);
+    const formData = new FormData();
+    formData.append("request", JSON.stringify(roomInfo));
+    if (image) formData.append("file", image);
     try {
       const response = await axios.patch(
         `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}`,
-        roomInfo,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      // const imageResponse = await axios.patch(
+      //   `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}/thumbnails/${roomInfo.thumbnailId}`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-      console.log(response.data); // 응답 데이터 처리
       alert("객실 수정 성공!");
     } catch (error) {
       console.error(error);
@@ -159,6 +170,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const onCancel = () => {
     setIsEdit(false);
   };
+  const handleFileChange = () => {};
   return (
     <>
       <Box className={"white mt-5"}>
@@ -248,28 +260,25 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
               <div className="flex">
                 <Radio
                   color={"blue"}
-                  checked={roomInfo.active_status}
+                  checked={roomInfo.active_status === "ACTIVE"}
                   value={"예약가능"}
                   id={"room_reser1"}
                   name={"roomrag1"}
-                  onChange={() => handleRadioChange("예약가능")}
+                  onChange={() => handleRadioChange("ACTIVE")}
                 />
                 <Radio
                   color={"red ml-5"}
-                  checked={!roomInfo.active_status}
+                  checked={roomInfo.active_status === "INACTIVE"}
                   value={"예약 불가능"}
                   id={"room_reser2"}
                   name={"roomrag1"}
-                  onChange={() => handleRadioChange("예약불가능")}
+                  onChange={() => handleRadioChange("INACTIVE")}
                 />
               </div>
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">
               객실 사진
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
+              <Input type={"file"} onChange={handleFileChange} />
             </li>
           </ul>
         </form>

@@ -78,6 +78,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   const { totalHotels, addHotel } = usehotelListStore();
   const { rooms, addRoom } = useRoomFromEditStore();
   const [isRadio, setIsRadio] = useState(false);
+  const [image, setImage] = useState();
   const [roomInfo, setRoomInfo] = useState({
     type: "STANDARD",
     active_status: "ACTIVE",
@@ -89,7 +90,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     adult_fare: null,
     child_fare: null,
   });
-  console.log("roomWrite", roomInfo);
+  // console.log("roomWrite", roomInfo);
   const handleRoomType = (e) => {
     const selectedOption = roomOption.find(
       (option) => option.text === e.target.value
@@ -144,10 +145,14 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   const handleRadioChange = (value) => {
     setRoomInfo({ ...roomInfo, active_status: value });
   };
+  const handleImageChange = (file) => {
+    setImage(file);
+  };
   const token = localStorage.getItem("token");
   const onSubmit = async () => {
     const formData = new FormData();
     formData.append("request", JSON.stringify(roomInfo)); // hotelInfo 객체를 문자열로 변환하여 추가
+    formData.append("file", image); // hotelInfo 객체를 문자열로 변환하여 추가
 
     try {
       const response = await axios.post(
@@ -255,10 +260,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">
               객실 사진
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
+              <Input type={"file"} onChange={handleImageChange} />
             </li>
           </ul>
         </form>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import axios from "axios";
+
 import hotel1 from "../../assets/hotel1.jpg";
 import { digit3 } from "../../store/digit3";
 import Badge from "../Badge";
@@ -16,13 +18,11 @@ const HotelListItems = ({ modify, ...props }) => {
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
     axios.get("http://52.78.12.252:8080/api/hotels").then((response) => {
-      console.log(response.data.result.content);
+      // console.log(response.data.result.content);
       setHotels(response.data.result.content);
     });
   }, []);
-  const totalHotels = usehotelListStore((state) => state.totalHotels);
-  // console.log(hotels[8].thumbnails[0].img_url);
-  // console.log(totalHotels);
+
   return (
     <>
       {hotels.map((hotel) => (

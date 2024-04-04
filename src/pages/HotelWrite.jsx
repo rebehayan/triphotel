@@ -167,11 +167,8 @@ const HotelWrite = () => {
       nation: selectedValue,
     }));
   };
-  //가격
-  // const handlePrice = (value) => {
-  //   setHotelInfo({ ...hotelInfo, price: value });
-  // };
-  console.log(hotelInfo);
+
+  // console.log(hotelInfo);
   //예약가능
   const handleRadioChange = (value) => {
     setHotelInfo({ ...hotelInfo, active_status: value });
@@ -247,7 +244,7 @@ const HotelWrite = () => {
   };
   //호텔등록
   const token = localStorage.getItem("token");
-  console.log(token);
+
   const onSendClick = async (e) => {
     if (
       hotelInfo.name == "" ||
@@ -276,7 +273,7 @@ const HotelWrite = () => {
     if (imageFile3) formData.append("file", imageFile3);
     if (imageFile4) formData.append("file", imageFile4);
     formData.append("request", JSON.stringify(hotelInfo));
-    console.log("Form", formData);
+
     const roomFormData = new FormData();
     if (file) roomFormData.append("file", file);
     roomFormData.append("request", JSON.stringify(roomInfo));
@@ -287,12 +284,11 @@ const HotelWrite = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
           },
         }
       );
       const hotelId = response.data.result.id;
-
+      console.log(response);
       const roomResponse = await axios.post(
         `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
         roomFormData,

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+
 import category1 from "../assets/category1.jpg";
 import category2 from "../assets/category2.webp";
 import category3 from "../assets/category3.webp";
 import category4 from "../assets/category4.jpg";
 import category5 from "../assets/category5.jpg";
-import axios from "axios";
-import { useSearchStore } from "../store/searchStore";
 import Loading2 from "../components/Loading2";
-import { useNavigate } from "react-router-dom";
+import { useSearchStore } from "../store/searchStore";
 
 const DestinationsItems = () => {
   const { setSearchTerm } = useSearchStore();
