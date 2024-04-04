@@ -23,17 +23,14 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   const [roomsInfo, setRoomsInfo] = useState({});
   const onDelete = (roomId) => {
     deleteRoom(roomId);
-    // console.log("룸" + roomId);
   };
-  // console.log("룸", roomLists?.[0].thumbnails[0].img_url);
+
   useEffect(() => {
     axios
       .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
       .then((response) => {
         setRoomsInfo(response.data.result.rooms);
-        // console.log(response.data.result.rooms);
       });
-    // setTitle(hotelInfo.name, SubVisual);
   }, []);
 
   const clickToReserve = (id) => {
@@ -41,7 +38,7 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
 
     addRoom(clickedItem);
   };
-  // console.log(reservedRoom);
+
   return (
     <>
       {roomLists?.map((it) => (

@@ -42,14 +42,11 @@ const HotelList = ({ className, ...props }) => {
       await axios
         .get(`http://52.78.12.252:8080/api/hotels?page=0&size=${pageSize}`)
         .then((response) => {
-          // console.log(response.data.result.content);
           setHotels(response.data.result.content);
         });
     };
     fetchData();
   }, []);
-
-  // console.log(hotels);
 
   return (
     <>

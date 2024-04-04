@@ -125,7 +125,7 @@ const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
   const handleFileChange = (value) => {
     setFile(value);
   };
-  // console.log(roomInfo);
+
   return (
     <>
       <Box className={"white mt-5"}>
