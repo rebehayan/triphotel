@@ -203,7 +203,7 @@ const Search = ({ ...props }) => {
         const selectedWhereOption = where.find(
           (option) => option.value === location
         );
-        setSearchTerm(selectedWhereOption ? selectedWhereOption.text : "");
+        setSearchTerm(selectedWhereOption ? selectedWhereOption.value : "");
         navigate("/search/result");
       }
     } catch (error) {
