@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { SlLocationPin } from "react-icons/sl";
+import "../styles/components/search.css";
+
+import React, { useState } from "react";
+
+import axios from "axios";
+import { BiWon } from "react-icons/bi";
 import { GoPeople } from "react-icons/go";
+import { GrView } from "react-icons/gr";
 import { LuSearch } from "react-icons/lu";
 import { PiBed } from "react-icons/pi";
-import { GrView } from "react-icons/gr";
-import { BiWon } from "react-icons/bi";
-import axios from "axios";
-import Select from "./Select";
-import Guest from "./Guest";
-import "../styles/components/search.css";
-import Loading2 from "./Loading2";
-import { useSearchStore } from "../store/searchStore";
+import { SlLocationPin } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
+
+import { useSearchStore } from "../store/searchStore";
+import Guest from "./Guest";
+import Loading2 from "./Loading2";
+import Select from "./Select";
 import Toast from "./Toast";
 
 const where = [

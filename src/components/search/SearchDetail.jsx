@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import Input from "../Input";
-import Select from "../Select";
-import { IoSearch } from "react-icons/io5";
-import Loading2 from "../Loading";
-import { useSearchStore } from "../../store/searchStore";
+
 import axios from "axios";
+import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+
+import { useSearchStore } from "../../store/searchStore";
+import Input from "../Input";
+import Loading2 from "../Loading";
+import Select from "../Select";
 
 const where = [
   {

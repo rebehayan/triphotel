@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import Heading from "../Heading";
 import MypageCartItem from "./MypageCartItem";
-import request from "../../api/request";
-import instance from "../../api/axios";
 
 const MypageCart = () => {
   const token = localStorage.getItem("token");
@@ -49,7 +50,9 @@ const MypageCart = () => {
             </thead>
             <tbody>
               {myCart.length > 0 ? (
-                myCart.map((items, index) => <MypageCartItem key={index} items={items} />)
+                myCart.map((items, index) => (
+                  <MypageCartItem key={index} items={items} />
+                ))
               ) : (
                 <tr>
                   <td colSpan={5} className="!py-10">

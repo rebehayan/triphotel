@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
 import "../../styles/components/cart.css";
-import CartItems from "./CartItems";
-import Badge from "../Badge";
-import { digit3 } from "../../store/digit3";
-import request from "../../api/request";
+
+import React, { useEffect, useState } from "react";
+
 import instance from "../../api/axios";
+import request from "../../api/request";
+import { digit3 } from "../../store/digit3";
 import { useLoginStore } from "../../store/loginStore";
+import Badge from "../Badge";
+import CartItems from "./CartItems";
 
 const Cart = ({ mypage, close, show }) => {
   const token = localStorage.getItem("token");
@@ -20,7 +22,9 @@ const Cart = ({ mypage, close, show }) => {
   const handleCart = () => {
     close();
   };
-  const cartTotalPrice = digit3(isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0));
+  const cartTotalPrice = digit3(
+    isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0)
+  );
 
   useEffect(() => {
     if (show) {
@@ -70,7 +74,12 @@ const Cart = ({ mypage, close, show }) => {
       <form onSubmit={handleSubmit}>
         <ul className="cart__list">
           {isCartItmes.map((items, index) => (
-            <CartItems close={handleCart} key={index} items={items} onDelid={handleDelete} />
+            <CartItems
+              close={handleCart}
+              key={index}
+              items={items}
+              onDelid={handleDelete}
+            />
           ))}
         </ul>
         <div className="cart-price">

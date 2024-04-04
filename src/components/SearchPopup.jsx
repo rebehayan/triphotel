@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+
+import axios from "axios";
 import { FiSearch } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
-import { useSearchStore } from "../store/searchStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import { useSearchStore } from "../store/searchStore";
 
 const SearchPopup = ({ open, close, onSearch, ...props }) => {
   const [searchTerm, setSearchTerm] = useState("");

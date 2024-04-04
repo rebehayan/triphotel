@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
-import Input from "../Input";
-import axios from "axios";
 import "../../styles/pages/mypage.css";
-import Heading from "../Heading";
-import Avatar from "../Avatar";
-import { useLoginStore } from "../../store/loginStore";
+
+import React, { useEffect, useState } from "react";
+
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Toast from "../Toast";
-import Loading2 from "../Loading2";
+
 import { digit3 } from "../../store/digit3";
+import { useLoginStore } from "../../store/loginStore";
+import Avatar from "../Avatar";
+import Heading from "../Heading";
+import Input from "../Input";
+import Loading2 from "../Loading2";
+import Toast from "../Toast";
 
 const isLoggedIn = () => {
   const token = localStorage.getItem("token");

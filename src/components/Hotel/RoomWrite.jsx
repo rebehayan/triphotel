@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import { usehotelListStore } from '../../store/hotelListStore';
-import { useRoomStore } from '../../store/roomStore';
-import Box from '../Box';
-import Input from '../Input';
-import Radio from '../Radio';
-import Select from '../Select';
+import { usehotelListStore } from "../../store/hotelListStore";
+import { useRoomStore } from "../../store/roomStore";
+import Box from "../Box";
+import Input from "../Input";
+import Radio from "../Radio";
+import Select from "../Select";
 
 const viewOption = [
   {
@@ -71,23 +71,23 @@ const viewKind = [
     text: "스위트 룸",
   },
 ];
-const RoomWrite = () => {
+const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
   const { hotelId } = useParams();
   const { totalHotels, addHotel } = usehotelListStore();
   const { rooms, addRoom } = useRoomStore();
   const [isRadio, setIsRadio] = useState(false);
-  const [roomInfo, setRoomInfo] = useState({
-    type: "스탠다드 룸",
-    active_status: true,
-    bed_type: "싱글/트윈 베드",
-    standard_capacity: null,
-    maximum_capacity: null,
-    view_type: "오션뷰",
-    standard_price: null,
-    adult_fare: "",
-    child_fare: "",
-    roomId: "",
-  });
+
+  // const [roomInfo, setRoomInfo] = useState({
+  //   type: "STANDARD",
+  //   active_status: "ACTIVE",
+  //   bed_type: "SINGLE",
+  //   standard_capacity: null,
+  //   maximum_capacity: null,
+  //   view_type: "OCEAN",
+  //   standard_price: null,
+  //   adult_fare: null,
+  //   child_fare: null,
+  // });
   const handleRoomType = (e) => {
     setRoomInfo((prevInfo) => ({
       ...prevInfo,
@@ -122,7 +122,9 @@ const RoomWrite = () => {
     addRoom(roomInfo);
   };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
-
+  const handleFileChange = (value) => {
+    setFile(value);
+  };
   // console.log(roomInfo);
   return (
     <>
@@ -203,20 +205,17 @@ const RoomWrite = () => {
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">
               객실 사진
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
-              <Input type={"file"} />
+              <Input type={"file"} onChange={handleFileChange} />
             </li>
           </ul>
         </form>
       </Box>
       <div className="flex gap-3 justify-center mt-5">
-        <button className="btn-blue" onClick={onSubmit}>
+        {/* <button className="btn-blue" onClick={onSubmit}>
           객실 등록
         </button>
         <button className="btn-green">객실 수정</button>
-        <button className="btn-gray">취소</button>
+        <button className="btn-gray">취소</button> */}
       </div>
     </>
   );
