@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import Input from "../Input";
-import axios from "axios";
+import request from "../../api/request";
+import instance from "../../api/axios";
 
 const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, ...props }) => {
   const [editedTitle, setEditedTitle] = useState(item.title); // 수정된 제목을 저장할 상태
   const [editedDescription, setEditedDescription] = useState(item.message); // 수정된 내용을 저장할 상태
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부를 나타내는 상태
   const token = localStorage.getItem("token");
+  const { fetchHotels } = request;
+
   const hotelId = parseInt(myId);
   const noticeId = parseInt(item.id);
 
@@ -28,7 +31,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
     };
     setIsEditing(false);
     try {
-      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices/${noticeId}`, boardData, {
+      const response = await instance.patch(`${fetchHotels}/${hotelId}/notices/${noticeId}`, boardData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +58,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
   const handleConfirmDelete = async () => {
     setIsPopup(false); // 팝업 닫기
     try {
-      await axios.delete(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices/${noticeId}`, {
+      await instance.delete(`${fetchHotels}/${hotelId}/notices/${noticeId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

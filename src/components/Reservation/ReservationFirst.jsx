@@ -29,7 +29,7 @@ const Today = (nextDay = 0) => {
 
 const ReservationFirst = () => {
   const token = localStorage.getItem("token");
-  const { fetchOrders } = request; // 필요한 요청 URL을 추출
+  const { fetchOrders } = request;
   const navigate = useNavigate();
   const { addInfo } = useReservationStore();
   const [isWidth, setIsWidth] = useState(window.innerWidth);

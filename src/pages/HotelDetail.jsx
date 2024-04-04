@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import instance from "../api/axios";
 import request from "../api/request";
 import pic1 from "../assets/img1.webp";
@@ -47,7 +44,7 @@ const HotelDetail = () => {
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
 
   useEffect(() => {
-    axios.get(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`).then((response) => {
+    instance.get(`${fetchHotels}/${hotelId}`).then((response) => {
       setHotelInfo(response.data.result);
       setNotices(response.data.result.notices);
     });
@@ -64,7 +61,7 @@ const HotelDetail = () => {
   const onDelete = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.delete(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`, {
+      const response = await instance.delete(`${fetchHotels}/${hotelId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

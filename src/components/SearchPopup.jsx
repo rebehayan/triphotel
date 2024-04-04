@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-
-import axios from "axios";
 import { FiSearch } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
 import { useSearchStore } from "../store/searchStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const SearchPopup = ({ open, close, onSearch, ...props }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { fetchHotels } = request;
   const ref = useRef();
   const body = document.body;
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const SearchPopup = ({ open, close, onSearch, ...props }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/name/${searchTerm}`);
+      const response = await instance.get(`${fetchHotels}/name/${searchTerm}`);
       setSearchResults(response.data.result.content);
 
       navigate("/search/result");

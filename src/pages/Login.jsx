@@ -1,17 +1,16 @@
 import "../styles/pages/login.css";
-
 import React, { useState } from "react";
-
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import Dialog from "../components/Dialog";
 import Input from "../components/Input";
 import Loading2 from "../components/Loading2";
 import Toast from "../components/Toast";
 import { useLoginStore } from "../store/loginStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const Login = ({ close, ...props }) => {
+  const { fetchMembersLogin, fetchMembersJoin } = request;
   const { setLogin, setUserInfo } = useLoginStore();
   const navigate = useNavigate();
   const [isLoading2, setIsLoading2] = useState(false);
@@ -83,7 +82,7 @@ const Login = ({ close, ...props }) => {
     e.preventDefault();
     setIsLoading2(true);
     try {
-      const response = await axios.post("https://be7-team4.r-e.kr/api/members/login", {
+      const response = await instance.post(fetchMembersLogin, {
         email: loginEmail,
         password: loginPassword,
       });
@@ -161,7 +160,7 @@ const Login = ({ close, ...props }) => {
     };
 
     try {
-      const response = await axios.post("https://be7-team4.r-e.kr/api/members/join", requestData);
+      const response = await instance.post(fetchMembersJoin, requestData);
       resetRegisterForm();
       setIsPopup(true);
     } catch (error) {

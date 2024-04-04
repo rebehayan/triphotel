@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-
-import axios from "axios";
 import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
 import { useSearchStore } from "../../store/searchStore";
 import Input from "../Input";
 import Loading2 from "../Loading";
 import Select from "../Select";
 import Dialog from "../Dialog";
+import request from "../../api/request";
+import instance from "../../api/axios";
 
 const where = [
   {
@@ -43,7 +42,7 @@ const SearchDetail = () => {
   const [isLoading2, setIsLoading2] = useState(false);
   const [isPopup, setIsPopup] = useState(false);
   const [errrorMessage, setErrrorMessage] = useState("");
-
+  const { fetchHotels } = request;
   const navigate = useNavigate();
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
@@ -69,7 +68,7 @@ const SearchDetail = () => {
 
     setIsLoading2(true);
     try {
-      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/?name=${hotelName}&nation=${selectedNation}`);
+      const response = await instance.get(`${fetchHotels}/?name=${hotelName}&nation=${selectedNation}`);
       setSearchResults(response.data.result.content);
       setSearchTerm(where.find((option) => option.value === selectedNation)?.value || "");
       navigate("/search/result");

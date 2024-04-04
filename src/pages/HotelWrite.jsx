@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import subvisual from "../assets/subvisual3.jpg";
 import Badge from "../components/Badge";
 import Box from "../components/Box";
@@ -18,6 +15,8 @@ import Select from "../components/Select";
 import { usehotelListStore } from "../store/hotelListStore";
 import { useRoomStore } from "../store/roomStore";
 import { useVisualStore } from "../store/visualStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const where = [
   {
@@ -240,6 +239,8 @@ const HotelWrite = () => {
   const token = localStorage.getItem("token");
 
   const onSendClick = async (e) => {
+    const { fetchHotels } = request;
+
     if (
       hotelInfo.name == "" ||
       // hotelInfo.price == "" ||
@@ -272,14 +273,14 @@ const HotelWrite = () => {
     if (file) roomFormData.append("file", file);
     roomFormData.append("request", JSON.stringify(roomInfo));
     try {
-      const response = await axios.post("https://be7-team4.r-e.kr/api/hotels", formData, {
+      const response = await instance.post(fetchHotels, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const hotelId = response.data.result.id;
       console.log(response);
-      const roomResponse = await axios.post(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms`, roomFormData, {
+      const roomResponse = await instance.post(`${fetchHotels}/${hotelId}/rooms`, roomFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
           // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.

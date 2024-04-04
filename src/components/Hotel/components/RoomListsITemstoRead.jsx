@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import room from "../../../assets/hotelroom1.jpeg";
 import { digit3 } from "../../../store/digit3";
@@ -11,9 +10,12 @@ import HotelTitle from "../HotelTitle";
 import RoomOptions from "../RoomOptions";
 import RoomPicture from "../RoomPicture";
 import Toast from "../../Toast";
+import request from "../../../api/request";
+import instance from "../../../api/axios";
 
 const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   const show = { able: "disabled" };
+  const { fetchHotels } = request;
   const { totalHotels } = usehotelListStore();
   const { addRoom, reservedRoom } = useReserveRoomStore();
   let { hotelId } = useParams();
@@ -27,7 +29,7 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   };
 
   useEffect(() => {
-    axios.get(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`).then((response) => {
+    instance.get(`${fetchHotels}/${hotelId}`).then((response) => {
       setRoomsInfo(response.data.result.rooms);
     });
   }, []);

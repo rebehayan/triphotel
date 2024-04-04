@@ -1,10 +1,5 @@
-import "../../styles/pages/mypage.css";
-
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import { digit3 } from "../../store/digit3";
 import { useLoginStore } from "../../store/loginStore";
 import Avatar from "../Avatar";
@@ -12,6 +7,9 @@ import Heading from "../Heading";
 import Input from "../Input";
 import Loading2 from "../Loading2";
 import Toast from "../Toast";
+import "../../styles/pages/mypage.css";
+import request from "../../api/request";
+import instance from "../../api/axios";
 
 const isLoggedIn = () => {
   const token = localStorage.getItem("token");
@@ -28,7 +26,7 @@ const MypageAccount = () => {
   }, [navigate]);
 
   const { userId, userName, userEmail, userBirth, userCredit, userProfileImage, userAddress, userCity, userZipCode, userNation, setUserInfo } = useLoginStore();
-
+  const { fetchMembersMyInfo } = request;
   const birthYear = userBirth?.slice(0, 4);
   const birthMonth = userBirth?.slice(4, 6);
   const birthDay = userBirth?.slice(6, 8);
@@ -118,8 +116,8 @@ const MypageAccount = () => {
       return;
     }
     try {
-      const response = await axios.patch(
-        "https://be7-team4.r-e.kr/api/members/my-info",
+      const response = await instance.patch(
+        fetchMembersMyInfo,
         {
           password,
           address,

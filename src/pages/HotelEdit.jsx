@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import subvisual from "../assets/subvisual3.jpg";
 import Badge from "../components/Badge";
 import Box from "../components/Box";
@@ -19,6 +16,8 @@ import Select from "../components/Select";
 import { usehotelListStore } from "../store/hotelListStore";
 import { useRoomEditStore } from "../store/roomEditStore";
 import { useVisualStore } from "../store/visualStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const where = [
   {
@@ -70,6 +69,7 @@ const checkOption = [
   { value: "select2", text: "24:00" },
 ];
 const HotelEdit = () => {
+  const { fetchHotels } = request;
   const { setTitle } = useVisualStore();
   let { hotelId } = useParams();
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ const HotelEdit = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`);
+        const response = await instance.get(`${fetchHotels}/${hotelId}`);
         setHotelData(response.data.result);
       } catch (error) {
         console.log(error);
@@ -298,7 +298,7 @@ const HotelEdit = () => {
     // if (imageFile4) formData.append("file", imageFile4);
 
     try {
-      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}`, hotelInfo, {
+      const response = await instance.patch(`${fetchHotels}/${hotelId}`, hotelInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -334,7 +334,7 @@ const HotelEdit = () => {
     setIndexImage(index);
 
     try {
-      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/thumbnails/${thumbnailId}`, formData, {
+      const response = await instance.patch(`${fetchHotels}/${hotelId}/thumbnails/${thumbnailId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

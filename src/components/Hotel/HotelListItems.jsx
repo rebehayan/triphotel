@@ -30,20 +30,16 @@ const HotelListItems = ({ hotel, checkFav }) => {
     setIsFav(!isFav);
     let myfav = "";
     try {
-      const isfavs = await instance.post(
-        `${fetchHotels}/${hotel.id}/favorite`,
-        favData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const isfavs = await instance.post(`${fetchHotels}/${hotel.id}/favorite`, favData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       myfav = isfavs;
     } catch (error) {
       console.log(error);
     } finally {
-      console.log(myfav);
+      // console.log(myfav);
     }
   };
 
@@ -52,32 +48,19 @@ const HotelListItems = ({ hotel, checkFav }) => {
   };
   const onBooking = (id) => {
     console.log(id);
-    navigate(`hoteldetails/${id}`);
+    navigate(`/hoteldetail/${id}`);
   };
   return (
     <>
-      <li
-        className={hotel.active_status === "ACTIVE" ? "" : "disabled"}
-        onClick={handleResetStore}
-      >
-        <HotelPicture
-          link={`/hoteldetail/${hotel.id}`}
-          image={
-            hotel.thumbnails?.length < 4
-              ? hotel1
-              : hotel.thumbnails?.[0].img_url
-          }
-        />
+      <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"} onClick={handleResetStore}>
+        <HotelPicture link={`/hoteldetail/${hotel.id}`} image={hotel.thumbnails?.length < 4 ? hotel1 : hotel.thumbnails?.[0].img_url} />
         <div className="hotel__info">
           <HotelLocation location={hotel.nation} />
           <HotelFavorite onClick={handleFavorite} checked={isFav} />
           <HotelTitle link={`/hoteldetail/${hotel.id}`} title={hotel.name} />
           <HotelPrice price={digit3(hotel.rooms[0]?.standard_price)} />
           {hotel.active_status === "ACTIVE" ? (
-            <HotelBooking
-              text={"HotelBooking"}
-              onClick={() => onBooking(hotel.id)}
-            />
+            <HotelBooking text={"HotelBooking"} onClick={() => onBooking(hotel.id)} />
           ) : (
             <>
               <HotelBooking disabled text={"Sold Out"} />

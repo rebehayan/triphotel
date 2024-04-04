@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import room2 from "../../assets/hotelroom2.jpeg";
 import { useRoomEditStore } from "../../store/roomEditStore";
 import { useRoomStore } from "../../store/roomStore";
@@ -12,8 +9,11 @@ import HotelPrice from "./HotelPrice";
 import HotelTitle from "./HotelTitle";
 import RoomOptions from "./RoomOptions";
 import RoomPicture from "./RoomPicture";
+import request from "../../api/request";
+import instance from "../../api/axios";
 
 const RoomListItems = ({ roomLists, edit, ...props }) => {
+  const { fetchHotels } = request;
   const show = { able: "disabled" };
   const { isEdit, getIsEdit, changeEdit } = useRoomEditStore();
   const [isPopup, setIsPopup] = useState(false);
@@ -24,15 +24,11 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
   const token = localStorage.getItem("token");
   const onDelete = async (hotelId, roomId) => {
     try {
-      const response = await axios.delete(
-        `https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms/${roomId}`,
-
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await instance.delete(`${fetchHotels}/${hotelId}/rooms/${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error(error);
     }

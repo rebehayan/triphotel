@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import instance from "../../api/axios";
 import request from "../../api/request";
 import Checkbox from "../Checkbox";
@@ -175,12 +173,7 @@ const ReservationPersonInfo = (isitem) => {
         </div>
         <div className="mt-10 flex justify-between items-center">
           <div className="check-group">
-            <Checkbox
-              color={"blue"}
-              id={"agree"}
-              checked={persnalInfo.agreement}
-              onChange={(e) => setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })}
-            >
+            <Checkbox color={"blue"} id={"agree"} checked={persnalInfo.agreement} onChange={(e) => setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })}>
               예약 약관동의
             </Checkbox>
           </div>

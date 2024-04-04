@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
-
 import subvisual from "../assets/subvisual1.jpg";
 import Destinations from "../components/Destinations";
 import Heading from "../components/Heading";
 import HotelList from "../components/Hotel/HotelList";
 import SearchDetail from "../components/Search/SearchDetail";
 import { useVisualStore } from "../store/visualStore";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const HotelAllList = () => {
+  const { fetchHotels } = request;
   const { setTitle } = useVisualStore();
   const [isLoading, setIsLoading] = useState(false);
   const [hotelsLength, setHotelsLength] = useState();
@@ -24,10 +24,17 @@ const HotelAllList = () => {
     }, 3000);
   };
   useEffect(() => {
-    axios.get(`https://52.78.12.252:8080/api/hotels`).then((response) => {
-      setHotelsLength(response.data.result.total_elements);
-      console.log(response);
-    });
+    const fetchLoadHotels = async () => {
+      try {
+        const response = await instance.get(fetchHotels);
+
+        // console.log(response);
+        setHotelsLength(response.data.result.total_elements);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLoadHotels();
   }, []);
   return (
     <div className="main pb-20">

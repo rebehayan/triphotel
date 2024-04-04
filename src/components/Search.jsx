@@ -1,8 +1,5 @@
 import "../styles/components/search.css";
-
 import React, { useState } from "react";
-
-import axios from "axios";
 import { BiWon } from "react-icons/bi";
 import { GoPeople } from "react-icons/go";
 import { GrView } from "react-icons/gr";
@@ -10,13 +7,14 @@ import { LuSearch } from "react-icons/lu";
 import { PiBed } from "react-icons/pi";
 import { SlLocationPin } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
-
 import { useSearchStore } from "../store/searchStore";
 import Guest from "./Guest";
 import Loading2 from "./Loading2";
 import Select from "./Select";
 import Toast from "./Toast";
 import Dialog from "./Dialog";
+import request from "../api/request";
+import instance from "../api/axios";
 
 const where = [
   {
@@ -124,6 +122,7 @@ const priceOption = [
 ];
 
 const Search = ({ ...props }) => {
+  const { fetchHotels } = request;
   const [location, setLocation] = useState("");
   const [roomType, setRoomType] = useState("");
   const [viewType, setViewType] = useState("");
@@ -190,7 +189,7 @@ const Search = ({ ...props }) => {
     setIsLoading2(true);
 
     try {
-      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`);
+      const response = await instance.get(`${fetchHotels}/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`);
       if (response.data.result.content.length === 0) {
         alert(`검색 결과가 없습니다.`);
         // setErrrorMessage(`검색 결과가 없습니다.`);

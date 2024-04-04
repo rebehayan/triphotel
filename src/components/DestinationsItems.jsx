@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
+import instance from "../api/axios";
+import request from "../api/request";
 import { Link, useNavigate } from "react-router-dom";
-
 import category1 from "../assets/category1.jpg";
 import category2 from "../assets/category2.webp";
 import category3 from "../assets/category3.webp";
@@ -12,6 +11,7 @@ import Loading2 from "../components/Loading2";
 import { useSearchStore } from "../store/searchStore";
 
 const DestinationsItems = () => {
+  const { fetchHotels } = request;
   const { setSearchTerm } = useSearchStore();
   const [nation, setNation] = useState("");
   const [isLoading2, setIsLoading2] = useState(false);
@@ -27,7 +27,7 @@ const DestinationsItems = () => {
       try {
         await Promise.all(
           countries.map(async (country) => {
-            const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/nation/${country}`);
+            const response = await instance.get(`${fetchHotels}/nation/${country}`);
             counts[country] = response.data.result.number_of_elements;
           })
         );
@@ -48,7 +48,7 @@ const DestinationsItems = () => {
     setIsLoading2(true);
 
     try {
-      const response = await axios.get(`https://be7-team4.r-e.kr/api/hotels/nation/${destination.value}`);
+      const response = await instance.get(`${fetchHotels}/nation/${destination.value}`);
       setSearchResults(response.data.result.content);
       navigate("/search/result");
     } catch (error) {

@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { usehotelListStore } from "../../../store/hotelListStore";
 import { useRoomStore } from "../../../store/roomStore";
 import Box from "../../Box";
 import Input from "../../Input";
 import Radio from "../../Radio";
 import Select from "../../Select";
-
+import request from "../../../api/request";
+import instance from "../../../api/axios";
+const { fetchHotels } = request;
 const viewOption = [
   {
     value: "select1",
@@ -143,7 +142,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     formData.append("request", JSON.stringify(roomInfo));
 
     try {
-      const response = await axios.patch(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms/${roomInfo.id}`, formData, {
+      const response = await instance.patch(`${fetchHotels}/${hotelId}/rooms/${roomInfo.id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

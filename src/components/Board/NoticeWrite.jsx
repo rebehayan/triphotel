@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Input from "../Input";
+import request from "../../api/request";
+import instance from "../../api/axios";
 
 const NoticeWrite = ({ myId }) => {
   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const { fetchHotels } = request;
   const hotelId = parseInt(myId);
 
   const handleSubmit = async (e) => {
@@ -15,7 +17,7 @@ const NoticeWrite = ({ myId }) => {
       message: description,
     };
     try {
-      await axios.post(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/notices`, boardData, {
+      await instance.post(`${fetchHotels}/${hotelId}/notices`, boardData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { usehotelListStore } from "../../../store/hotelListStore";
 import { useRoomFromEditStore } from "../../../store/roomFromEditStore";
 import Box from "../../Box";
@@ -10,6 +7,8 @@ import Dialog from "../../Dialog";
 import Input from "../../Input";
 import Radio from "../../Radio";
 import Select from "../../Select";
+import request from "../../../api/request";
+import instance from "../../../api/axios";
 
 const viewOption = [
   {
@@ -74,6 +73,7 @@ const roomOption = [
   },
 ];
 const RoomWriteFromEdit = ({ setIsToggle }) => {
+  const { fetchHotels } = request;
   const { hotelId } = useParams();
   const navigate = useNavigate();
   const { totalHotels, addHotel } = usehotelListStore();
@@ -152,7 +152,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     formData.append("file", image);
 
     try {
-      const response = await axios.post(`https://be7-team4.r-e.kr/api/hotels/${hotelId}/rooms`, formData, {
+      const response = await instance.post(`${fetchHotels}/${hotelId}/rooms`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
