@@ -32,9 +32,10 @@ const Utillity = ({ ...props }) => {
 
   const navigate = useNavigate();
   const logout = useLoginStore((state) => state.logout);
-  const { login, userName } = useLoginStore((state) => ({
+  const { login, userName, userProfileImage } = useLoginStore((state) => ({
     login: state.login,
     userName: state.userName,
+    userProfileImage: state.userProfileImage,
   }));
 
   const handleLogin = () => {
@@ -68,10 +69,11 @@ const Utillity = ({ ...props }) => {
       {login ? (
         <>
           <Link
-            to="/mypage"
+            to="/mypage/account"
             className="flex items-center gap-1 mr-2 avatar-name"
           >
             <Avatar
+              profileImage={userProfileImage}
               className={"mobile:w-8 mobile:h-8 tablet:w-10 tablet:h-10"}
             />
             <div className="mobile:hidden tablet:block">
@@ -126,7 +128,7 @@ const Utillity = ({ ...props }) => {
         open={isPopup3}
         close={() => setIsPopup3(false)}
       >
-        <Cart close={() => setIsPopup3(false)} />
+        <Cart show={isPopup3} close={() => setIsPopup3(false)} />
       </Dialog>
 
       <Dialog

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
+import instance from "../api/axios";
+import request from "../api/request";
 import pic1 from "../assets/img1.webp";
 import pic2 from "../assets/img2.webp";
 import pic3 from "../assets/img3.webp";
@@ -35,6 +37,8 @@ const HotelDetail = () => {
   const navigate = useNavigate();
   let { hotelId } = useParams();
   const { setTitle } = useVisualStore();
+  const [isFav, setIsFav] = useState(false);
+  const { fetchHotels } = request;
 
   const [isWrite, setIsWrite] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({});
@@ -53,6 +57,7 @@ const HotelDetail = () => {
         setHotelInfo(response.data.result);
         // console.log(response.data.result);
       });
+    // setTitle(hotelInfo.name, SubVisual);
   }, []);
   console.log(hotelInfo.thumbnails?.length);
   useEffect(() => {
@@ -91,6 +96,32 @@ const HotelDetail = () => {
     navigate(`/hoteledit/${hotelId}`);
   };
 
+  // 즐겨찾기
+  const favData = {
+    id: hotelId,
+  };
+
+  const handleFavorite = async () => {
+    setIsFav(!isFav);
+    let myfav = "";
+    try {
+      const isfavs = await instance.post(
+        `${fetchHotels}/${hotelId}/favorite`,
+        favData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      myfav = isfavs;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(myfav);
+    }
+  };
+
   return (
     <div className="main mb-24">
       <div className="container">
@@ -101,7 +132,7 @@ const HotelDetail = () => {
             </div>
             <div>
               {/* <HotelPrice price={digit3(hotelInfo.rooms[0]?.standard_price)} /> */}
-              <HotelFavorite />
+              <HotelFavorite onClick={handleFavorite} checked={isFav} />
               <button className="btn-blue -mr-2" onClick={toEdit}>
                 수정
               </button>

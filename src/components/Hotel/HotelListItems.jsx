@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import axios from "axios";
-
 import hotel1 from "../../assets/hotel1.jpg";
 import { digit3 } from "../../store/digit3";
-import { usehotelListStore } from "../../store/hotelListStore";
 import Badge from "../Badge";
 import HotelBooking from "./HotelBooking";
 import HotelFavorite from "./HotelFavorite";
