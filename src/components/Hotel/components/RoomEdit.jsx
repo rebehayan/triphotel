@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import { usehotelListStore } from '../../../store/hotelListStore';
-import { useRoomStore } from '../../../store/roomStore';
-import Box from '../../Box';
-import Input from '../../Input';
-import Radio from '../../Radio';
-import Select from '../../Select';
+import { usehotelListStore } from "../../../store/hotelListStore";
+import { useRoomStore } from "../../../store/roomStore";
+import Box from "../../Box";
+import Input from "../../Input";
+import Radio from "../../Radio";
+import Select from "../../Select";
 
 const viewOption = [
   {
@@ -76,8 +76,7 @@ const RoomEdit = ({ roomData, roomId, setIsEdit }) => {
   const { totalHotels, addHotel } = usehotelListStore();
   const { rooms, addRoom, saveEditedRoom } = useRoomStore();
   const [isRadio, setIsRadio] = useState(false);
-  // const thisRoom = rooms.find((it) => it.roomId === roomId);
-  // console.log(thisRoom);
+
   const [roomInfo, setRoomInfo] = useState({
     type: roomData.type,
     active_status: roomData.active_status,
