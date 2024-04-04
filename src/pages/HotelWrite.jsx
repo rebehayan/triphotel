@@ -766,12 +766,12 @@ const HotelWrite = () => {
           <Box className={"mt-10 room-write"}>
             <div className="flex justify-between items-center">
               <Heading tag={"h3"} text={"객실관리"} className={"base"} />
-              <button
+              {/* <button
                 className="btn-blue"
                 onClick={() => setIsToggle(!isToggle)}
               >
                 객실등록
-              </button>
+              </button> */}
             </div>
             <RoomWrite
               file={file}

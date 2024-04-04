@@ -211,11 +211,11 @@ const RoomWrite = ({ roomInfo, setRoomInfo, file, setFile }) => {
         </form>
       </Box>
       <div className="flex gap-3 justify-center mt-5">
-        <button className="btn-blue" onClick={onSubmit}>
+        {/* <button className="btn-blue" onClick={onSubmit}>
           객실 등록
         </button>
         <button className="btn-green">객실 수정</button>
-        <button className="btn-gray">취소</button>
+        <button className="btn-gray">취소</button> */}
       </div>
     </>
   );
