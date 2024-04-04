@@ -3,7 +3,6 @@ import React from "react";
 import { PiImageLight } from "react-icons/pi";
 
 const Noimage = ({ props, className, bringImage, imgurl }) => {
-  console.log("imgurlZ", imgurl);
   return (
     <div
       className={
