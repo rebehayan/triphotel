@@ -27,12 +27,14 @@
     }
   }
    > li {
-    @apply py-6;
+    @apply my-6;
     > div {
-      @apply mobile:block desktop:grid gap-7 items-center grid-cols-[min-content_1fr_1fr] grid-rows-[1fr_min-content_1fr];
+      @apply mobile:block desktop:grid gap-7 items-center grid-cols-[min-content_1fr_1fr] grid-rows-[1fr_min-content_1fr]
+      desktop:border-solid desktop:border-b-[1px] border-b-gray-300 pb-6
+      ;
     }
     + li {
-      @apply border-solid border-t-[1px] border-t-gray-300;
+      @apply mobile:border-solid mobile:border-t-[1px] mobile:border-t-gray-300 desktop:border-t-0;
     }
     &.disabled {
       @apply relative;

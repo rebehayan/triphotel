@@ -25,7 +25,7 @@ const HotelFavoriteList = ({ className, ...props }) => {
       } catch (error) {
         console.log(error);
       } finally {
-        console.log(myFav);
+        // console.log(myFav);
       }
     };
     fetchFavData();

@@ -19,7 +19,7 @@ const MypageReservation = () => {
         },
       });
       setIsMyOrders(responseOrder.data.result.content);
-      console.log(responseOrder);
+      // console.log(responseOrder); //예약결과
     };
     fetchData();
   }, []);
@@ -51,9 +51,7 @@ const MypageReservation = () => {
           </thead>
           <tbody>
             {isMyOrders.length > 0 ? (
-              isMyOrders.map((items, index) => (
-                <MypageReservationItems key={index} items={items} />
-              ))
+              isMyOrders.map((items, index) => <MypageReservationItems key={index} items={items} />)
             ) : (
               <tr>
                 <td colSpan={7} className="!py-10">

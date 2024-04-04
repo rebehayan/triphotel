@@ -92,9 +92,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   });
   // console.log("roomWrite", roomInfo);
   const handleRoomType = (e) => {
-    const selectedOption = roomOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = roomOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -104,9 +102,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleBed = (e) => {
-    const selectedOption = bedOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = bedOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -116,9 +112,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleView = (e) => {
-    const selectedOption = viewOption.find(
-      (option) => option.text === e.target.value
-    );
+    const selectedOption = viewOption.find((option) => option.text === e.target.value);
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -155,16 +149,12 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     formData.append("file", image); // hotelInfo 객체를 문자열로 변환하여 추가
 
     try {
-      const response = await axios.post(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
-          },
-        }
-      );
+      const response = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
+        },
+      });
       console.log(response.data); // 응답 데이터 처리
       alert("객실 등록 성공!");
       setIsToggle(false);
@@ -205,12 +195,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
                   price={true}
                   onChange={handlePrice}
                 />{" "} */}
-                <Input
-                  type={"number"}
-                  value={roomInfo.standard_price}
-                  onChange={handlePrice}
-                />{" "}
-                원
+                <Input type={"number"} value={roomInfo.standard_price} onChange={handlePrice} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">

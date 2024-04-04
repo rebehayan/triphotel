@@ -8,14 +8,7 @@ import { LuBed } from "react-icons/lu";
 import { digit3 } from "../../store/digit3";
 import { useRoomStore } from "../../store/roomStore";
 
-const RoomOptions = ({
-  bedtype,
-  capacity,
-  maximum,
-  view,
-  adult_fare,
-  child_fare,
-}) => {
+const RoomOptions = ({ bedtype, capacity, maximum, view, adult_fare, child_fare }) => {
   const { rooms } = useRoomStore();
   return (
     <div className="room-option">
@@ -39,10 +32,10 @@ const RoomOptions = ({
       </ul>
       <ul className="room-option__price">
         <li>
-          <span>성인 1인 숙박</span> : {digit3(adult_fare)} ₩
+          <span>성인 1인 숙박</span> : ₩ {digit3(adult_fare)}
         </li>
         <li>
-          <span>어린이 1인 숙박</span> : {digit3(child_fare)} ₩
+          <span>어린이 1인 숙박</span> : ₩ {digit3(child_fare)}
         </li>
       </ul>
     </div>

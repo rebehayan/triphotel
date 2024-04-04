@@ -1,8 +1,8 @@
-import '../../styles/components/room.css';
+import "../../styles/components/room.css";
 
-import React from 'react';
+import React from "react";
 
-import RoomListItems from './RoomListItems';
+import RoomListItems from "./RoomListItems";
 
 const RoomList = ({ roomLists, className, edit, ...props }) => {
   return (

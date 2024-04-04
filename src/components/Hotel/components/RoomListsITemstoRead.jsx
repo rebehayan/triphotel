@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
 import room from "../../../assets/hotelroom1.jpeg";
 import { digit3 } from "../../../store/digit3";
 import { usehotelListStore } from "../../../store/hotelListStore";
@@ -12,6 +10,7 @@ import HotelPrice from "../HotelPrice";
 import HotelTitle from "../HotelTitle";
 import RoomOptions from "../RoomOptions";
 import RoomPicture from "../RoomPicture";
+import Toast from "../../Toast";
 
 const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   const show = { able: "disabled" };
@@ -21,35 +20,33 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   const { rooms, deleteRoom } = useRoomStore();
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
   const [roomsInfo, setRoomsInfo] = useState({});
+  const [toast, setToast] = useState(false);
+  const [toastInfo, setToastInfo] = useState("");
   const onDelete = (roomId) => {
     deleteRoom(roomId);
     // console.log("룸" + roomId);
   };
   // console.log("룸", roomLists?.[0].thumbnails[0].img_url);
   useEffect(() => {
-    axios
-      .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
-      .then((response) => {
-        setRoomsInfo(response.data.result.rooms);
-        // console.log(response.data.result.rooms);
-      });
+    axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`).then((response) => {
+      setRoomsInfo(response.data.result.rooms);
+      // console.log(response.data.result.rooms);
+    });
     // setTitle(hotelInfo.name, SubVisual);
+    addRoom({}); // 룸정보 초기화
   }, []);
 
-  const clickToReserve = (id) => {
+  const clickToReserve = (id, type) => {
     const clickedItem = roomsInfo?.find((it) => it.id === id);
-
+    setToast(!toast);
     addRoom(clickedItem);
+    setToastInfo(type);
   };
   // console.log(reservedRoom);
   return (
     <>
       {roomLists?.map((it) => (
-        <li
-          className={it.active_status === "INACTIVE" ? "disabled" : ""}
-          {...props}
-          key={it.id}
-        >
+        <li className={it.active_status === "INACTIVE" ? "disabled" : ""} {...props} key={it.id}>
           <div>
             <RoomPicture
               // image={
@@ -70,7 +67,7 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
             {!edit ? (
               <div className="flex gap-2">
                 <button
-                  onClick={() => clickToReserve(it.id)}
+                  onClick={() => clickToReserve(it.id, it.type)}
                   className="btn-blue-outline mobile:flex-1 tablet:flex-none justify-center"
                 >
                   {it.active_status === "INACTIVE" ? "Sold Out" : "예약하기"}
@@ -92,6 +89,9 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
           </div>
         </li>
       ))}
+      <Toast color={"green"} onOpen={toast} onClose={() => setToast(false)}>
+        {toastInfo}의 객실을 예약합니다.
+      </Toast>
     </>
   );
 };

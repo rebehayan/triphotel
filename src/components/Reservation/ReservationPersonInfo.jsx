@@ -15,7 +15,7 @@ import ReservationRule from "../ReservationRule";
 const ReservationPersonInfo = (isitem) => {
   const navigate = useNavigate();
 
-  const { member, total_price, id } = isitem;
+  const { member, total_price, id, hotel } = isitem;
   // console.log(isitem);
 
   const token = localStorage.getItem("token");
@@ -90,9 +90,7 @@ const ReservationPersonInfo = (isitem) => {
         isValid = false;
       } else if (member?.credit < total_price) {
         setIsPopup(true);
-        setErrrorMessage(
-          "보유금액이 결제금액보다 적습니다. 크래딧을 충전해주세요."
-        );
+        setErrrorMessage("보유금액이 결제금액보다 적습니다. 크래딧을 충전해주세요.");
         isValid = false;
       } else if (!persnalInfo.agreement) {
         setIsPopup(true);
@@ -106,15 +104,17 @@ const ReservationPersonInfo = (isitem) => {
 
     if (!isValidCheck) return;
 
-    const requestData = {
-      zip_code: persnalInfo.zip_code,
-      nation: persnalInfo.nation,
-      city: persnalInfo.city,
-      address: persnalInfo.address,
-      comment: persnalInfo.comment,
-    };
+    // console.log(requestData);
+    // console.log(id);
 
     try {
+      const requestData = {
+        zip_code: persnalInfo.zip_code,
+        nation: persnalInfo.nation,
+        city: persnalInfo.city,
+        address: persnalInfo.address,
+        comment: persnalInfo.comment,
+      };
       setIsLoading2(true);
       await instance.patch(`${fetchOrders}/${id}`, requestData, {
         headers: {
@@ -130,13 +130,11 @@ const ReservationPersonInfo = (isitem) => {
         setErrrorMessage("Not found order");
       }
     } finally {
-      console.log(requestData);
-      console.log(id);
       setIsLoading2(false);
       setIsLoading(true);
-      setTimeout(() => {
+      setTimeout(async () => {
         setIsLoading(false);
-        navigate(`/reservation/done/${member.id}`);
+        await navigate(`/reservation/done/${member.id}`);
       }, 1500);
     }
   };
@@ -168,19 +166,11 @@ const ReservationPersonInfo = (isitem) => {
           </div>
           <div>
             우편번호
-            <Input
-              type={"number"}
-              value={isPostCode}
-              onChange={handlePostCode}
-            />
+            <Input type={"number"} value={isPostCode} onChange={handlePostCode} />
           </div>
           <div className="col-span-2">
             요청사항
-            <Input
-              type={"textarea"}
-              value={isRequestText}
-              onChange={handleRequest}
-            />
+            <Input type={"textarea"} value={isRequestText} onChange={handleRequest} />
           </div>
         </div>
         <div className="mt-10 flex justify-between items-center">
@@ -189,9 +179,7 @@ const ReservationPersonInfo = (isitem) => {
               color={"blue"}
               id={"agree"}
               checked={persnalInfo.agreement}
-              onChange={(e) =>
-                setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })
-              }
+              onChange={(e) => setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })}
             >
               예약 약관동의
             </Checkbox>
@@ -207,7 +195,7 @@ const ReservationPersonInfo = (isitem) => {
           <button className="btn-blue xl" onClick={handleReservation}>
             숙소 예약하기
           </button>
-          <Link to="/" className="btn-red xl">
+          <Link to={`/hoteldetail/${hotel.id}`} className="btn-red xl">
             취소하기
           </Link>
         </div>

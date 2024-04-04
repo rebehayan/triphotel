@@ -96,9 +96,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   });
   // console.log(roomData.thumbnails);
   useEffect(() => {
-    setImage(
-      roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url
-    );
+    setImage(roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url);
   }, []);
 
   const handleRoomType = (e) => {
@@ -171,86 +169,49 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
 
   return (
     <>
-      <Box className={"white mt-5"}>
+      <Box className={"white mt-5 !block"}>
         <form>
           <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-10">
             <li className="grid gap-3 self-start">
               객실 종류
-              <Select
-                selectValue={roomInfo.type}
-                options={viewKind}
-                onChange={handleRoomType}
-              />
+              <Select selectValue={roomInfo.type} options={viewKind} onChange={handleRoomType} />
             </li>
             <li className="grid gap-3 self-start">
               객실 침대 정보
-              <Select
-                selectValue={roomInfo.bed_type}
-                options={bedOption}
-                onChange={handleBed}
-              />
+              <Select selectValue={roomInfo.bed_type} options={bedOption} onChange={handleBed} />
             </li>
             <li className="grid gap-3">
               객실 뷰 종류
-              <Select
-                selectValue={roomInfo.view_type}
-                options={viewOption}
-                onChange={handleView}
-              />
+              <Select selectValue={roomInfo.view_type} options={viewOption} onChange={handleView} />
             </li>
             <li className="grid gap-3 self-start">
               객실 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"text"}
-                  value={roomInfo.standard_price}
-                  onChange={handlePrice}
-                />{" "}
-                원
+                <Input type={"text"} value={roomInfo.standard_price} onChange={handlePrice} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               성인 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"text"}
-                  value={roomInfo.adult_fare}
-                  onChange={handleAdultFare}
-                />{" "}
-                원
+                <Input type={"text"} value={roomInfo.adult_fare} onChange={handleAdultFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               어린이 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"text"}
-                  value={roomInfo.child_fare}
-                  onChange={handleChildFare}
-                />{" "}
-                원
+                <Input type={"text"} value={roomInfo.child_fare} onChange={handleChildFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 기준인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"number"}
-                  value={roomInfo.standard_capacity}
-                  onChange={handleCapacity}
-                />{" "}
-                명
+                <Input type={"number"} value={roomInfo.standard_capacity} onChange={handleCapacity} /> 명
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 최대인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  value={roomInfo.maximum_capacity}
-                  type={"text"}
-                  onChange={handleMax}
-                />{" "}
-                명
+                <Input value={roomInfo.maximum_capacity} type={"text"} onChange={handleMax} /> 명
               </div>
             </li>
             <li className="grid gap-3">
@@ -281,8 +242,8 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
           </ul>
         </form>
       </Box>
-      <div className="flex gap-3 justify-center mt-5">
-        <button onClick={onSave} className="btn-green">
+      <div className="!flex gap-3 justify-center mt-5">
+        <button onClick={onSave} className="btn-green whitespace-nowrap">
           객실 수정
         </button>
         <button className="btn-gray" onClick={onCancel}>

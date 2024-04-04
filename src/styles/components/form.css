@@ -51,6 +51,7 @@
   &[type="file"] {
     padding: 0.35rem 0.875rem;
     overflow: hidden;
+    width: 100%;
     &:hover:not([disabled]):not([focus]) {
       border-color: #c9c8ce;
     }
