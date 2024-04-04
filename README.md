@@ -40,13 +40,14 @@
 
 <style>
 .table-link a {
-    color: #fffff;
+    color: #ff0000;
 }
 </style>
 
 |   [하성필](https://github.com/hasungpil)   |   [최훙주](https://github.com/Zojo24)   |   [심소망](https://github.com/ssmv713)   |   [이재혁](https://github.com/Now-h)   |
 |-----------|----------|----------|-----------|
 |   • 프론트엔드 기획 및 설계<br> • 스타일 가이드<br> • 코딩 컨벤션 정의<br> • 예약, 장바구니, 결제<br> • 호텔 즐겨찾기<br>     |   • 회의록 및 노션 업데이트 <br> • 로그인<br> • 회원가입<br> • 검색 기능<br>    |    • 유저플로우 <br> • 호텔 상품 CRUD<br> • 호텔 룸 CRUD<br>    |   • Git<br> • 공지사항 게시판 CRUD<br>    |
+
 
 
 
