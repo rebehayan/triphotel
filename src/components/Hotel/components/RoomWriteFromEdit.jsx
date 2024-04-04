@@ -149,26 +149,12 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     formData.append("file", image);
 
     try {
-<<<<<<< HEAD
       const response = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
         },
       });
-      console.log(response.data); // 응답 데이터 처리
-=======
-      const response = await axios.post(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
->>>>>>> db13ad53d70ce4bdb5c6294683c4aa35734f1bba
       alert("객실 등록 성공!");
       setIsToggle(false);
     } catch (error) {

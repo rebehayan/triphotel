@@ -27,20 +27,9 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`).then((response) => {
       setRoomsInfo(response.data.result.rooms);
-      // console.log(response.data.result.rooms);
     });
-    // setTitle(hotelInfo.name, SubVisual);
-    addRoom({}); // 룸정보 초기화
-=======
-    axios
-      .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
-      .then((response) => {
-        setRoomsInfo(response.data.result.rooms);
-      });
->>>>>>> db13ad53d70ce4bdb5c6294683c4aa35734f1bba
   }, []);
 
   const clickToReserve = (id, type) => {
