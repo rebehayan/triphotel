@@ -6,6 +6,7 @@ import { RiLinkedinFill } from "react-icons/ri";
 import { RiInstagramLine } from "react-icons/ri";
 import { GoogleMap, LoadScript, MarkerF } from "@react-google-maps/api";
 import logo from "../assets/logo.svg";
+import visual from "../assets/contact_visual.jpg";
 const ContactUs = () => {
   const { setTitle } = useVisualStore();
 
@@ -26,7 +27,9 @@ const ContactUs = () => {
     <>
       <div className="main">
         <div className="container mt-10 mobile:mb-14 tablet:mb-28 grid gap-14 mobile:grid-cols-1 tablet:grid-cols-2">
-          <div className="bg-black/5"></div>
+          <div>
+            <img src={visual} alt="" className="object-cover w-full" />
+          </div>
           <div className="grid gap-5">
             <div className="flex gap-2 items-center text-2xl">
               <div className="text-white text-2xl logo">
