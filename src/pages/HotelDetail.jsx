@@ -84,7 +84,7 @@ const HotelDetail = () => {
     deleteHotel(hotelId);
     navigate("/");
   };
-  // console.log(hotelInfo);
+
   const toEdit = () => {
     navigate(`/hoteledit/${hotelId}`);
   };
@@ -123,11 +123,9 @@ const HotelDetail = () => {
   };
 
   const handleWrite = (blooan) => {
-    console.log(blooan);
     setIsWrite(blooan);
   };
 
-  // console.log(hotelInfo);
   return (
     <div className="main mb-24">
       <div className="container">

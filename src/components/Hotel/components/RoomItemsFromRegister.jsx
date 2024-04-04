@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import room from '../../../assets/hotelroom1.jpeg';
-import room2 from '../../../assets/hotelroom2.jpeg';
-import { useRoomStore } from '../../../store/roomStore';
-import HotelPrice from '../HotelPrice';
-import HotelTitle from '../HotelTitle';
-import RoomOptions from '../RoomOptions';
-import RoomPicture from '../RoomPicture';
-import RoomEdit from './RoomEdit';
+import room from "../../../assets/hotelroom1.jpeg";
+import room2 from "../../../assets/hotelroom2.jpeg";
+import { useRoomStore } from "../../../store/roomStore";
+import HotelPrice from "../HotelPrice";
+import HotelTitle from "../HotelTitle";
+import RoomOptions from "../RoomOptions";
+import RoomPicture from "../RoomPicture";
+import RoomEdit from "./RoomEdit";
 
 const RoomItemsFromRegister = ({ roomLists, edit, ...props }) => {
   const show = { able: "disabled" };
@@ -20,7 +20,7 @@ const RoomItemsFromRegister = ({ roomLists, edit, ...props }) => {
   const onEdit = () => {
     setIsEdit(true);
   };
-  // console.log(roomLists);
+
   return (
     <>
       {roomLists.map((it) => (

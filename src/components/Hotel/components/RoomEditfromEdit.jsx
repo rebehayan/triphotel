@@ -79,7 +79,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const [isRadio, setIsRadio] = useState(false);
   const thisRoom = rooms.find((it) => it.roomId === roomId);
   const navigate = useNavigate();
-  // console.log(roomData);
+
   const [image, setImage] = useState();
   const [roomInfo, setRoomInfo] = useState({
     id: roomData.id,
@@ -92,9 +92,8 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     standard_price: roomData.standard_price,
     adult_fare: roomData.adult_fare,
     child_fare: roomData.child_fare,
-    // thumbnailId: roomData.thumbnails?.[0]?.id,
   });
-  // console.log(roomData.thumbnails);
+
   useEffect(() => {
     setImage(roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url);
   }, []);
@@ -137,7 +136,6 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
 
-  // console.log(roomData);
   const token = localStorage.getItem("token");
   const onSave = async () => {
     const formData = new FormData();

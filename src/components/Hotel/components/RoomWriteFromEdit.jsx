@@ -90,7 +90,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     adult_fare: null,
     child_fare: null,
   });
-  // console.log("roomWrite", roomInfo);
+
   const handleRoomType = (e) => {
     const selectedOption = roomOption.find((option) => option.text === e.target.value);
 
@@ -145,10 +145,11 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   const token = localStorage.getItem("token");
   const onSubmit = async () => {
     const formData = new FormData();
-    formData.append("request", JSON.stringify(roomInfo)); // hotelInfo 객체를 문자열로 변환하여 추가
-    formData.append("file", image); // hotelInfo 객체를 문자열로 변환하여 추가
+    formData.append("request", JSON.stringify(roomInfo));
+    formData.append("file", image);
 
     try {
+<<<<<<< HEAD
       const response = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -156,6 +157,18 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
         },
       });
       console.log(response.data); // 응답 데이터 처리
+=======
+      const response = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+>>>>>>> db13ad53d70ce4bdb5c6294683c4aa35734f1bba
       alert("객실 등록 성공!");
       setIsToggle(false);
     } catch (error) {
@@ -168,7 +181,7 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   const onCancel = () => {
     setIsToggle(false);
   };
-  // console.log(roomInfo);
+
   return (
     <>
       <Box className={"white mt-5"}>

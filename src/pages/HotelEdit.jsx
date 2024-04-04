@@ -83,7 +83,6 @@ const HotelEdit = () => {
     const fetch = async () => {
       try {
         const response = await axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`);
-        // console.log(response);
         setHotelData(response.data.result);
       } catch (error) {
         console.log(error);
@@ -113,14 +112,14 @@ const HotelEdit = () => {
   const [hotelInfo, setHotelInfo] = useState({});
   const [imageFile1, setImageFile1] = useState();
   const [imageFile2, setImageFile2] = useState();
-  // hotelData.thumbnails[1]?.img_url
+
   const [imageFile3, setImageFile3] = useState();
-  // hotelData.thumbnails[2]?.img_url
+
   const [imageFile4, setImageFile4] = useState();
-  // hotelData.thumbnails[3]?.img_url
+
   const [indexImage, setIndexImage] = useState();
   const options = hotelData?.basic_options;
-  // console.log(options);
+
   const [bringImage1, setBringImage1] = useState(true);
   const [bringImage2, setBringImage2] = useState(true);
   const [bringImage3, setBringImage3] = useState(true);
@@ -168,7 +167,6 @@ const HotelEdit = () => {
   }, [hotelData]);
 
   const addHotel = usehotelListStore((state) => state.addHotel);
-  //이미지
 
   const handleFileChange1 = (file) => {
     setBringImage1(false);
@@ -317,7 +315,6 @@ const HotelEdit = () => {
   };
 
   const saveImage = async (index) => {
-    // console.log("이미지", imageFile2);
     const formData = new FormData();
     if (index === 0) {
       if (imageFile1) formData.append("file", imageFile1);
@@ -344,13 +341,11 @@ const HotelEdit = () => {
           },
         }
       );
-      // console.log(response);
-      // console.log(response);
+
       alert("이미지 수정 성공!");
     } catch (error) {
       console.error("성공", error);
     }
-    // navigate("/")
   };
   const toPrevious = () => {
     navigate(`/hoteldetail/${hotelId}`);

@@ -31,7 +31,6 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
         }
       );
 
-      console.log(response.data); // 응답 데이터 처리
       alert("객실 삭제 성공!");
     } catch (error) {
       console.error(error);
@@ -39,7 +38,6 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
 
     deleteRoom(roomId);
     navigate(`/hoteldetail/${hotelId}`);
-    console.log(roomId);
   };
   const onEdit = () => {
     changeEdit(true);
