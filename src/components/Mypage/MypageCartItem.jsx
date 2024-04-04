@@ -1,15 +1,25 @@
 import React from "react";
+
 import { RiDeleteBinLine } from "react-icons/ri";
-import RoomPicture from "../Hotel/RoomPicture";
 import { Link, useNavigate } from "react-router-dom";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import { digit3 } from "../../store/digit3";
 import { useReservationStore } from "../../store/reservationStore";
-import request from "../../api/request";
-import instance from "../../api/axios";
-import axios from "axios";
+import RoomPicture from "../Hotel/RoomPicture";
 
 const MypageCartItem = ({ items }) => {
-  const { adult_count, child_count, check_out, hotel, check_in, total_price, room, id } = items;
+  const {
+    adult_count,
+    child_count,
+    check_out,
+    hotel,
+    check_in,
+    total_price,
+    room,
+    id,
+  } = items;
   const { addInfo } = useReservationStore();
   const navigate = useNavigate();
   const photo = room.thumbnails[0].img_url;
@@ -22,8 +32,8 @@ const MypageCartItem = ({ items }) => {
   };
 
   const handleDeleteCart = async () => {
-    console.log(id);
-    console.log(token);
+    // console.log(id);
+    // console.log(token);
     try {
       await instance.patch(`${fetchMembersMyCart}/${id}`, null, {
         headers: {
@@ -49,7 +59,10 @@ const MypageCartItem = ({ items }) => {
               <RoomPicture image={photo} className="sm" />
             </Link>
             <div>
-              <Link to={`/hoteldetail/${hotel.id}`} className=" group-hover:text-blue-700 line-clamp-2 font-bold">
+              <Link
+                to={`/hoteldetail/${hotel.id}`}
+                className=" group-hover:text-blue-700 line-clamp-2 font-bold"
+              >
                 {hotel.name}
               </Link>
               <div className="text-sm flex mt-2 leading-6">
@@ -67,12 +80,17 @@ const MypageCartItem = ({ items }) => {
             </div>
           </div>
         </td>
-        <td className="mobile:justify-self-end mobile:whitespace-nowrap">{room.type}</td>
+        <td className="mobile:justify-self-end mobile:whitespace-nowrap">
+          {room.type}
+        </td>
         <td className=" mobile:pr-0 tablet:pr-3 text-right whitespace-nowrap">
           총 <b>{digit3(total_price)}</b> 원
         </td>
         <td className="mobile:justify-self-end">
-          <button onClick={handleOnClick} className="btn-blue whitespace-nowrap">
+          <button
+            onClick={handleOnClick}
+            className="btn-blue whitespace-nowrap"
+          >
             예약하기
           </button>
         </td>

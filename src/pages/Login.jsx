@@ -129,7 +129,6 @@ const Login = ({ close, ...props }) => {
     e.preventDefault();
     setIsLoading2(true);
 
-    // 생년 검증
     const yearValid = birthYear.length === 4 && /^\d{4}$/.test(birthYear);
     if (!yearValid) {
       setRegisterError("년도는 4자리 숫자로 입력해주세요.");
@@ -138,7 +137,6 @@ const Login = ({ close, ...props }) => {
       return;
     }
 
-    // 월 검증
     const monthValid =
       birthMonth >= 1 && birthMonth <= 12 && /^\d{2}$/.test(birthMonth);
     if (!monthValid) {
@@ -148,7 +146,6 @@ const Login = ({ close, ...props }) => {
       return;
     }
 
-    // 일 검증
     const dayValid =
       birthDay >= 1 && birthDay <= 31 && /^\d{2}$/.test(birthDay);
     if (!dayValid) {
@@ -158,7 +155,6 @@ const Login = ({ close, ...props }) => {
       return;
     }
 
-    // 비밀번호 일치 검증
     if (registerPassword !== confirmPassword) {
       setRegisterError("비밀번호가 일치하지 않습니다.");
       setRegisterToast(true);

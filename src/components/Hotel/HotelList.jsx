@@ -7,8 +7,6 @@ import axios from "axios";
 import HotelListItems from "./HotelListItems";
 
 const HotelList = ({ className, ...props }) => {
-  const data = { state: "disabled" };
-
   const [hotels, setHotels] = useState([]);
   useEffect(() => {
     axios.get("http://52.78.12.252:8080/api/hotels").then((response) => {
@@ -21,7 +19,7 @@ const HotelList = ({ className, ...props }) => {
     <>
       <ul className={`hotel ${className}`} {...props}>
         {hotels.map((hotel) => (
-          <HotelListItems key={hotel.id} hotel={hotel} checkFav={false} />
+          <HotelListItems key={hotel.id} hotel={hotel} />
         ))}
       </ul>
     </>

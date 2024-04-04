@@ -2,7 +2,6 @@ import React from "react";
 import Heading from "../Heading";
 import Box from "../Box";
 import ReservationHotelInfoItems from "./ReservationHotelInfoItems";
-import { useReservationStore } from "../../store/reservationStore";
 import { digit3 } from "../../store/digit3";
 import { useLoginStore } from "../../store/loginStore";
 

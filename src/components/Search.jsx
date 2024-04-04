@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { SlLocationPin } from "react-icons/sl";
+import "../styles/components/search.css";
+
+import React, { useState } from "react";
+
+import axios from "axios";
+import { BiWon } from "react-icons/bi";
 import { GoPeople } from "react-icons/go";
+import { GrView } from "react-icons/gr";
 import { LuSearch } from "react-icons/lu";
 import { PiBed } from "react-icons/pi";
-import { GrView } from "react-icons/gr";
-import { BiWon } from "react-icons/bi";
-import axios from "axios";
-import Select from "./Select";
-import Guest from "./Guest";
-import "../styles/components/search.css";
-import Loading2 from "./Loading2";
-import { useSearchStore } from "../store/searchStore";
+import { SlLocationPin } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
+
+import { useSearchStore } from "../store/searchStore";
+import Guest from "./Guest";
+import Loading2 from "./Loading2";
+import Select from "./Select";
 import Toast from "./Toast";
 
 const where = [
@@ -43,7 +46,7 @@ const where = [
 const viewKind = [
   {
     value: "select 1",
-    text: "----",
+    text: "객실을 선택하세요.",
   },
   {
     value: "STANDARD",
@@ -65,7 +68,7 @@ const viewKind = [
 const viewOption = [
   {
     value: "select 1",
-    text: "----",
+    text: "뷰를 선택하세요.",
   },
   {
     value: "OCEAN",
@@ -131,6 +134,7 @@ const Search = ({ ...props }) => {
   const navigate = useNavigate();
 
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
+  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 
   const handleLocation = (e) => {
     const selectedLocationText = e.target.value;
@@ -167,21 +171,18 @@ const Search = ({ ...props }) => {
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    // 지역 필드 검증
     if (!location || location === "NATION") {
       setSearchError("지역을 선택해주세요.");
       setSearchToast(true);
       return;
     }
 
-    // 객실 종류 필드 검증
     if (!roomType || roomType === "select 1") {
       setSearchError("객실 종류를 선택해주세요.");
       setSearchToast(true);
       return;
     }
 
-    // 뷰 종류 필드 검증
     if (!viewType || viewType === "select 1") {
       setSearchError("뷰 종류를 선택해주세요.");
       setSearchToast(true);
@@ -199,6 +200,10 @@ const Search = ({ ...props }) => {
         return;
       } else {
         setSearchResults(response.data.result.content);
+        const selectedWhereOption = where.find(
+          (option) => option.value === location
+        );
+        setSearchTerm(selectedWhereOption ? selectedWhereOption.text : "");
         navigate("/search/result");
       }
     } catch (error) {

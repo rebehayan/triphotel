@@ -2,30 +2,12 @@ import React, { useState } from "react";
 import NoticeItem from "./NoticeItem";
 import "../../styles/components/board.css";
 
-const Notice = ({ className, ...props }) => {
-  const [noticeItems, setNoticeItems] = useState([
-    {
-      title: "공지사항 제목입니다.1",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi perspiciatis, libero itaque excepturi nesciunt harum quasi, voluptas blanditiis ex error ratione adipisci deleniti similique ducimus veniam incidunt suscipit aperiam voluptatum.",
-    },
-    {
-      title: "공지사항 제목입니다.2",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi perspiciatis, libero itaque excepturi nesciunt harum quasi, voluptas blanditiis ex error ratione adipisci deleniti similique ducimus veniam incidunt suscipit aperiam voluptatum.",
-    },
-    {
-      title: "공지사항 제목입니다.3",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi perspiciatis, libero itaque excepturi nesciunt harum quasi, voluptas blanditiis ex error ratione adipisci deleniti similique ducimus veniam incidunt suscipit aperiam voluptatum.",
-    },
-    {
-      title: "공지사항 제목입니다.4",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi perspiciatis, libero itaque excepturi nesciunt harum quasi, voluptas blanditiis ex error ratione adipisci deleniti similique ducimus veniam incidunt suscipit aperiam voluptatum.",
-    },
-  ]);
+const Notice = ({ className, notices, myId}) => {
+console.log(notices);
 
   const [activeIndex, setActiveIndex] = useState(null);
 
-  // 공지사항 삭제 함수
-  const deleteNotice = (index) => {
+  const handleDelete = (index) => {
     const updatedNoticeItems = [...noticeItems];
     updatedNoticeItems.splice(index, 1);
     setNoticeItems(updatedNoticeItems);
@@ -35,14 +17,15 @@ const Notice = ({ className, ...props }) => {
   return (
     <div>
       <ul className={`notice-list ${className}`}>
-        {noticeItems.map((item, index) => (
+        {notices.map((item, index) => (
           <NoticeItem
+            myId={myId}
             key={index}
-            item={item}
             index={index}
+            item={item}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
-            onDelete={deleteNotice} // 삭제 함수 전달
+            onDelete={handleDelete}
           />
         ))}
       </ul>

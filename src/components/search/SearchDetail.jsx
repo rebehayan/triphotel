@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import Input from "../Input";
-import Select from "../Select";
-import { IoSearch } from "react-icons/io5";
-import Loading2 from "../Loading";
-import { useSearchStore } from "../../store/searchStore";
+import React, { useState } from "react";
+
 import axios from "axios";
+import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+
+import { useSearchStore } from "../../store/searchStore";
+import Input from "../Input";
+import Loading2 from "../Loading";
+import Select from "../Select";
 
 const where = [
   {
@@ -40,6 +42,7 @@ const SearchDetail = () => {
   const [isLoading2, setIsLoading2] = useState(false);
   const navigate = useNavigate();
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
+  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 
   const handleNation = (e) => {
     const selectedText = e.target.value;
@@ -65,6 +68,9 @@ const SearchDetail = () => {
         `http://52.78.12.252:8080/api/hotels/?name=${hotelName}&nation=${selectedNation}`
       );
       setSearchResults(response.data.result.content);
+      setSearchTerm(
+        where.find((option) => option.value === selectedNation)?.value || ""
+      );
       navigate("/search/result");
     } catch (error) {
       console.error("호텔 검색에 실패했습니다:", error);

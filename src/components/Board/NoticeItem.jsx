@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import Input from "../Input";
+import { useReservationStore } from "../../store/reservationStore";
+import axios from "axios";
 
-const NoticeItem = ({ index, item, activeIndex, setActiveIndex, onDelete, ...props }) => {
+const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, ...props }) => {
   const [editedTitle, setEditedTitle] = useState(item.title); // 수정된 제목을 저장할 상태
-  const [editedDescription, setEditedDescription] = useState(item.description); // 수정된 내용을 저장할 상태
+  const [editedDescription, setEditedDescription] = useState(item.message); // 수정된 내용을 저장할 상태
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부를 나타내는 상태
+  const token = localStorage.getItem("token");
+  const hotelId = parseInt(myId);
+  const noticeId = parseInt(item.id);
 
   const handleItem = (index) => {
     // 수정 중일 때는 토글이 닫히지 않도록 변경
@@ -17,14 +22,28 @@ const NoticeItem = ({ index, item, activeIndex, setActiveIndex, onDelete, ...pro
     setIsEditing(true); // 수정 모드로 변경
   };
 
-  const handleSave = () => {
-    console.log("수정된 제목:", editedTitle);
-    console.log("수정된 내용:", editedDescription);
-
-    // 수정 상태와 내용 초기화, 읽기 모드로 변경
+  const handleSave = async () => {
+    const boardData = {
+      title: editedTitle,
+      message: editedDescription,
+    };
     setIsEditing(false);
-    item.title = editedTitle;
-    item.description = editedDescription;
+    try {
+      const response = await axios.patch(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`,
+        boardData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("공지사항 추가 실패:", error);
+    } finally {
+      //onAddNotice({ title, description }); // 부모 컴포넌트로 새로운 공지사항 전달
+    }
   };
 
   const handleCancel = () => {
@@ -35,8 +54,28 @@ const NoticeItem = ({ index, item, activeIndex, setActiveIndex, onDelete, ...pro
   };
 
   const handleDelete = () => {
-    onDelete(index);
+    setIsPopup(true); // 팝업 창 표시
   };
+  
+  const handleConfirmDelete = async () => {
+    setIsPopup(false); // 팝업 닫기
+    try {
+      await axios.delete(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("삭제 완료");
+      onDelete(hotelId, noticeId); // 삭제 함수 호출 시 hotelId와 noticeId 모두 전달
+    } catch (error) {
+      //console.error("공지사항 삭제 실패:", error);
+    }
+  };
+
+  const [isPopup, setIsPopup] = useState(false);
 
   return (
     <li {...props} className="bg-white">
@@ -85,7 +124,7 @@ const NoticeItem = ({ index, item, activeIndex, setActiveIndex, onDelete, ...pro
           ) : (
             // 읽기 전용 모드에서는 공지사항 내용을 표시하고, 수정 버튼을 표시
             <div>
-              {item.description}
+              {editedDescription}
               <div className="flex justify-end gap-2">
                 <button className="btn-blue-label sm" onClick={handleEdit}>
                   수정
@@ -96,6 +135,22 @@ const NoticeItem = ({ index, item, activeIndex, setActiveIndex, onDelete, ...pro
               </div>
             </div>
           )}
+        </div>
+      )}
+      {/* 삭제 확인 팝업 */}
+      {isPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-75">
+          <div className="bg-white p-8 rounded-lg">
+            <p>삭제하시겠습니까?</p>
+            <div className="flex justify-center gap-2 mt-5">
+              <button className="btn-blue" onClick={handleConfirmDelete}>
+                확인
+              </button>
+              <button className="btn-gray" onClick={() => setIsPopup(false)}>
+                취소
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </li>

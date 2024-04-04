@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import Heading from "../Heading";
 import MypageReservationItems from "./MypageReservationItems";
-import request from "../../api/request";
-import instance from "../../api/axios";
-import { useLoginStore } from "../../store/loginStore";
 
-const { fetchMembersMyOrder } = request; // 필요한 요청 URL을 추출
+const { fetchMembersMyOrder } = request;
 
 const MypageReservation = () => {
-  const { userName, userCredit, userId, userRole, userEmail, address, city, nation, zip_code, profile_image } =
-    useLoginStore();
   const token = localStorage.getItem("token");
   const [isMyOrders, setIsMyOrders] = useState([]);
 
@@ -25,8 +23,6 @@ const MypageReservation = () => {
     };
     fetchData();
   }, []);
-
-  // const myOrders = isMyOrders.find((user) => user.member.id === userId);
 
   return (
     <div>
@@ -55,7 +51,9 @@ const MypageReservation = () => {
           </thead>
           <tbody>
             {isMyOrders.length > 0 ? (
-              isMyOrders.map((items, index) => <MypageReservationItems key={index} items={items} />)
+              isMyOrders.map((items, index) => (
+                <MypageReservationItems key={index} items={items} />
+              ))
             ) : (
               <tr>
                 <td colSpan={7} className="!py-10">

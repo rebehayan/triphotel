@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
+import Checkbox from "../Checkbox";
+import Dialog from "../Dialog";
 import Heading from "../Heading";
 import Input from "../Input";
-import Checkbox from "../Checkbox";
-import { Link, useNavigate } from "react-router-dom";
-import Dialog from "../Dialog";
-import ReservationRule from "../ReservationRule";
-import { useReservationStore } from "../../store/reservationStore";
 import Loading from "../Loading";
 import Loading2 from "../Loading2";
-import request from "../../api/request";
-import instance from "../../api/axios";
+import ReservationRule from "../ReservationRule";
 
 const ReservationPersonInfo = (isitem) => {
   const navigate = useNavigate();
 
   const { member, total_price, id } = isitem;
-  const { deleteCart } = useReservationStore();
   // console.log(isitem);
 
   const token = localStorage.getItem("token");
   const { fetchOrders } = request;
-
   const [isRule, setIsRule] = useState(false);
   const [isAddress, setIsAddress] = useState("");
   const [isCountry, setIsCountry] = useState("");
@@ -91,7 +90,9 @@ const ReservationPersonInfo = (isitem) => {
         isValid = false;
       } else if (member?.credit < total_price) {
         setIsPopup(true);
-        setErrrorMessage("보유금액이 결제금액보다 적습니다. 크래딧을 충전해주세요.");
+        setErrrorMessage(
+          "보유금액이 결제금액보다 적습니다. 크래딧을 충전해주세요."
+        );
         isValid = false;
       } else if (!persnalInfo.agreement) {
         setIsPopup(true);
@@ -167,11 +168,19 @@ const ReservationPersonInfo = (isitem) => {
           </div>
           <div>
             우편번호
-            <Input type={"number"} value={isPostCode} onChange={handlePostCode} />
+            <Input
+              type={"number"}
+              value={isPostCode}
+              onChange={handlePostCode}
+            />
           </div>
           <div className="col-span-2">
             요청사항
-            <Input type={"textarea"} value={isRequestText} onChange={handleRequest} />
+            <Input
+              type={"textarea"}
+              value={isRequestText}
+              onChange={handleRequest}
+            />
           </div>
         </div>
         <div className="mt-10 flex justify-between items-center">
@@ -180,7 +189,9 @@ const ReservationPersonInfo = (isitem) => {
               color={"blue"}
               id={"agree"}
               checked={persnalInfo.agreement}
-              onChange={(e) => setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })}
+              onChange={(e) =>
+                setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })
+              }
             >
               예약 약관동의
             </Checkbox>

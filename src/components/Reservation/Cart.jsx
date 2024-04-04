@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
 import "../../styles/components/cart.css";
-import CartItems from "./CartItems";
-import Badge from "../Badge";
-import { useReservationStore } from "../../store/reservationStore";
-import { digit3 } from "../../store/digit3";
-import request from "../../api/request";
+
+import React, { useEffect, useState } from "react";
+
 import instance from "../../api/axios";
+import request from "../../api/request";
+import { digit3 } from "../../store/digit3";
 import { useLoginStore } from "../../store/loginStore";
+import Badge from "../Badge";
+import CartItems from "./CartItems";
 
 const Cart = ({ mypage, close, show }) => {
   const token = localStorage.getItem("token");
@@ -21,7 +22,9 @@ const Cart = ({ mypage, close, show }) => {
   const handleCart = () => {
     close();
   };
-  const cartTotalPrice = digit3(isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0));
+  const cartTotalPrice = digit3(
+    isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0)
+  );
 
   useEffect(() => {
     if (show) {
@@ -56,14 +59,6 @@ const Cart = ({ mypage, close, show }) => {
     }
   };
 
-  // const handleDelete = (delId) => {
-  //   console.log(delId);
-  //   const myCartItem = isCartItmes.find((item) => {
-  //     item.id === delId;
-  //   });
-  //   console.log(isCartItmes);
-  // };
-
   return (
     <div className="w-[22rem]">
       {!mypage && (
@@ -84,7 +79,6 @@ const Cart = ({ mypage, close, show }) => {
               key={index}
               items={items}
               onDelid={handleDelete}
-              // onDeleteItem={handleDeleteItem}
             />
           ))}
         </ul>
