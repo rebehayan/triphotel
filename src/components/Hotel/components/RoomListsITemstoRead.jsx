@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import room from "../../../assets/hotelroom1.jpeg";
+import { digit3 } from "../../../store/digit3";
 import { usehotelListStore } from "../../../store/hotelListStore";
 import { useReserveRoomStore } from "../../../store/reserveRoomStore";
 import { useRoomStore } from "../../../store/roomStore";
@@ -57,8 +58,15 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
               image={it.thumbnails.length > 0 ? it.thumbnails[0].img_url : room}
             />
             <HotelTitle title={it.type} />
-            <HotelPrice price={it.standard_price} />
-            <RoomOptions />
+            <HotelPrice price={digit3(it.standard_price)} />
+            <RoomOptions
+              bedtype={it.bed_type}
+              capacity={it.standard_capacity}
+              maximum={it.maximum_capacity}
+              view={it.view_type}
+              adult_fare={it.adult_fare}
+              child_fare={it.child_fare}
+            />
             {!edit ? (
               <div className="flex gap-2">
                 <button
