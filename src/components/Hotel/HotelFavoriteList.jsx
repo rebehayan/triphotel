@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import HotelListItems from "./HotelListItems";
 import "../../styles/components/hotel.css";
+
+import React, { useEffect, useState } from "react";
+
 import instance from "../../api/axios";
 import request from "../../api/request";
+import HotelListItems from "./HotelListItems";
 
 const HotelFavoriteList = ({ className, ...props }) => {
   const token = localStorage.getItem("token");
@@ -27,7 +29,7 @@ const HotelFavoriteList = ({ className, ...props }) => {
       }
     };
     fetchFavData();
-  }, []);
+  }, [myFavList]);
 
   return (
     <>

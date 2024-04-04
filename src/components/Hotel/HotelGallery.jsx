@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MdArrowBackIosNew } from "react-icons/md";
-import { MdArrowForwardIos } from "react-icons/md";
+
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
 const HotelGallery = ({ className, pictures, ...props }) => {
   const [isWidth, setIsWidth] = useState(window.innerWidth);
@@ -37,9 +37,9 @@ const HotelGallery = ({ className, pictures, ...props }) => {
   return (
     <div className="mobile:relative">
       <div className={"hotel-gallery " + className} {...props} ref={ref}>
-        {pictures.map((picture, index) => (
+        {pictures?.map((picture, index) => (
           <div key={index}>
-            <img src={picture.src} alt="" />
+            <img src={picture.img_url} alt="" />
           </div>
         ))}
       </div>

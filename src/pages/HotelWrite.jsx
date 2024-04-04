@@ -9,7 +9,6 @@ import Box from "../components/Box";
 import Checkbox from "../components/Checkbox";
 import Dialog from "../components/Dialog";
 import Heading from "../components/Heading";
-import RoomListFromRegister from "../components/Hotel/components/RoomListsFromRegister";
 import RoomWrite from "../components/Hotel/RoomWrite";
 import Input from "../components/Input";
 import Loading from "../components/Loading";
@@ -44,15 +43,15 @@ const where = [
 ];
 
 const checkOption = [
-  { value: "select3", text: "1:00" },
-  { value: "select4", text: "2:00" },
-  { value: "select5", text: "3:00" },
-  { value: "select6", text: "4:00" },
-  { value: "select7", text: "5:00" },
-  { value: "select8", text: "6:00" },
-  { value: "select9", text: "7:00" },
-  { value: "select10", text: "8:00" },
-  { value: "select11", text: "9:00" },
+  { value: "select3", text: "01:00" },
+  { value: "select4", text: "02:00" },
+  { value: "select5", text: "03:00" },
+  { value: "select6", text: "04:00" },
+  { value: "select7", text: "05:00" },
+  { value: "select8", text: "06:00" },
+  { value: "select9", text: "07:00" },
+  { value: "select10", text: "08:00" },
+  { value: "select11", text: "09:00" },
   { value: "select12", text: "10:00" },
   { value: "select13", text: "11:00" },
   { value: "select14", text: "12:00" },
@@ -73,20 +72,37 @@ const HotelWrite = () => {
   const { setTitle } = useVisualStore();
   const navigate = useNavigate();
   const [isImage, setIsImage] = useState("");
+  const [imageFile1, setImageFile1] = useState(null);
+  const [imageFile2, setImageFile2] = useState(null);
+  const [imageFile3, setImageFile3] = useState(null);
+  const [imageFile4, setImageFile4] = useState(null);
   const { rooms, resetRooms } = useRoomStore();
   useEffect(() => {
     setTitle("Hotel Registration", subvisual);
   }, [setTitle]);
 
-  const handleonChange = (file) => {
-    setIsImage(file);
+  const handleFileChange1 = (file) => {
+    setImageFile1(file);
   };
+  const handleFileChange2 = (file) => {
+    setImageFile2(file);
+  };
+  const handleFileChange3 = (file) => {
+    setImageFile3(file);
+  };
+  const handleFileChange4 = (file) => {
+    setImageFile4(file);
+  };
+  // const handleonChange = (file) => {
+  //   setIsImage(file);
+  // };
 
   const [isRadio, setIsRadio] = useState(false);
   const [isRadio2, setIsRadio2] = useState(false);
   const [isRadio3, setIsRadio3] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
   const [locationText, setLocationText] = useState("");
+  const [file, setFile] = useState();
   // const [price, setPrice] = useState("");
   const [isPopup, setIsPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -96,8 +112,8 @@ const HotelWrite = () => {
     nation: "THAILAND",
     active_status: "ACTIVE",
     description: "",
-    check_in: "1:00",
-    check_out: "1:00",
+    check_in: "01:00",
+    check_out: "01:00",
     smoking_rule: "TOTAL_IMPOSSIBLE",
     pet_rule: "TOTAL_IMPOSSIBLE",
     pool_opening_time: null,
@@ -124,6 +140,17 @@ const HotelWrite = () => {
       electric_kettle: false,
     },
   });
+  const [roomInfo, setRoomInfo] = useState({
+    type: "STANDARD",
+    active_status: "ACTIVE",
+    bed_type: "SINGLE",
+    standard_capacity: null,
+    maximum_capacity: null,
+    view_type: "OCEAN",
+    standard_price: null,
+    adult_fare: null,
+    child_fare: null,
+  });
   const addHotel = usehotelListStore((state) => state.addHotel);
   //호텔이름
   const handleName = (value) => {
@@ -140,11 +167,8 @@ const HotelWrite = () => {
       nation: selectedValue,
     }));
   };
-  //가격
-  // const handlePrice = (value) => {
-  //   setHotelInfo({ ...hotelInfo, price: value });
-  // };
-  console.log(hotelInfo);
+
+  // console.log(hotelInfo);
   //예약가능
   const handleRadioChange = (value) => {
     setHotelInfo({ ...hotelInfo, active_status: value });
@@ -220,7 +244,7 @@ const HotelWrite = () => {
   };
   //호텔등록
   const token = localStorage.getItem("token");
-  console.log(token);
+
   const onSendClick = async (e) => {
     if (
       hotelInfo.name == "" ||
@@ -244,8 +268,15 @@ const HotelWrite = () => {
     }
     e.preventDefault();
     const formData = new FormData();
-    formData.append("request", JSON.stringify(hotelInfo)); // hotelInfo 객체를 문자열로 변환하여 추가
+    if (imageFile1) formData.append("file", imageFile1);
+    if (imageFile2) formData.append("file", imageFile2);
+    if (imageFile3) formData.append("file", imageFile3);
+    if (imageFile4) formData.append("file", imageFile4);
+    formData.append("request", JSON.stringify(hotelInfo));
 
+    const roomFormData = new FormData();
+    if (file) roomFormData.append("file", file);
+    roomFormData.append("request", JSON.stringify(roomInfo));
     try {
       const response = await axios.post(
         "http://52.78.12.252:8080/api/hotels",
@@ -253,12 +284,21 @@ const HotelWrite = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const hotelId = response.data.result.id;
+      console.log(response);
+      const roomResponse = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
+        roomFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
             // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
           },
         }
       );
-
-      console.log(response.data); // 응답 데이터 처리
       alert("호텔 등록 성공!");
     } catch (error) {
       console.error("Error sending POST request:", error);
@@ -287,45 +327,45 @@ const HotelWrite = () => {
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-4 gap-5">
                 <li>
                   <Noimage
-                    props={{ image: isImage }}
+                    props={{ image: imageFile1 }}
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input
                     type={"file"}
-                    onChange={handleonChange}
+                    onChange={handleFileChange1}
                     className={"mobile:!w-full"}
                   />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: isImage }}
+                    props={{ image: imageFile2 }}
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input
                     type={"file"}
-                    onChange={handleonChange}
+                    onChange={handleFileChange2}
                     className={"mobile:!w-full"}
                   />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: isImage }}
+                    props={{ image: imageFile3 }}
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input
                     type={"file"}
-                    onChange={handleonChange}
+                    onChange={handleFileChange3}
                     className={"mobile:!w-full"}
                   />
                 </li>
                 <li>
                   <Noimage
-                    props={{ image: isImage }}
+                    props={{ image: imageFile4 }}
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input
                     type={"file"}
-                    onChange={handleonChange}
+                    onChange={handleFileChange4}
                     className={"mobile:!w-full"}
                   />
                 </li>
@@ -353,18 +393,18 @@ const HotelWrite = () => {
                     onChange={handleName}
                   />
                 </li>
-                <li className="grid gap-3">
+                {/* <li className="grid gap-3">
                   호텔 가격
                   <div className="grid grid-cols-[1fr_min-content] items-center gap-2">
-                    {/* <Input
+                    <Input
                       onChange={handlePrice}
                       value={price}
                       type={"text"}
                       price={true}
-                    />{" "} */}
+                    />{" "}
                     원
                   </div>
-                </li>
+                </li> */}
                 <li className="grid gap-3">
                   호텔 예약여부
                   <div className="flex">
@@ -726,18 +766,19 @@ const HotelWrite = () => {
           <Box className={"mt-10 room-write"}>
             <div className="flex justify-between items-center">
               <Heading tag={"h3"} text={"객실관리"} className={"base"} />
-              <button
+              {/* <button
                 className="btn-blue"
                 onClick={() => setIsToggle(!isToggle)}
               >
                 객실등록
-              </button>
+              </button> */}
             </div>
-            {isToggle ? (
-              <RoomWrite />
-            ) : (
-              <RoomListFromRegister edit={true} roomLists={rooms} />
-            )}
+            <RoomWrite
+              file={file}
+              setFile={setFile}
+              roomInfo={roomInfo}
+              setRoomInfo={setRoomInfo}
+            />
           </Box>
           <div className="flex justify-between mt-10">
             <button className="btn-gray xl">이전</button>

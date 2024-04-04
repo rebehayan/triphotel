@@ -1,12 +1,15 @@
+import "../../styles/pages/reservation.css";
+
 import React, { useEffect, useState } from "react";
+
+import { useLocation } from "react-router-dom";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
+import subvisual from "../../assets/subvisual3.png";
 import { useVisualStore } from "../../store/visualStore";
 import ReservationHotelInfo from "./ReservationHotelInfo";
 import ReservationPersonInfo from "./ReservationPersonInfo";
-import subvisual from "../../assets/subvisual3.png";
-import request from "../../api/request";
-import instance from "../../api/axios";
-import { useLocation } from "react-router-dom";
-import "../../styles/pages/reservation.css";
 
 const ReservationSecond = () => {
   const token = localStorage.getItem("token");

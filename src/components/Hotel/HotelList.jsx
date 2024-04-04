@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
-import HotelListItems from "./HotelListItems";
-import axios from "axios";
 import "../../styles/components/hotel.css";
+
+import React, { useEffect, useState } from "react";
+
+import axios from "axios";
+
+import HotelListItems from "./HotelListItems";
 
 const HotelList = ({ className, ...props }) => {
   const [hotels, setHotels] = useState([]);
@@ -11,6 +14,8 @@ const HotelList = ({ className, ...props }) => {
       setHotels(response.data.result.content);
     });
   }, []);
+
+  // console.log(hotels);
 
   return (
     <>

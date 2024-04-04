@@ -1,11 +1,21 @@
 import React from "react";
-import RoomPicture from "../Hotel/RoomPicture";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { digit3 } from "../../store/digit3";
-import { useReservationStore } from "../../store/reservationStore";
+import RoomPicture from "../Hotel/RoomPicture";
 
 const CartItems = ({ close, items, onDelid }) => {
-  const { room, adult_count, child_count, check_out, hotel, check_in, total_price, id } = items;
+  const {
+    room,
+    adult_count,
+    child_count,
+    check_out,
+    hotel,
+    check_in,
+    total_price,
+    id,
+  } = items;
 
   const navigate = useNavigate();
   const photo = room.thumbnails[0].img_url;
@@ -22,7 +32,10 @@ const CartItems = ({ close, items, onDelid }) => {
           <RoomPicture image={photo} className="base" />
         </Link>
         <div>
-          <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2 font-bold">
+          <Link
+            to="/hoteldetail"
+            className=" group-hover:text-blue-700 line-clamp-2 font-bold"
+          >
             {hotel.name}
           </Link>
           <div className="text-sm flex mt-2 leading-6">

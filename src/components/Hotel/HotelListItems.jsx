@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import hotel1 from "../../assets/hotel1.jpg";
 import { digit3 } from "../../store/digit3";
 import Badge from "../Badge";
@@ -8,15 +11,13 @@ import HotelLocation from "./HotelLocation";
 import HotelPicture from "./HotelPicture";
 import HotelPrice from "./HotelPrice";
 import HotelTitle from "./HotelTitle";
-import instance from "../../api/axios";
-import request from "../../api/request";
 
-const HotelListItems = ({ hotel }) => {
+const HotelListItems = ({ hotel, checkFav }) => {
   const token = localStorage.getItem("token");
-  const [isFav, setIsFav] = useState(hotel.favorite);
+  const [isFav, setIsFav] = useState(hotel.favorite || checkFav);
   const { fetchHotels } = request;
 
-  console.log(hotel.favorite);
+  // console.log(hotel.favorite);
   // console.log(hotel);
   const favData = {
     id: hotel.id,
@@ -25,11 +26,15 @@ const HotelListItems = ({ hotel }) => {
     setIsFav(!isFav);
     let myfav = "";
     try {
-      const isfavs = await instance.post(`${fetchHotels}/${hotel.id}/favorite`, favData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const isfavs = await instance.post(
+        `${fetchHotels}/${hotel.id}/favorite`,
+        favData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       myfav = isfavs;
     } catch (error) {
       console.log(error);
@@ -41,7 +46,14 @@ const HotelListItems = ({ hotel }) => {
   return (
     <>
       <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"}>
-        <HotelPicture link={`/hoteldetail/${hotel.id}`} image={hotel1} />
+        <HotelPicture
+          link={`/hoteldetail/${hotel.id}`}
+          image={
+            hotel.thumbnails?.length < 4
+              ? hotel1
+              : hotel.thumbnails?.[0].img_url
+          }
+        />
         <div className="hotel__info">
           <HotelLocation location={hotel.nation} />
           <HotelFavorite onClick={handleFavorite} checked={isFav} />

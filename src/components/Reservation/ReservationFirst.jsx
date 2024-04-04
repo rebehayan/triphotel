@@ -1,19 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
 import "../../styles/pages/reservation.css";
-import Input from "../Input";
-import GuestCounter from "../GuestCounter";
-import { useNavigate } from "react-router-dom";
-import Toast from "../Toast";
-import { useReservationStore } from "../../store/reservationStore";
-import Dialog from "../Dialog";
-import Loading from "../Loading";
-import { digit3 } from "../../store/digit3";
-import Loading2 from "../Loading2";
-import request from "../../api/request";
-import { useLoginStore } from "../../store/loginStore";
+
+import React, { useEffect, useRef, useState } from "react";
+
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 import instance from "../../api/axios";
+import request from "../../api/request";
+import { digit3 } from "../../store/digit3";
+import { useReservationStore } from "../../store/reservationStore";
 import { useReserveRoomStore } from "../../store/reserveRoomStore";
+import Dialog from "../Dialog";
+import GuestCounter from "../GuestCounter";
+import Input from "../Input";
+import Loading from "../Loading";
+import Loading2 from "../Loading2";
+import Toast from "../Toast";
 
 // 달력 현재날짜 고정
 const Today = (nextDay = 0) => {
@@ -108,7 +110,10 @@ const ReservationFirst = () => {
       setIsPopup(true);
       setErrrorMessage("체크아웃 날짜를 선택해주세요.");
       isValid = false;
-    } else if (isPayInfo.adult_count + isPayInfo.child_count > reservedRoom.maximum_capacity) {
+    } else if (
+      isPayInfo.adult_count + isPayInfo.child_count >
+      reservedRoom.maximum_capacity
+    ) {
       setIsPopup(true);
       setErrrorMessage(
         `해당 객실은 ${reservedRoom.maximum_capacity}명까지 수용가능한 객실입니다. 인원수를 조절해주세요.`
@@ -132,9 +137,12 @@ const ReservationFirst = () => {
     };
 
     const handleCalculate = () => {
-      const countMember = parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count);
-      const adult_fare = parseInt(isPayInfo.adult_count) * reservedRoom.adult_fare;
-      const childrenPay = parseInt(isPayInfo.child_count) * reservedRoom.child_fare;
+      const countMember =
+        parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count);
+      const adult_fare =
+        parseInt(isPayInfo.adult_count) * reservedRoom.adult_fare;
+      const childrenPay =
+        parseInt(isPayInfo.child_count) * reservedRoom.child_fare;
       const checkIn = new Date(isPayInfo.check_in);
       const checkOut = new Date(isPayInfo.check_out);
       const days = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
@@ -143,7 +151,10 @@ const ReservationFirst = () => {
       if (reservedRoom.maximum_capacity < countMember) {
         setIsToast(true);
         setIsPayInfo({ ...isPayInfo, adult_fare, childrenPay, total_price });
-      } else if (reservedRoom.standard_capacity < countMember && reservedRoom.maximum_capacity >= countMember) {
+      } else if (
+        reservedRoom.standard_capacity < countMember &&
+        reservedRoom.maximum_capacity >= countMember
+      ) {
         setIsToast2(true);
         setIsPayInfo({ ...isPayInfo, adult_fare, childrenPay, total_price });
       } else {
@@ -158,7 +169,12 @@ const ReservationFirst = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out]);
+  }, [
+    isPayInfo.adult_count,
+    isPayInfo.child_count,
+    isPayInfo.check_in,
+    isPayInfo.check_out,
+  ]);
 
   // 결제다음단계 넘기기
   const handleReservation = async (e) => {
@@ -237,28 +253,51 @@ const ReservationFirst = () => {
               <label htmlFor="reser1" className="--title">
                 체크인
               </label>
-              <Input type="date" name="start" min={Today()} value={isStart} onChange={handleStart} />
+              <Input
+                type="date"
+                name="start"
+                min={Today()}
+                value={isStart}
+                onChange={handleStart}
+              />
             </li>
             <li>
               <label htmlFor="reser2" className="--title">
                 체크아웃
               </label>
-              <Input type="date" name="end" min={isStart ? isStart : Today(1)} value={isEnd} onChange={handleEnd} />
+              <Input
+                type="date"
+                name="end"
+                min={isStart ? isStart : Today(1)}
+                value={isEnd}
+                onChange={handleEnd}
+              />
             </li>
             <li>
               <strong className="--title">성인(청소년)</strong>
-              <GuestCounter iscount={handleAdult} max={reservedRoom.maximum_capacity} />
+              <GuestCounter
+                iscount={handleAdult}
+                max={reservedRoom.maximum_capacity}
+              />
             </li>
             <li>
               <strong className="--title">어린이</strong>
-              <GuestCounter kids iscount={handleChildren} max={reservedRoom.maximum_capacity} />
+              <GuestCounter
+                kids
+                iscount={handleChildren}
+                max={reservedRoom.maximum_capacity}
+              />
             </li>
             <li className="!grid grid-cols-2">
-              <strong className="--title">성인 ⨉ {isPayInfo.adult_count ? isPayInfo.adult_count : 0}</strong>
+              <strong className="--title">
+                성인 ⨉ {isPayInfo.adult_count ? isPayInfo.adult_count : 0}
+              </strong>
               <span className="--total justify-self-end">
                 ₩ {isPayInfo.adult_fare ? digit3(isPayInfo.adult_fare) : 0}
               </span>
-              <strong className="--title">어린이 ⨉ {isPayInfo.child_count ? isPayInfo.child_count : 0}</strong>
+              <strong className="--title">
+                어린이 ⨉ {isPayInfo.child_count ? isPayInfo.child_count : 0}
+              </strong>
               <span className="--total justify-self-end">
                 ₩ {isPayInfo.childrenPay ? digit3(isPayInfo.childrenPay) : "0"}
               </span>
@@ -276,7 +315,9 @@ const ReservationFirst = () => {
                 onClick={handleToggle}
                 className="absolute left-2/4 -top-9 -translate-x-2/4 w-12 h-10 bg-gray-100 rounded-full flex justify-center pt-[0.3rem] text-2xl"
               >
-                <MdKeyboardDoubleArrowUp className={`ico-toggle ${!isToggle ? "active" : ""}`} />
+                <MdKeyboardDoubleArrowUp
+                  className={`ico-toggle ${!isToggle ? "active" : ""}`}
+                />
               </button>
             )}
             <button
@@ -297,13 +338,18 @@ const ReservationFirst = () => {
       </div>
       {isToast && (
         <Toast onOpen={isToast} onClose={() => setIsToast(false)} color={"red"}>
-          인원수가 초과되었습니다. 최대 {reservedRoom.maximum_capacity}명 수용 가능합니다.
+          인원수가 초과되었습니다. 최대 {reservedRoom.maximum_capacity}명 수용
+          가능합니다.
         </Toast>
       )}
       {isToast2 && (
-        <Toast onOpen={isToast2} onClose={() => setIsToast(false)} color={"blue"}>
-          해당 숙소는 {reservedRoom.standard_capacity + 1}인이상 {reservedRoom.maximum_capacity}이하면 추가금액이
-          발생합니다.
+        <Toast
+          onOpen={isToast2}
+          onClose={() => setIsToast(false)}
+          color={"blue"}
+        >
+          해당 숙소는 {reservedRoom.standard_capacity + 1}인이상{" "}
+          {reservedRoom.maximum_capacity}이하면 추가금액이 발생합니다.
         </Toast>
       )}
       <Dialog open={isPopup} close={() => setIsPopup(false)}>

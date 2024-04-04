@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { usehotelListStore } from "../../../store/hotelListStore";
-import { useRoomStore } from "../../../store/roomStore";
+import { useRoomFromEditStore } from "../../../store/roomFromEditStore";
 import Box from "../../Box";
 import Input from "../../Input";
 import Radio from "../../Radio";
@@ -12,106 +12,120 @@ import Select from "../../Select";
 
 const viewOption = [
   {
-    value: "select1",
+    value: "OCEAN",
     text: "오션뷰",
   },
   {
-    value: "select2",
+    value: "CITY",
     text: "시티뷰",
   },
   {
-    value: "select3",
+    value: "GARDEN",
     text: "가든뷰",
   },
   {
-    value: "select4",
+    value: "RIVER",
     text: "리버뷰",
   },
   {
-    value: "select5",
+    value: "MOUNTAIN",
     text: "마운틴뷰",
   },
   {
-    value: "select6",
+    value: "NONE",
     text: "뷰없음",
   },
 ];
 const bedOption = [
   {
-    value: "select1",
+    value: "SINGLE",
     text: "싱글/트윈 베드",
   },
   {
-    value: "select2",
+    value: "DOUBLE",
     text: "더블베드",
   },
   {
-    value: "select3",
+    value: "QUEEN",
     text: "퀸베드",
   },
   {
-    value: "select4",
+    value: "KING",
     text: "킹베드",
   },
 ];
-const viewKind = [
+const roomOption = [
   {
-    value: "select1",
+    value: "STANDARD",
     text: "스탠다드 룸",
   },
   {
-    value: "select2",
+    value: "DELUXE",
     text: "디럭스 룸",
   },
   {
-    value: "select3",
+    value: "TWIN",
     text: "트윈 룸",
   },
   {
-    value: "select4",
+    value: "SWEET",
     text: "스위트 룸",
   },
 ];
-const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
+const RoomWriteFromEdit = ({ setIsToggle }) => {
   const { hotelId } = useParams();
-  const { totalHotels, addHotel, saveEditHotel } = usehotelListStore();
-  const { rooms, addRoom, saveEditedRoom } = useRoomStore();
-  const [isRadio, setIsRadio] = useState(false);
-  const thisRoom = rooms.find((it) => it.roomId === roomId);
   const navigate = useNavigate();
-  // console.log(roomData);
+  const { totalHotels, addHotel } = usehotelListStore();
+  const { rooms, addRoom } = useRoomFromEditStore();
+  const [isRadio, setIsRadio] = useState(false);
   const [image, setImage] = useState();
   const [roomInfo, setRoomInfo] = useState({
-    id: roomData.id,
-    type: roomData.type,
-    active_status: roomData.active_status,
-    bed_type: roomData.bed_type,
-    standard_capacity: roomData.standard_capacity,
-    maximum_capacity: roomData.maximum_capacity,
-    view_type: roomData.view_type,
-    standard_price: roomData.standard_price,
-    adult_fare: roomData.adult_fare,
-    child_fare: roomData.child_fare,
-    // thumbnailId: roomData.thumbnails?.[0]?.id,
+    type: "STANDARD",
+    active_status: "ACTIVE",
+    bed_type: "SINGLE",
+    standard_capacity: null,
+    maximum_capacity: null,
+    view_type: "OCEAN",
+    standard_price: null,
+    adult_fare: null,
+    child_fare: null,
   });
-  // console.log(roomData.thumbnails);
-  useEffect(() => {
-    setImage(
-      roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url
-    );
-  }, []);
-
+  // console.log("roomWrite", roomInfo);
   const handleRoomType = (e) => {
-    setRoomInfo((prevInfo) => ({
-      ...prevInfo,
-      type: e.target.value,
-    }));
+    const selectedOption = roomOption.find(
+      (option) => option.text === e.target.value
+    );
+
+    if (selectedOption) {
+      setRoomInfo((prev) => ({
+        ...prev,
+        type: selectedOption.value,
+      }));
+    }
   };
   const handleBed = (e) => {
-    setRoomInfo((prev) => ({ ...prev, bed_type: e.target.value }));
+    const selectedOption = bedOption.find(
+      (option) => option.text === e.target.value
+    );
+
+    if (selectedOption) {
+      setRoomInfo((prev) => ({
+        ...prev,
+        bed_type: selectedOption.value,
+      }));
+    }
   };
   const handleView = (e) => {
-    setRoomInfo((prev) => ({ ...prev, view_type: e.target.value }));
+    const selectedOption = viewOption.find(
+      (option) => option.text === e.target.value
+    );
+
+    if (selectedOption) {
+      setRoomInfo((prev) => ({
+        ...prev,
+        view_type: selectedOption.value,
+      }));
+    }
   };
   const handlePrice = (value) => {
     setRoomInfo({ ...roomInfo, standard_price: value });
@@ -131,44 +145,40 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   const handleRadioChange = (value) => {
     setRoomInfo({ ...roomInfo, active_status: value });
   };
-  const onSubmit = () => {
-    addRoom(roomInfo);
-  };
-  const handleFileChange = (file) => {
+  const handleImageChange = (file) => {
     setImage(file);
   };
-  const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
-
-  // console.log(roomData);
   const token = localStorage.getItem("token");
-  const onSave = async () => {
+  const onSubmit = async () => {
     const formData = new FormData();
-    if (image) formData.append("file", image);
-    formData.append("request", JSON.stringify(roomInfo));
+    formData.append("request", JSON.stringify(roomInfo)); // hotelInfo 객체를 문자열로 변환하여 추가
+    formData.append("file", image); // hotelInfo 객체를 문자열로 변환하여 추가
 
     try {
-      const response = await axios.patch(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}`,
+      const response = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
           },
         }
       );
-
-      alert("객실 수정 성공!");
+      console.log(response.data); // 응답 데이터 처리
+      alert("객실 등록 성공!");
+      setIsToggle(false);
     } catch (error) {
-      console.error(error);
+      console.error("Error sending POST request:", error);
     }
-
-    setIsEdit(false);
     navigate(`/hoteldetail/${hotelId}`);
+    addRoom(roomInfo);
   };
+  const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
   const onCancel = () => {
-    setIsEdit(false);
+    setIsToggle(false);
   };
-
+  // console.log(roomInfo);
   return (
     <>
       <Box className={"white mt-5"}>
@@ -176,33 +186,27 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
           <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-10">
             <li className="grid gap-3 self-start">
               객실 종류
-              <Select
-                selectValue={roomInfo.type}
-                options={viewKind}
-                onChange={handleRoomType}
-              />
+              <Select options={roomOption} onChange={handleRoomType} />
             </li>
             <li className="grid gap-3 self-start">
               객실 침대 정보
-              <Select
-                selectValue={roomInfo.bed_type}
-                options={bedOption}
-                onChange={handleBed}
-              />
+              <Select options={bedOption} onChange={handleBed} />
             </li>
             <li className="grid gap-3">
               객실 뷰 종류
-              <Select
-                selectValue={roomInfo.view_type}
-                options={viewOption}
-                onChange={handleView}
-              />
+              <Select options={viewOption} onChange={handleView} />
             </li>
             <li className="grid gap-3 self-start">
               객실 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
+                {/* <Input
                   type={"text"}
+                  value={roomInfo.standard_price}
+                  price={true}
+                  onChange={handlePrice}
+                />{" "} */}
+                <Input
+                  type={"number"}
                   value={roomInfo.standard_price}
                   onChange={handlePrice}
                 />{" "}
@@ -212,45 +216,25 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
             <li className="grid gap-3 self-start">
               성인 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"text"}
-                  value={roomInfo.adult_fare}
-                  onChange={handleAdultFare}
-                />{" "}
-                원
+                <Input type={"number"} onChange={handleAdultFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               어린이 1명당 1박 가격
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"text"}
-                  value={roomInfo.child_fare}
-                  onChange={handleChildFare}
-                />{" "}
-                원
+                <Input type={"number"} onChange={handleChildFare} /> 원
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 기준인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  type={"number"}
-                  value={roomInfo.standard_capacity}
-                  onChange={handleCapacity}
-                />{" "}
-                명
+                <Input type={"number"} onChange={handleCapacity} /> 명
               </div>
             </li>
             <li className="grid gap-3 self-start">
               객실 최대인원
               <div className="grid grid-cols-[1fr_min-content] items-center gap-1">
-                <Input
-                  value={roomInfo.maximum_capacity}
-                  type={"text"}
-                  onChange={handleMax}
-                />{" "}
-                명
+                <Input type={"number"} onChange={handleMax} /> 명
               </div>
             </li>
             <li className="grid gap-3">
@@ -276,15 +260,16 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
             </li>
             <li className="grid gap-3 mobile:col-span-1 tablet:col-span-3">
               객실 사진
-              <Input type={"file"} onChange={handleFileChange} />
+              <Input type={"file"} onChange={handleImageChange} />
             </li>
           </ul>
         </form>
       </Box>
       <div className="flex gap-3 justify-center mt-5">
-        <button onClick={onSave} className="btn-green">
-          객실 수정
+        <button className="btn-blue" onClick={onSubmit}>
+          객실 등록
         </button>
+
         <button className="btn-gray" onClick={onCancel}>
           취소
         </button>
@@ -293,4 +278,4 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
   );
 };
 
-export default RoomEditfromEdit;
+export default RoomWriteFromEdit;

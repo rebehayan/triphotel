@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { persist, devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
 let reservationStore = (set) => ({
   paymentInfos: {},
   totalInfos: [],
-  noticeId: '',
+  noticeId: "",
 
   // 결제정보
   addInfo: (paymentState) =>

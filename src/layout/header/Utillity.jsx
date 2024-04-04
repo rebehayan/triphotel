@@ -1,21 +1,21 @@
-import { GoPerson } from "react-icons/go";
-import { CiSearch, CiShoppingCart } from "react-icons/ci";
-import Login from "../../pages/Login";
 import { useState } from "react";
-import SearchPopup from "../../components/SearchPopup";
-import Cart from "../../components/Reservation/Cart";
-import Dialog from "../../components/Dialog";
-import { GoPencil } from "react-icons/go";
-import { Link } from "react-router-dom";
+
+import { CiSearch, CiShoppingCart } from "react-icons/ci";
+import { GoPencil, GoPerson } from "react-icons/go";
 import { IoIosLogOut } from "react-icons/io";
 import { RiMenu3Fill } from "react-icons/ri";
-import { useSearchStore } from "../../store/searchStore";
-import { useLoginStore } from "../../store/loginStore";
-import Loading2 from "../../components/Loading2";
-import Toast from "../../components/Toast";
+import { Link, useNavigate } from "react-router-dom";
+
 import Avatar from "../../components/Avatar";
+import Dialog from "../../components/Dialog";
+import Loading2 from "../../components/Loading2";
+import Cart from "../../components/Reservation/Cart";
+import SearchPopup from "../../components/SearchPopup";
+import Toast from "../../components/Toast";
+import Login from "../../pages/Login";
+import { useLoginStore } from "../../store/loginStore";
+import { useSearchStore } from "../../store/searchStore";
 import MobileGnb from "./MobileGnb";
-import { useNavigate } from "react-router-dom";
 
 const Utillity = ({ ...props }) => {
   const [isPopup, setIsPopup] = useState(false);
@@ -64,8 +64,14 @@ const Utillity = ({ ...props }) => {
       </button>
       {login ? (
         <>
-          <Link to="/mypage/account" className="flex items-center gap-1 mr-2 avatar-name">
-            <Avatar profileImage={userProfileImage} className={"mobile:w-8 mobile:h-8 tablet:w-10 tablet:h-10"} />
+          <Link
+            to="/mypage/account"
+            className="flex items-center gap-1 mr-2 avatar-name"
+          >
+            <Avatar
+              profileImage={userProfileImage}
+              className={"mobile:w-8 mobile:h-8 tablet:w-10 tablet:h-10"}
+            />
             <div className="mobile:hidden tablet:block">
               <strong className="whitespace-nowrap">{userName}</strong>님
             </div>
@@ -86,7 +92,10 @@ const Utillity = ({ ...props }) => {
           </Link>
         </>
       ) : (
-        <button className="btn-blue mobile:h-8 mobile:px-2 tablet:h-10 tablet:px-3" onClick={handleLogin}>
+        <button
+          className="btn-blue mobile:h-8 mobile:px-2 tablet:h-10 tablet:px-3"
+          onClick={handleLogin}
+        >
           <GoPerson />
           <span className="mobile:hidden desktop:inline-block">Log In</span>
         </button>
@@ -101,16 +110,28 @@ const Utillity = ({ ...props }) => {
       <Dialog open={isPopup} close={() => setIsPopup(false)}>
         <Login close={() => setIsPopup(false)} />
       </Dialog>
-      <SearchPopup open={isPopup2} close={() => setIsPopup2(false)} onSearch={handleSearch} />
+      <SearchPopup
+        open={isPopup2}
+        close={() => setIsPopup2(false)}
+        onSearch={handleSearch}
+      />
       {isLoading2 && <Loading2 />}
       <Toast onOpen={showToast} onClose={setShowToast} color="red">
         {error}
       </Toast>
-      <Dialog className={"cart"} open={isPopup3} close={() => setIsPopup3(false)}>
+      <Dialog
+        className={"cart"}
+        open={isPopup3}
+        close={() => setIsPopup3(false)}
+      >
         <Cart show={isPopup3} close={() => setIsPopup3(false)} />
       </Dialog>
 
-      <Dialog className={"mobile-gnb"} open={isPopup4} close={() => setIsPopup4(false)}>
+      <Dialog
+        className={"mobile-gnb"}
+        open={isPopup4}
+        close={() => setIsPopup4(false)}
+      >
         <MobileGnb close={() => setIsPopup4(false)} />
       </Dialog>
     </div>

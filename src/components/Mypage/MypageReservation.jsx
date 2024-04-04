@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import Heading from "../Heading";
 import MypageReservationItems from "./MypageReservationItems";
-import request from "../../api/request";
-import instance from "../../api/axios";
 
 const { fetchMembersMyOrder } = request;
 
@@ -50,7 +51,9 @@ const MypageReservation = () => {
           </thead>
           <tbody>
             {isMyOrders.length > 0 ? (
-              isMyOrders.map((items, index) => <MypageReservationItems key={index} items={items} />)
+              isMyOrders.map((items, index) => (
+                <MypageReservationItems key={index} items={items} />
+              ))
             ) : (
               <tr>
                 <td colSpan={7} className="!py-10">
