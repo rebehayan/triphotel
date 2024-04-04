@@ -18,6 +18,7 @@ import { useSearchStore } from "../../store/searchStore";
 import MobileGnb from "./MobileGnb";
 
 const Utillity = ({ ...props }) => {
+  const { userRole } = useLoginStore();
   const [isPopup, setIsPopup] = useState(false);
   const [isPopup2, setIsPopup2] = useState(false);
   const [isPopup3, setIsPopup3] = useState(false);
@@ -83,13 +84,17 @@ const Utillity = ({ ...props }) => {
             <IoIosLogOut />
             <span className="mobile:hidden tablet:inline-block">Log Out</span>
           </button>
-          <Link
-            to="/hotelwrite"
-            className="btn-red whitespace-nowrap mobile:w-8 mobile:px-0 tablet:w-auto tablet:inline-flex tablet:h-10 tablet:px-3"
-          >
-            <GoPencil />
-            <span className="mobile:hidden tablet:inline-block">호텔 등록</span>
-          </Link>
+          {userRole === "MASTER" && (
+            <Link
+              to="/hotelwrite"
+              className="btn-red whitespace-nowrap mobile:w-8 mobile:px-0 tablet:w-auto tablet:inline-flex tablet:h-10 tablet:px-3"
+            >
+              <GoPencil />
+              <span className="mobile:hidden tablet:inline-block">
+                호텔 등록
+              </span>
+            </Link>
+          )}
         </>
       ) : (
         <button
