@@ -15,6 +15,8 @@ const HotelList = ({ className, ...props }) => {
     });
   }, []);
 
+  console.log(hotels);
+
   return (
     <>
       <ul className={`hotel ${className}`} {...props}>

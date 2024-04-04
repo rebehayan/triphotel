@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import Input from "../Input";
-import { useReservationStore } from "../../store/reservationStore";
 import axios from "axios";
 
 const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, ...props }) => {
@@ -56,18 +55,15 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
   const handleDelete = () => {
     setIsPopup(true); // 팝업 창 표시
   };
-  
+
   const handleConfirmDelete = async () => {
     setIsPopup(false); // 팝업 닫기
     try {
-      await axios.delete(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`http://52.78.12.252:8080/api/hotels/${hotelId}/notices/${noticeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("삭제 완료");
       onDelete(hotelId, noticeId); // 삭제 함수 호출 시 hotelId와 noticeId 모두 전달
     } catch (error) {
@@ -139,7 +135,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
       )}
       {/* 삭제 확인 팝업 */}
       {isPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-75">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-75 z-[100]">
           <div className="bg-white p-8 rounded-lg">
             <p>삭제하시겠습니까?</p>
             <div className="flex justify-center gap-2 mt-5">

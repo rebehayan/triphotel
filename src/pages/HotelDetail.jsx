@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
+import instance from "../api/axios";
+import request from "../api/request";
 import pic1 from "../assets/img1.webp";
 import pic2 from "../assets/img2.webp";
 import pic3 from "../assets/img3.webp";
@@ -22,6 +24,7 @@ import ReservationFirst from "../components/Reservation/ReservationFirst";
 import SubVisual from "../components/SubVisual";
 import Text from "../components/Text";
 import { usehotelListStore } from "../store/hotelListStore";
+import { useLoginStore } from "../store/loginStore";
 import { useVisualStore } from "../store/visualStore";
 
 const pictures = [
@@ -32,6 +35,7 @@ const pictures = [
 ];
 
 const HotelDetail = () => {
+  const { userRole } = useLoginStore();
   const navigate = useNavigate();
   const { hotelId } = useParams();
   const { setTitle } = useVisualStore();
@@ -40,6 +44,8 @@ const HotelDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { totalHotels, deleteHotel } = usehotelListStore();
   const [notices, setNotices] = useState([]);
+  const [isFav, setIsFav] = useState(hotelInfo.favorite);
+  const { fetchHotels } = request;
 
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
 
@@ -92,7 +98,36 @@ const HotelDetail = () => {
   const handleWriteNotice = () => {
     setIsWrite(true);
   };
-  console.log(hotelInfo.thumbnails);
+  const favData = {
+    id: hotelId,
+  };
+  const handleFavorite = async () => {
+    setIsFav(!isFav);
+    let myfav = "";
+    try {
+      const isfavs = await instance.post(
+        `${fetchHotels}/${hotelId}/favorite`,
+        favData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      myfav = isfavs;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(myfav);
+    }
+  };
+
+  const handleWrite = (blooan) => {
+    console.log(blooan);
+    setIsWrite(blooan);
+  };
+
+  // console.log(hotelInfo);
   return (
     <div className="main mb-24">
       <div className="container">
@@ -102,7 +137,7 @@ const HotelDetail = () => {
               <HotelLocation className="xl" location={hotelInfo.nation} />
             </div>
             <div>
-              <HotelFavorite />
+              <HotelFavorite checked={isFav} onClick={handleFavorite} />
               <button className="btn-blue -mr-2" onClick={toEdit}>
                 수정
               </button>
@@ -129,12 +164,13 @@ const HotelDetail = () => {
             <Box>
               <div className="flex items-center justify-between">
                 <Heading tag="h3" text="호텔 공지" className="base" />
-                {!isWrite && (
+                {userRole === "MASTER" && (
                   <button className="btn-blue sm" onClick={handleWriteNotice}>
                     공지 올리기
                   </button>
                 )}
               </div>
+              {/* {isWrite && <NoticeWrite myId={hotelId} write={handleWrite} className="mt-5" />} */}
               {isWrite && <NoticeWrite myId={hotelId} className="mt-5" />}
               {!isWrite && (
                 <Notice className="mt-5" myId={hotelId} notices={notices} />
