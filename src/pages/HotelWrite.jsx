@@ -259,6 +259,8 @@ const HotelWrite = () => {
       return;
     }
     e.preventDefault();
+    setIsPopup(true);
+    setErrorMessage("호텔을 등록했습니다.");
     const formData = new FormData();
     if (imageFile1) formData.append("file", imageFile1);
     if (imageFile2) formData.append("file", imageFile2);
@@ -284,18 +286,21 @@ const HotelWrite = () => {
         },
       });
       console.log(roomResponse);
-      alert("호텔 등록 성공!");
+      await setErrorMessage("호텔을 등록 했습니다. ");
+      await setIsPopup(true);
+
+      // alert("호텔 등록 성공!");
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
-
-    // addHotel({ ...hotelInfo, rooms: [...rooms] });
-    resetRooms();
+  };
+  const onConfirm = async () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       navigate("/");
     }, 2000);
+    setIsPopup(false);
   };
   return (
     <>
@@ -706,7 +711,7 @@ const HotelWrite = () => {
       <Dialog open={isPopup} close={() => setIsPopup(false)}>
         <div className="text-center">
           <div className="text-center pb-3">{errorMessage}</div>
-          <button className="btn-blue" onClick={() => setIsPopup(false)}>
+          <button className="btn-blue" onClick={onConfirm}>
             확인
           </button>
         </div>
