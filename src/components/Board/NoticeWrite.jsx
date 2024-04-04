@@ -2,34 +2,27 @@ import React, { useState } from "react";
 import axios from "axios";
 import Input from "../Input";
 
-const NoticeWrite = ({ myId, write }) => {
+const NoticeWrite = ({ myId }) => {
   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isUpdate, setIsUpdate] = useState(write);
   const hotelId = parseInt(myId);
-
-  const boardData = {
-    title: title,
-    message: description,
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const boardData = {
+      title: title,
+      message: description,
+    };
     try {
-      const response = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/notices`, boardData, {
+      await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/notices`, boardData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setIsUpdate(!isUpdate);
-      // write(isUpdate);
-      // console.log(response);
+      window.location.reload(); // 공지사항을 추가한 후에 페이지를 새로고침
     } catch (error) {
       console.error("공지사항 추가 실패:", error);
-    } finally {
-      setTitle(""); // 입력값 초기화
-      setDescription("");
     }
   };
 
