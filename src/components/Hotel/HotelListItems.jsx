@@ -24,15 +24,11 @@ const HotelListItems = ({ hotel, checkFav }) => {
     setIsFav(!isFav);
     let myfav = "";
     try {
-      const isfavs = await instance.post(
-        `${fetchHotels}/${hotel.id}/favorite`,
-        favData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const isfavs = await instance.post(`${fetchHotels}/${hotel.id}/favorite`, favData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       myfav = isfavs;
     } catch (error) {
       console.log(error);
@@ -46,11 +42,7 @@ const HotelListItems = ({ hotel, checkFav }) => {
       <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"}>
         <HotelPicture
           link={`/hoteldetail/${hotel.id}`}
-          image={
-            hotel.thumbnails?.length < 4
-              ? hotel1
-              : hotel.thumbnails?.[0].img_url
-          }
+          image={hotel.thumbnails?.length < 4 ? hotel1 : hotel.thumbnails?.[0].img_url}
         />
         <div className="hotel__info">
           <HotelLocation location={hotel.nation} />

@@ -199,7 +199,7 @@ const ReservationFirst = () => {
         setIsLoading2(false);
         setIsLoading(false);
         await navigate(`/reservation/?${orderId}`);
-      }, 1500);
+      }, 2000);
     }
   };
 
@@ -234,13 +234,13 @@ const ReservationFirst = () => {
         <Box className={"white !py-3 !px-4 mb-3"}>
           <ul className="flex gap-6 text-base">
             <li>
-              룸종류 : <b>{reservedRoom.type}</b>
+              룸종류 : <b>{reservedRoom.type ? reservedRoom.type : "-"}</b>
             </li>
             <li>
-              침대타입 : <b>{reservedRoom.bed_type}</b>
+              침대타입 : <b>{reservedRoom.bed_type ? reservedRoom.bed_type : "-"}</b>
             </li>
             <li>
-              객실뷰 : <b>{reservedRoom.view_type}</b>
+              객실뷰 : <b>{reservedRoom.view_type ? reservedRoom.view_type : "-"}</b>
             </li>
           </ul>
         </Box>
