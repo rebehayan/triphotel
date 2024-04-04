@@ -37,5 +37,10 @@
     "tailwindcss": "^3.4.1",
     "vite": "^5.1.6"
   },
-  "proxy": "https://be7-team4.r-e.kr "
+  "proxy": {
+    "/api": {
+      "target": "https://be7-team4.r-e.kr",
+      "changeOrigin": true
+    }
+  }
 }
