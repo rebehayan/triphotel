@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import HotelList from "../components/Hotel/HotelList";
-import { useVisualStore } from "../store/visualStore";
-import { TbRotateClockwise2 } from "react-icons/tb";
 import { FaArrowDownShortWide } from "react-icons/fa6";
-import Heading from "../components/Heading";
-import Destinations from "../components/Destinations";
-import SearchDetail from "../components/Search/SearchDetail";
+import { TbRotateClockwise2 } from "react-icons/tb";
 import subvisual from "../assets/subvisual1.jpg";
+import Destinations from "../components/Destinations";
+import Heading from "../components/Heading";
+import HotelList from "../components/Hotel/HotelList";
+import SearchDetail from "../components/Search/SearchDetail";
+import { useVisualStore } from "../store/visualStore";
 
 const HotelAllList = () => {
   const { setTitle } = useVisualStore();
@@ -28,8 +28,8 @@ const HotelAllList = () => {
       <div className="container">
         <Destinations className="sub" />
         <Heading tag={"h3"} text={"TripHotel 목록"} className={"xl mt-10"} />
-        <div className="flex justify-between items-center mt-10 mb-5">
-          <div className="text-2xl">
+        <div className="flex mobile:flex-col tablet:flex-row justify-between items-center mt-10 mb-5">
+          <div className="text-2xl mobile:mb-3 tablet:mb-0">
             <strong className="">50개</strong>
             <span className="font-light">의 호텔이 있습니다.</span>
           </div>

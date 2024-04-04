@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
 import Heading from "../Heading";
-import RoomPicture from "../Hotel/RoomPicture";
-import room from "../../assets/hotelroom3.jpeg";
-import { Link } from "react-router-dom";
-import { RiDeleteBinLine } from "react-icons/ri";
-import GuestCounter from "../GuestCounter";
+import MypageCartItem from "./MypageCartItem";
 
 const MypageCart = () => {
+  const token = localStorage.getItem("token");
+  const { fetchMembersMyCart } = request;
+  const [myCart, setMyCart] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseCart = await instance.get(fetchMembersMyCart, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // console.log(responseCart);
+        setMyCart(responseCart.data.result.content);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <>
       <div className="mypage-cart">
@@ -30,89 +49,21 @@ const MypageCart = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="group">
-                <td className="self-start justify-self-end text-lg text-gray-500">
-                  <button>
-                    <RiDeleteBinLine />
-                  </button>
-                </td>
-                <td>
-                  <div className="grid items-center grid-cols-[min-content_1fr] gap-5 text-left">
-                    <Link to="/hoteldetail">
-                      <RoomPicture image={room} className="sm" />
-                    </Link>
-                    <div>
-                      <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2 font-bold">
-                        호텔명
-                      </Link>
-                      <div className="text-sm flex mt-2 leading-6">
-                        <b className="font-semibold">예약일</b>
-                        <div> : 2024-03-18 ~ 2024-03-19</div>
-                      </div>
-                      <div className="text-sm flex leading-6">
-                        <b className="font-semibold">인원수</b>
-                        <div> : 성인 1, 어린이 1</div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>디럭스</td>
-                <td className="pr-3 text-right">
-                  총 <b>1,000,000</b> 원
-                </td>
-                <td>
-                  <Link to="/reservation" className="btn-blue">
-                    결제
-                  </Link>
-                </td>
-              </tr>
-              <tr className="group">
-                <td className="self-start justify-self-end text-lg text-gray-500">
-                  <button>
-                    <RiDeleteBinLine />
-                  </button>
-                </td>
-                <td>
-                  <div className="grid items-center grid-cols-[min-content_1fr] gap-5 text-left">
-                    <Link to="/hoteldetail">
-                      <RoomPicture image={room} className="sm" />
-                    </Link>
-                    <div>
-                      <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2 font-bold">
-                        호텔명은 최대 2줄까지만 지원됩니다람쥐. 호텔명은 최대 2줄까지만 지원됩니다람쥐. 호텔명은 최대
-                        2줄까지만 지원됩니다람쥐. 호텔명은 최대 2줄까지만 지원됩니다람쥐. 호텔명은 최대 2줄까지만
-                        지원됩니다람쥐.
-                      </Link>
-                      <div className="text-sm flex mt-2 leading-6">
-                        <b className="font-semibold">예약일</b>
-                        <div> : 2024-03-18 ~ 2024-03-19</div>
-                      </div>
-                      <div className="text-sm flex leading-6">
-                        <b className="font-semibold">인원수</b>
-                        <div> : 성인 1, 어린이 1</div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td>디럭스</td>
-                <td className="pr-3 text-right">
-                  총 <b>1,000,000</b> 원
-                </td>
-                <td>
-                  <Link to="/reservation" className="btn-blue">
-                    결제
-                  </Link>
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={5} className="!py-10">
-                  장바구니가 비어 있습니다.
-                </td>
-              </tr>
+              {myCart.length > 0 ? (
+                myCart.map((items, index) => (
+                  <MypageCartItem key={index} items={items} />
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="!py-10">
+                    장바구니가 비어 있습니다.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-        {/* <div className="bg-white rounded-xl p-10 self-start">
+        {/* <div className="bg-white rounded-xl p-10 self-start mt-5">
           <Heading tag={"h4"} className={"sm"} text={"주문 요약"} />
           <div className="cart-price">
             <ul className="grid gap-2">
@@ -129,11 +80,6 @@ const MypageCart = () => {
                 </span>
               </li>
             </ul>
-            <div className="grid pt-5">
-              <Link to="/reservation" className="btn-blue xl !font-normal">
-                결재하기
-              </Link>
-            </div>
           </div>
         </div> */}
       </div>

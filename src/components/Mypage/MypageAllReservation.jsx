@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
-import { Link } from "react-router-dom";
-import RoomPicture from "../Hotel/RoomPicture";
-import room from "../../assets/hotelroom3.jpeg";
+import MypageAllReservationItems from "./MypageAllReservationItems";
+import request from "../../api/request";
+import instance from "../../api/axios";
+
+const { fetchOrdersList } = request; // 필요한 요청 URL을 추출
 
 const MypageAllReservation = () => {
+  const token = localStorage.getItem("token");
+  const [isMyOrders, setIsMyOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseOrder = await instance.get(`${fetchOrdersList}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setIsMyOrders(responseOrder.data.result.content);
+      // console.log(responseOrder);
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="bg-white rounded-xl p-10">
@@ -33,53 +51,15 @@ const MypageAllReservation = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="group">
-              <td>2024-03-15</td>
-              <td>
-                <div className="grid items-center grid-cols-[min-content_1fr] gap-1 text-left">
-                  <Link to="/hoteldetail">
-                    <RoomPicture image={room} size={"sm"} />
-                  </Link>
-                  <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2">
-                    호텔명
-                  </Link>
-                </div>
-              </td>
-              <td>홍길동</td>
-              <td>디럭스</td>
-              <td>2</td>
-              <td>0</td>
-              <td>2024-03-18 ~ 2024-03-19</td>
-              <td className="text-right">
-                <b>5,400,000 원</b>
-              </td>
-            </tr>
-            <tr className="group">
-              <td>2024-03-17</td>
-              <td>
-                <div className="grid items-center grid-cols-[min-content_1fr] gap-1 text-left">
-                  <Link to="/hoteldetail">
-                    <RoomPicture image={room} size={"sm"} />
-                  </Link>
-                  <Link to="/hoteldetail" className=" group-hover:text-blue-700 line-clamp-2">
-                    호텔명
-                  </Link>
-                </div>
-              </td>
-              <td>오예스</td>
-              <td>디럭스</td>
-              <td>4</td>
-              <td>2</td>
-              <td>2024-04-18 ~ 2024-05-19</td>
-              <td className="text-right">
-                <b>5,400,000 원</b>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={8} className="!py-10">
-                예약된 내역이 없습니다.
-              </td>
-            </tr>
+            {isMyOrders.length > 0 ? (
+              isMyOrders.map((items, index) => <MypageAllReservationItems key={index} items={items} />)
+            ) : (
+              <tr>
+                <td colSpan={8} className="!py-10">
+                  예약된 내역이 없습니다.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

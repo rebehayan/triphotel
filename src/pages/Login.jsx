@@ -1,21 +1,29 @@
-import React, { useState } from "react";
-import Input from "../components/Input";
-import { useNavigate } from "react-router-dom";
 import "../styles/pages/login.css";
+
+import React, { useState } from "react";
+
 import axios from "axios";
-import { useLoginStore } from "../store/loginStore";
-import { useRegisterStore } from "../store/RegisterStore";
+import { useNavigate } from "react-router-dom";
+
+import Dialog from "../components/Dialog";
+import Input from "../components/Input";
+import Loading2 from "../components/Loading2";
 import Toast from "../components/Toast";
+import { useLoginStore } from "../store/loginStore";
 
 const Login = ({ close, ...props }) => {
-  const setLogin = useLoginStore((state) => state.setLogin);
-  const setRegister = useRegisterStore((state) => state.setRegister);
+  const { setLogin, setUserInfo } = useLoginStore();
+  const navigate = useNavigate();
+  const [isLoading2, setIsLoading2] = useState(false);
 
+  // 로그인 상태
   const [isTab, setIsTab] = useState("login");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginToast, setLoginToast] = useState(false);
+
+  // 회원가입 상태
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerError, setRegisterError] = useState("");
@@ -25,8 +33,7 @@ const Login = ({ close, ...props }) => {
   const [birthYear, setBirthYear] = useState("");
   const [birthMonth, setBirthMonth] = useState("");
   const [birthDay, setBirthDay] = useState("");
-
-  const navigate = useNavigate();
+  const [isPopup, setIsPopup] = useState(false);
 
   const handleTab = (tab) => {
     setIsTab(tab);
@@ -74,19 +81,25 @@ const Login = ({ close, ...props }) => {
   // 로그인 로직
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    setIsLoading2(true);
     try {
-      const response = await axios.post("/api/members/login", {
-        email: loginEmail,
-        password: loginPassword,
-      });
+      const response = await axios.post(
+        "http://52.78.12.252:8080/api/members/login",
+        {
+          email: loginEmail,
+          password: loginPassword,
+        }
+      );
 
-      //header jwt 토큰 정보 받아오기
-      let jwtToken = response.headers["Authorization"];
-      //TODO: 추후 헤더 이름 확인 필요
-      if (response.data.success && jwtToken) {
-        localStorage.setItem("token", jwtToken);
+      const result = response.data.result;
+      const accessToken = result.access_token;
+
+      if (result && accessToken) {
+        localStorage.setItem("token", accessToken);
         setLogin(true);
+        setUserInfo(result, accessToken);
+        navigate("/");
+        close();
       }
     } catch (error) {
       if (error.response) {
@@ -106,32 +119,65 @@ const Login = ({ close, ...props }) => {
       }
       setLoginToast(true);
       console.log("Login failed", error);
+    } finally {
+      setIsLoading2(false);
     }
   };
 
   // 회원가입 로직
   const handleRegister = async (e) => {
     e.preventDefault();
+    setIsLoading2(true);
+
+    const yearValid = birthYear.length === 4 && /^\d{4}$/.test(birthYear);
+    if (!yearValid) {
+      setRegisterError("년도는 4자리 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
+
+    const monthValid =
+      birthMonth >= 1 && birthMonth <= 12 && /^\d{2}$/.test(birthMonth);
+    if (!monthValid) {
+      setRegisterError("월은 01-12 사이의 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
+
+    const dayValid =
+      birthDay >= 1 && birthDay <= 31 && /^\d{2}$/.test(birthDay);
+    if (!dayValid) {
+      setRegisterError("일은 01-31 사이의 숫자로 입력해주세요.");
+      setRegisterToast(true);
+      setIsLoading2(false);
+      return;
+    }
 
     if (registerPassword !== confirmPassword) {
       setRegisterError("비밀번호가 일치하지 않습니다.");
       setRegisterToast(true);
+      setIsLoading2(false);
       return;
     }
 
     const requestData = {
       name,
       email: registerEmail,
-      dateOfBirth: `${birthYear}/${birthMonth}/${birthDay}`,
+      birth: `${birthYear}${birthMonth}${birthDay}`,
       password: registerPassword,
     };
+
     try {
-      //TODO: 추후 URL 확인 필요
-      const response = await axios.post("/api/register", requestData);
-      navigate("/login");
+      const response = await axios.post(
+        "http://52.78.12.252:8080/api/members/join",
+        requestData
+      );
+      resetRegisterForm();
+      setIsPopup(true);
     } catch (error) {
       if (error.response) {
-        setRegister(true);
         switch (error.response.status) {
           default:
             setRegisterError("회원가입 중 예기치 않은 오류가 발생했습니다.");
@@ -143,8 +189,21 @@ const Login = ({ close, ...props }) => {
       }
       setRegisterToast(true);
       console.log("Register failed", error);
+    } finally {
+      setIsLoading2(false);
     }
   };
+
+  const resetRegisterForm = () => {
+    setName("");
+    setRegisterEmail("");
+    setBirthYear("");
+    setBirthMonth("");
+    setBirthDay("");
+    setRegisterPassword("");
+    setConfirmPassword("");
+  };
+
   return (
     <>
       <nav>
@@ -169,7 +228,8 @@ const Login = ({ close, ...props }) => {
       </nav>
       {isTab === "login" && (
         <>
-          <form className="login-form" onSubmit={handleLogin}>
+          <form className="login-form relative" onSubmit={handleLogin}>
+            {isLoading2 && <Loading2 />}
             <div>
               이메일
               <Input
@@ -208,7 +268,8 @@ const Login = ({ close, ...props }) => {
       )}
       {isTab === "register" && (
         <>
-          <form className="login-form" onSubmit={handleRegister}>
+          <form className="login-form relative" onSubmit={handleRegister}>
+            {isLoading2 && <Loading2 />}
             <div>
               이름
               <Input type="text" required value={name} onChange={handleName} />
@@ -273,6 +334,18 @@ const Login = ({ close, ...props }) => {
               Sign Up
             </button>
           </form>
+          <Dialog open={isPopup} close={() => setIsPopup(false)}>
+            이메일로 인증 링크를 보냈습니다. <br />
+            링크를 클릭해 회원가입을 완료해 주세요.{" "}
+            <div className="flex justify-center gap-2 mt-5">
+              <button className="btn-blue" onClick={() => setIsPopup(false)}>
+                확인
+              </button>
+              <button className="btn-gray" onClick={() => setIsPopup(false)}>
+                취소
+              </button>
+            </div>
+          </Dialog>
           <Toast
             color={"red"}
             onOpen={registerToast}

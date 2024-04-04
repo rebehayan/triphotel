@@ -1,7 +1,7 @@
+
 /* 결재 */
 .reservation {
-  @apply grid gap-10;
-  grid-template-columns: 1fr 2.2fr;
+  @apply grid gap-10 mobile:grid-cols-1 tablet:grid-cols-[1fr_2.2fr];
   &__hotel-info {
     @apply self-start;
     &__list {
@@ -21,14 +21,19 @@
 
 /* 예약 입력 */
 .reservation-form {
- display: grid;
- grid-template-columns: 1fr 1fr;
- gap:1.5rem;
+  @apply gap-6 mobile:block tablet:grid-cols-2 tablet:grid ;
  > div {
-  display: grid;
-  gap:.4rem;
+  @apply grid gap-2 mobile:mt-5 tablet:mt-0;
  }
 }
+.ico-toggle {
+  transition: all .3s cubic-bezier(0.215, 0.610, 0.355, 1);
+  transform: rotateX(0);
+ &.active {
+   transform: rotateX(180deg);
+ }
+}
+
 
 /* 방정보 */
 .reservation-write {
@@ -39,9 +44,6 @@
         @apply border-t border-t-gray-300;
       }
     }
-  }
-  .btn-blue {
-    @apply w-full mt-5;
   }
   .--title {
     @apply font-bold text-sm;

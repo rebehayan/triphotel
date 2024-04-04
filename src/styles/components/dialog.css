@@ -1,5 +1,5 @@
 .dialog {
-  @apply left-2/4 top-2/4 -translate-x-1/2 -translate-y-1/2 p-16 rounded-xl;
+  @apply left-2/4 top-2/4 -translate-x-1/2 -translate-y-1/2 mobile:p-10 tablet:p-16 rounded-xl;
   &::-webkit-scrollbar {
     @apply w-2 bg-transparent;
   }
@@ -12,15 +12,36 @@
   &__close {
     @apply absolute right-0 top-0 p-3 text-xl text-gray-500 hover:text-gray-800 max-w-[600px];
   }
-  &::backdrop {
-    @apply bg-black/0;
-    transition: 
-    display 0.7s allow-discrete,
-    overlay 0.7s allow-discrete,
-    background-color 0.7s
-    ;
+  &[open]:not(&.cart){
+    animation: goDown 1  0.5s both cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  &.hide:not(&.cart){
+    animation: goUp 1  0.5s both cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  &.hide::backdrop{
+    animation: fadeOut 1  0.5s both reverse;
   }
   &[open]::backdrop{
-    @apply  bg-black/25;
+    @apply bg-black/35;
+    animation: fadeIn 1  0.5s both;
+    backdrop-filter: blur(2px);
   }
+}
+
+
+@keyframes fadeIn {
+  0% { @apply  !bg-black/0;}
+  100% { @apply  !bg-black/35;}
+}
+@keyframes fadeOut {
+  0% { @apply  !bg-black/35;}
+  100% { @apply  !bg-black/0;}
+}
+@keyframes goDown {
+  0% { @apply  -mt-10 opacity-0;}
+  100% { @apply -mt-0 opacity-100;}
+}
+@keyframes goUp {
+  0% { @apply  -mt-0 opacity-100;}
+  100% { @apply -mt-10 opacity-0;}
 }

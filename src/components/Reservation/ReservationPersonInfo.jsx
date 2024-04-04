@@ -1,77 +1,200 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import instance from "../../api/axios";
+import request from "../../api/request";
+import Checkbox from "../Checkbox";
+import Dialog from "../Dialog";
 import Heading from "../Heading";
 import Input from "../Input";
-import Select from "../Select";
-import Checkbox from "../Checkbox";
-import { useNavigate, useParams } from "react-router-dom";
-import Dialog from "../Dialog";
+import Loading from "../Loading";
+import Loading2 from "../Loading2";
 import ReservationRule from "../ReservationRule";
 
-const ReservationPersonInfo = () => {
+const ReservationPersonInfo = (isitem) => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState("thisisid");
+
+  const { member, total_price, id } = isitem;
+  // console.log(isitem);
+
+  const token = localStorage.getItem("token");
+  const { fetchOrders } = request;
   const [isRule, setIsRule] = useState(false);
-  const [isvalue, setIsvalue] = useState("");
-  const [isvalue2, setIsvalue2] = useState("");
+  const [isAddress, setIsAddress] = useState("");
+  const [isCountry, setIsCountry] = useState("");
+  const [isCity, setIsCity] = useState("");
+  const [isPostCode, setIsPostCode] = useState("");
+  const [isRequestText, setIsRequestText] = useState("");
+  const [isPopup, setIsPopup] = useState(false);
+  const [errrorMessage, setErrrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [persnalInfo, setPersnalInfo] = useState({
+    name: "",
+    email: "",
+    address: "",
+    city: "",
+    nation: "",
+    zip_code: "",
+    comment: "",
+    agreement: false,
+    credit: member?.credit,
+  });
 
-  const handleInfo = (e) => {
-    e.preventDefault();
-    navigate(`/reservation/done/${userData}`);
+  const handleAddress = (address) => {
+    setIsAddress(address);
+    setPersnalInfo({ ...persnalInfo, address });
   };
-
+  const handleCity = (city) => {
+    setIsCity(city);
+    setPersnalInfo({ ...persnalInfo, city });
+  };
+  const handleCountry = (nation) => {
+    setIsCountry(nation);
+    setPersnalInfo({ ...persnalInfo, nation });
+  };
+  const handlePostCode = (zip_code) => {
+    setIsPostCode(zip_code);
+    setPersnalInfo({ ...persnalInfo, zip_code });
+  };
+  const handleRequest = (comment) => {
+    setIsRequestText(comment);
+    setPersnalInfo({ ...persnalInfo, comment });
+  };
   const handleRule = (e) => {
     e.preventDefault();
     setIsRule(true);
   };
-  const handleAddress = (value) => {
-    setIsvalue(value);
-  };
-  const handleCity = (value) => {
-    setIsvalue2(value);
-  };
 
-  // 결과값
-  // console.log("주소" + isvalue);
-  // console.log("도시" + isvalue2);
-  // console.log("도착시간" + isvalue3);
+  const handleReservation = async (e) => {
+    e.preventDefault();
+
+    const checkEmpty = () => {
+      let isValid = true;
+      if (!persnalInfo.address) {
+        setIsPopup(true);
+        setErrrorMessage("주소를 입력해 주세요.");
+        isValid = false;
+      } else if (!persnalInfo.city) {
+        setIsPopup(true);
+        setErrrorMessage("도시를 입력해 주세요.");
+        isValid = false;
+      } else if (!persnalInfo.nation) {
+        setIsPopup(true);
+        setErrrorMessage("국가를 입력해 주세요.");
+        isValid = false;
+      } else if (!persnalInfo.zip_code) {
+        setIsPopup(true);
+        setErrrorMessage("우편번호를 입력해 주세요.");
+        isValid = false;
+      } else if (member?.credit < total_price) {
+        setIsPopup(true);
+        setErrrorMessage(
+          "보유금액이 결제금액보다 적습니다. 크래딧을 충전해주세요."
+        );
+        isValid = false;
+      } else if (!persnalInfo.agreement) {
+        setIsPopup(true);
+        setErrrorMessage("예약 약관에 동의해주세요.");
+        isValid = false;
+      }
+      return isValid;
+    };
+
+    const isValidCheck = checkEmpty();
+
+    if (!isValidCheck) return;
+
+    const requestData = {
+      zip_code: persnalInfo.zip_code,
+      nation: persnalInfo.nation,
+      city: persnalInfo.city,
+      address: persnalInfo.address,
+      comment: persnalInfo.comment,
+    };
+
+    try {
+      setIsLoading2(true);
+      await instance.patch(`${fetchOrders}/${id}`, requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // deleteCart(id);
+    } catch (error) {
+      console.log("handleReservation", error);
+      const errorMessage = error.response.data.result;
+      if (errorMessage === "Not found order") {
+        setIsPopup(true);
+        setErrrorMessage("Not found order");
+      }
+    } finally {
+      console.log(requestData);
+      console.log(id);
+      setIsLoading2(false);
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate(`/reservation/done/${member.id}`);
+      }, 1500);
+    }
+  };
 
   return (
-    <div>
+    <div className="relative">
       <form>
         <Heading tag={"h3"} className={"base"} text={"개인정보 입력"} />
         <div className="reservation-form mt-5">
           <div>
             이름
-            <Input type={"text"} disabled defaultValue="아무개" />
+            <Input type={"text"} disabled defaultValue={member?.name} />
           </div>
           <div>
             이메일
-            <Input type={"email"} disabled defaultValue="123@123.com" />
+            <Input type={"email"} disabled defaultValue={member?.email} />
           </div>
           <div>
             주소
-            <Input type={"text"} value={isvalue} onChange={handleAddress} />
+            <Input type={"text"} value={isAddress} onChange={handleAddress} />
           </div>
           <div>
             도시
-            <Input type={"text"} value={isvalue2} onChange={handleCity} />
+            <Input type={"text"} value={isCity} onChange={handleCity} />
           </div>
           <div>
             국가
-            <Input type={"text"} />
+            <Input type={"text"} value={isCountry} onChange={handleCountry} />
           </div>
           <div>
             우편번호
-            <Input type={"text"} />
+            <Input
+              type={"number"}
+              value={isPostCode}
+              onChange={handlePostCode}
+            />
           </div>
           <div className="col-span-2">
             요청사항
-            <Input type={"textarea"} />
+            <Input
+              type={"textarea"}
+              value={isRequestText}
+              onChange={handleRequest}
+            />
           </div>
         </div>
         <div className="mt-10 flex justify-between items-center">
-          <div>
-            <Checkbox color={"blue"} id={"agree"} value={"예약 약관동의"} />
+          <div className="check-group">
+            <Checkbox
+              color={"blue"}
+              id={"agree"}
+              checked={persnalInfo.agreement}
+              onChange={(e) =>
+                setPersnalInfo({ ...persnalInfo, agreement: e.target.checked })
+              }
+            >
+              예약 약관동의
+            </Checkbox>
           </div>
           <div>
             <button className="btn-blue-outline" onClick={handleRule}>
@@ -81,15 +204,27 @@ const ReservationPersonInfo = () => {
         </div>
 
         <div className="mt-10 flex gap-2 justify-center">
-          <button className="btn-blue xl" onClick={handleInfo}>
+          <button className="btn-blue xl" onClick={handleReservation}>
             숙소 예약하기
           </button>
-          <button className="btn-red xl">취소하기</button>
+          <Link to="/" className="btn-red xl">
+            취소하기
+          </Link>
         </div>
       </form>
       <Dialog open={isRule} close={() => setIsRule(false)}>
         <ReservationRule />
       </Dialog>
+      <Dialog open={isPopup} close={() => setIsPopup(false)}>
+        <div className="text-center">
+          <div className="text-center pb-3">{errrorMessage}</div>
+          <button className="btn-blue" onClick={() => setIsPopup(false)}>
+            확인
+          </button>
+        </div>
+      </Dialog>
+      {isLoading && <Loading />}
+      {isLoading2 && <Loading2 />}
     </div>
   );
 };

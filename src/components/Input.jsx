@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Toast from "./Toast";
 
 const cut3Digit = /\B(?=(\d{3})+(?!\d))/g;
 const allowedFileTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -20,8 +19,7 @@ const Input = ({ type, className, onChange, price, value, ...props }) => {
     const formattedPrice = formatPrice(inputValue);
 
     setIsNumber(formattedPrice);
-
-    if (!price) onChange(e.target.value);
+    onChange(e.target.value);
     // 리턴할때에는 , 없이 해야하고, 가지고 올때에는 ,있게 가지고 와야한다.
   };
 
@@ -31,7 +29,6 @@ const Input = ({ type, className, onChange, price, value, ...props }) => {
     const filename = files[0].name;
     if (files[0]) {
       if (!allowedFileTypes.includes(files[0].type)) {
-        console.log("error");
         setIsToast(true);
         setIsFile("");
         return;
@@ -39,7 +36,6 @@ const Input = ({ type, className, onChange, price, value, ...props }) => {
 
       setIsFile(filename);
       onChange(files[0]);
-      console.log(files);
       // 스트림 or img
     }
   };
@@ -52,7 +48,12 @@ const Input = ({ type, className, onChange, price, value, ...props }) => {
   return (
     <>
       {type === "textarea" ? (
-        <textarea rows={10} className="textarea" value={value} onChange={onChange}></textarea>
+        <textarea
+          rows={10}
+          className={"textarea " + className}
+          value={value}
+          onChange={handleonChange}
+        ></textarea>
       ) : price ? (
         <input
           type={type}
@@ -70,7 +71,13 @@ const Input = ({ type, className, onChange, price, value, ...props }) => {
           accept=".jpg,.jpeg,.png,.webp"
         />
       ) : (
-        <input type={type} {...props} value={value} onChange={handleonChange} className={`input ${className}`} />
+        <input
+          type={type}
+          {...props}
+          value={value}
+          onChange={handleonChange}
+          className={`input ${className}`}
+        />
       )}
       {/* <Toast color={"red"} onOpen={isToast} onClose={() => setIsToast(!isToast)}>
         올바른 파일 형식이 아닙니다. jpg, png, webp 등 이미지만 허용됩니다.
