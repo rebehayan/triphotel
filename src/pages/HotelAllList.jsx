@@ -24,7 +24,7 @@ const HotelAllList = () => {
     }, 3000);
   };
   useEffect(() => {
-    axios.get(`https://52.78.12.252:8080/api/hotels`).then((response) => {
+    axios.get(`https://be7-team4.r-e.kr/api/hotels`).then((response) => {
       setHotelsLength(response.data.result.total_elements);
       console.log(response);
     });
