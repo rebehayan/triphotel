@@ -27,7 +27,7 @@ const HotelFavoriteList = ({ className, ...props }) => {
       }
     };
     fetchFavData();
-  }, []);
+  }, [myFavList]);
 
   return (
     <>

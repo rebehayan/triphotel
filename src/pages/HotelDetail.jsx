@@ -21,10 +21,14 @@ import SubVisual from "../components/SubVisual";
 import Text from "../components/Text";
 import { usehotelListStore } from "../store/hotelListStore";
 import { useVisualStore } from "../store/visualStore";
+import instance from "../api/axios";
+import request from "../api/request";
+import { useLoginStore } from "../store/loginStore";
 
 const pictures = [{ src: pic1 }, { src: pic2 }, { src: pic3 }, { src: pic4 }];
 
 const HotelDetail = () => {
+  const { userRole } = useLoginStore();
   const navigate = useNavigate();
   const { hotelId } = useParams();
   const { setTitle } = useVisualStore();
@@ -33,16 +37,16 @@ const HotelDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { totalHotels, deleteHotel } = usehotelListStore();
   const [notices, setNotices] = useState([]);
+  const [isFav, setIsFav] = useState(hotelInfo.favorite);
+  const { fetchHotels } = request;
 
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
 
   useEffect(() => {
-    axios
-      .get(`http://52.78.12.252:8080/api/hotels/${hotelId}`)
-      .then((response) => {
-        setHotelInfo(response.data.result);
-        setNotices(response.data.result.notices);
-      });
+    axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`).then((response) => {
+      setHotelInfo(response.data.result);
+      setNotices(response.data.result.notices);
+    });
   }, [hotelId]);
 
   useEffect(() => {
@@ -56,14 +60,11 @@ const HotelDetail = () => {
   const onDelete = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.delete(
-        `http://52.78.12.252:8080/api/hotels/${hotelId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`http://52.78.12.252:8080/api/hotels/${hotelId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("호텔 삭제 성공!");
     } catch (error) {
       console.error(error);
@@ -85,7 +86,32 @@ const HotelDetail = () => {
   const handleWriteNotice = () => {
     setIsWrite(true);
   };
+  const favData = {
+    id: hotelId,
+  };
+  const handleFavorite = async () => {
+    setIsFav(!isFav);
+    let myfav = "";
+    try {
+      const isfavs = await instance.post(`${fetchHotels}/${hotelId}/favorite`, favData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      myfav = isfavs;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log(myfav);
+    }
+  };
 
+  const handleWrite = (blooan) => {
+    console.log(blooan);
+    setIsWrite(blooan);
+  };
+
+  // console.log(hotelInfo);
   return (
     <div className="main mb-24">
       <div className="container">
@@ -95,7 +121,7 @@ const HotelDetail = () => {
               <HotelLocation className="xl" location={hotelInfo.nation} />
             </div>
             <div>
-              <HotelFavorite />
+              <HotelFavorite checked={isFav} onClick={handleFavorite} />
               <button className="btn-blue -mr-2" onClick={toEdit}>
                 수정
               </button>
@@ -117,12 +143,13 @@ const HotelDetail = () => {
             <Box>
               <div className="flex items-center justify-between">
                 <Heading tag="h3" text="호텔 공지" className="base" />
-                {!isWrite && (
+                {userRole === "MASTER" && (
                   <button className="btn-blue sm" onClick={handleWriteNotice}>
                     공지 올리기
                   </button>
                 )}
               </div>
+              {/* {isWrite && <NoticeWrite myId={hotelId} write={handleWrite} className="mt-5" />} */}
               {isWrite && <NoticeWrite myId={hotelId} className="mt-5" />}
               {!isWrite && <Notice className="mt-5" myId={hotelId} notices={notices} />}
             </Box>
@@ -140,11 +167,7 @@ const HotelDetail = () => {
             </Box>
           </div>
           <div className="mobile:fixed mobile:top-[inherit] mobile:bottom-0 z-50 mobile:left-0 tablet:left-[inherit] tablet:bottom-[inherit] tablet:sticky tablet:top-28 self-start mobile:w-full tablet:w-[25rem] desktop:w-[30rem] mobile:mt-0 tablet:mt-0">
-            <Box
-              className={
-                "mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"
-              }
-            >
+            <Box className={"mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"}>
               <ReservationFirst />
             </Box>
           </div>

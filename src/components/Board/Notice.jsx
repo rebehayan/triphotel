@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import NoticeItem from "./NoticeItem";
 import "../../styles/components/board.css";
 
-const Notice = ({ className, notices, myId}) => {
-console.log(notices);
+const Notice = ({ className, notices, myId }) => {
+  // console.log(notices);
 
   const [activeIndex, setActiveIndex] = useState(null);
 
   const handleDelete = (index) => {
-    const updatedNoticeItems = [...noticeItems];
-    updatedNoticeItems.splice(index, 1);
-    setNoticeItems(updatedNoticeItems);
+    // const updatedNoticeItems = [...noticeItems];
+    // updatedNoticeItems.splice(index, 1);
+    // setNoticeItems(updatedNoticeItems);
     setActiveIndex(null); // 삭제 후 활성화된 인덱스 초기화
   };
 
