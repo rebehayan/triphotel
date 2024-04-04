@@ -49,7 +49,7 @@
 |   김경호   |   여관구   |   황찬희   |
 |-----------|----------|----------|
 |    사진  |   사진   |   사진   |
-|    - Member, Security<br> - Test Code, CI/CD  |    - Reservation, Payment<br> - Test Code    |    - ShoppingCart, Bookmark<br> - Presentation    |
+|    ► Member, Security<br> ► Test Code, CI/CD  |    ► Reservation, Payment<br> ► Test Code    |    ► ShoppingCart, Bookmark<br> ► Presentation    |
 
 <br>
 <br>
