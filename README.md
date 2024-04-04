@@ -41,14 +41,12 @@
 
 |   [하성필](https://github.com/hasungpil)   |   [최훙주](https://github.com/Zojo24)   |   [심소망](https://github.com/ssmv713)   |   [이재혁](https://github.com/Now-h)   |
 |-----------|----------|----------|-----------|
-|    사진  |   사진   |   사진   |   사진   |
 |    역할    |    역할    |    역할    |    역할    |
 
 <h4>BE</h4>
 
 |   김경호   |   여관구   |   황찬희   |
 |-----------|----------|----------|
-|    사진  |   사진   |   사진   |
 |    • 유저플로우 및 DB설계<br> • Git<br> • Member, Security<br> • Test Code, CI/CD  |    • 유저플로우 및 DB설계<br> • Git<br> • Reservation, Payment<br> • Test Code    |    • 유저플로우 및 DB설계<br> • 회의록 및 노션 업데이트<br> • ShoppingCart, Bookmark<br> • Presentation    |
 
 <br>
