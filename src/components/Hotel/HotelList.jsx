@@ -16,7 +16,7 @@ const HotelList = ({ className, ...props }) => {
     <>
       <ul className={`hotel ${className}`} {...props}>
         {hotels.map((hotel) => (
-          <HotelListItems key={hotel.id} hotel={hotel} checkFav={false} />
+          <HotelListItems key={hotel.id} hotel={hotel} />
         ))}
       </ul>
     </>

@@ -11,13 +11,13 @@ import HotelTitle from "./HotelTitle";
 import instance from "../../api/axios";
 import request from "../../api/request";
 
-const HotelListItems = ({ hotel, checkFav }) => {
+const HotelListItems = ({ hotel }) => {
   const token = localStorage.getItem("token");
-  const [isFav, setIsFav] = useState(checkFav);
+  const [isFav, setIsFav] = useState(hotel.favorite);
   const { fetchHotels } = request;
 
-  // console.log(checkFav);
-  // console.log(hotel.id);
+  console.log(hotel.favorite);
+  // console.log(hotel);
   const favData = {
     id: hotel.id,
   };
