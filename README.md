@@ -1,5 +1,5 @@
 <div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&text=✈️%20숙박%20예약%20서비스%20플랫폼&animation=fadeIn&fontColor=ffffff&fontSize=40" />
+    <img src="color=gradient&height=120&text=✈️%20숙박%20예약%20서비스%20플랫폼&animation=fadeIn&fontColor=ffffff&fontSize=40" />
 </div>
 
 ## 🏠 배포 링크
