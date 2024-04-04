@@ -15,7 +15,6 @@ import { useVisualStore } from "../store/visualStore";
 const Mypage = () => {
   const { setTitle } = useVisualStore();
   const { userRole } = useLoginStore();
-  // console.log(userRole);
 
   useEffect(() => {
     setTitle("My Page", subvisual);

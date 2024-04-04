@@ -8,6 +8,7 @@ import { useSearchStore } from "../../store/searchStore";
 import Input from "../Input";
 import Loading2 from "../Loading";
 import Select from "../Select";
+import Dialog from "../Dialog";
 
 const where = [
   {
@@ -40,6 +41,9 @@ const SearchDetail = () => {
   const [selectedNation, setSelectedNation] = useState("");
   const [hotelName, setHotelName] = useState("");
   const [isLoading2, setIsLoading2] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
+  const [errrorMessage, setErrrorMessage] = useState("");
+
   const navigate = useNavigate();
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
@@ -58,7 +62,8 @@ const SearchDetail = () => {
     e.preventDefault();
 
     if (selectedNation === "NATION" || !hotelName.trim()) {
-      alert("국가와 호텔명을 모두 입력해주세요.");
+      setIsPopup(true);
+      setErrrorMessage(`국가와 호텔명을 모두 입력해주세요.`);
       return;
     }
 
@@ -99,6 +104,14 @@ const SearchDetail = () => {
         </button>
         {isLoading2 && <Loading2 />}
       </div>
+      <Dialog open={isPopup} close={() => setIsPopup(false)}>
+        {errrorMessage}
+        <div className="flex justify-center gap-2 mt-5">
+          <button className="btn-blue" onClick={() => setIsPopup(false)}>
+            확인
+          </button>
+        </div>
+      </Dialog>
     </form>
   );
 };

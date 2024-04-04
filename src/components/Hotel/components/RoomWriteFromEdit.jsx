@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usehotelListStore } from "../../../store/hotelListStore";
 import { useRoomFromEditStore } from "../../../store/roomFromEditStore";
 import Box from "../../Box";
+import Dialog from "../../Dialog";
 import Input from "../../Input";
 import Radio from "../../Radio";
 import Select from "../../Select";
@@ -79,6 +80,8 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   const { rooms, addRoom } = useRoomFromEditStore();
   const [isRadio, setIsRadio] = useState(false);
   const [image, setImage] = useState();
+  const [isPopup, setIsPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
   const [roomInfo, setRoomInfo] = useState({
     type: "STANDARD",
     active_status: "ACTIVE",
@@ -92,7 +95,9 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
   });
 
   const handleRoomType = (e) => {
-    const selectedOption = roomOption.find((option) => option.text === e.target.value);
+    const selectedOption = roomOption.find(
+      (option) => option.text === e.target.value
+    );
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -102,7 +107,9 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleBed = (e) => {
-    const selectedOption = bedOption.find((option) => option.text === e.target.value);
+    const selectedOption = bedOption.find(
+      (option) => option.text === e.target.value
+    );
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -112,7 +119,9 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     }
   };
   const handleView = (e) => {
-    const selectedOption = viewOption.find((option) => option.text === e.target.value);
+    const selectedOption = viewOption.find(
+      (option) => option.text === e.target.value
+    );
 
     if (selectedOption) {
       setRoomInfo((prev) => ({
@@ -149,19 +158,24 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
     formData.append("file", image);
 
     try {
-      const response = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      alert("객실 등록 성공!");
-      setIsToggle(false);
+      const response = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
+    setPopupMessage("객실을 새로 등록했습니다.");
+    setIsPopup(true);
+    // addRoom(roomInfo);
+  };
+  const onConfirm = () => {
     navigate(`/hoteldetail/${hotelId}`);
-    addRoom(roomInfo);
   };
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
   const onCancel = () => {
@@ -194,7 +208,12 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
                   price={true}
                   onChange={handlePrice}
                 />{" "} */}
-                <Input type={"number"} value={roomInfo.standard_price} onChange={handlePrice} /> 원
+                <Input
+                  type={"number"}
+                  value={roomInfo.standard_price}
+                  onChange={handlePrice}
+                />{" "}
+                원
               </div>
             </li>
             <li className="grid gap-3 self-start">
@@ -257,6 +276,14 @@ const RoomWriteFromEdit = ({ setIsToggle }) => {
         <button className="btn-gray" onClick={onCancel}>
           취소
         </button>
+        <Dialog open={isPopup} close={() => setIsPopup(false)}>
+          <div className="text-center">
+            <div className="text-center pb-3">{popupMessage}</div>
+            <button className="btn-blue" onClick={onConfirm}>
+              확인
+            </button>
+          </div>
+        </Dialog>
       </div>
     </>
   );

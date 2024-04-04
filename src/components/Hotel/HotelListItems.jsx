@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import instance from "../../api/axios";
 import request from "../../api/request";
 import hotel1 from "../../assets/hotel1.jpg";
 import { digit3 } from "../../store/digit3";
+import { useReservationStore } from "../../store/reservationStore";
 import Badge from "../Badge";
 import HotelBooking from "./HotelBooking";
 import HotelFavorite from "./HotelFavorite";
@@ -11,14 +14,13 @@ import HotelLocation from "./HotelLocation";
 import HotelPicture from "./HotelPicture";
 import HotelPrice from "./HotelPrice";
 import HotelTitle from "./HotelTitle";
-import { useReservationStore } from "../../store/reservationStore";
 
 const HotelListItems = ({ hotel, checkFav }) => {
   const token = localStorage.getItem("token");
   const [isFav, setIsFav] = useState(hotel.favorite || checkFav);
   const { fetchHotels } = request;
   const { addInfo } = useReservationStore();
-
+  const navigate = useNavigate();
   // console.log(hotel);
 
   const favData = {
@@ -28,11 +30,15 @@ const HotelListItems = ({ hotel, checkFav }) => {
     setIsFav(!isFav);
     let myfav = "";
     try {
-      const isfavs = await instance.post(`${fetchHotels}/${hotel.id}/favorite`, favData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const isfavs = await instance.post(
+        `${fetchHotels}/${hotel.id}/favorite`,
+        favData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       myfav = isfavs;
     } catch (error) {
       console.log(error);
@@ -42,15 +48,25 @@ const HotelListItems = ({ hotel, checkFav }) => {
   };
 
   const handleResetStore = () => {
-    addInfo("");
+    addInfo({});
   };
-
+  const onBooking = (id) => {
+    console.log(id);
+    navigate(`hoteldetails/${id}`);
+  };
   return (
     <>
-      <li className={hotel.active_status === "ACTIVE" ? "" : "disabled"} onClick={handleResetStore}>
+      <li
+        className={hotel.active_status === "ACTIVE" ? "" : "disabled"}
+        onClick={handleResetStore}
+      >
         <HotelPicture
           link={`/hoteldetail/${hotel.id}`}
-          image={hotel.thumbnails?.length < 4 ? hotel1 : hotel.thumbnails?.[0].img_url}
+          image={
+            hotel.thumbnails?.length < 4
+              ? hotel1
+              : hotel.thumbnails?.[0].img_url
+          }
         />
         <div className="hotel__info">
           <HotelLocation location={hotel.nation} />
@@ -58,7 +74,10 @@ const HotelListItems = ({ hotel, checkFav }) => {
           <HotelTitle link={`/hoteldetail/${hotel.id}`} title={hotel.name} />
           <HotelPrice price={digit3(hotel.rooms[0]?.standard_price)} />
           {hotel.active_status === "ACTIVE" ? (
-            <HotelBooking text={"HotelBooking"} />
+            <HotelBooking
+              text={"HotelBooking"}
+              onClick={() => onBooking(hotel.id)}
+            />
           ) : (
             <>
               <HotelBooking disabled text={"Sold Out"} />

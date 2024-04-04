@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import room2 from "../../assets/hotelroom2.jpeg";
 import { useRoomEditStore } from "../../store/roomEditStore";
 import { useRoomStore } from "../../store/roomStore";
+import Dialog from "../Dialog";
 import RoomEditfromEdit from "./components/RoomEditfromEdit";
 import HotelPrice from "./HotelPrice";
 import HotelTitle from "./HotelTitle";
@@ -15,7 +16,9 @@ import RoomPicture from "./RoomPicture";
 const RoomListItems = ({ roomLists, edit, ...props }) => {
   const show = { able: "disabled" };
   const { isEdit, getIsEdit, changeEdit } = useRoomEditStore();
-  // const [isEdit, setIsEdit] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const { hotelId } = useParams();
   const { rooms, deleteRoom } = useRoomStore();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -30,19 +33,18 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
           },
         }
       );
-
-      alert("객실 삭제 성공!");
     } catch (error) {
       console.error(error);
     }
-
-    deleteRoom(roomId);
-    navigate(`/hoteldetail/${hotelId}`);
+    setPopupMessage("해당 객실을 삭제했습니다.");
+    setIsPopup(true);
   };
   const onEdit = () => {
     changeEdit(true);
   };
-
+  const onConfirm = (id) => {
+    navigate(`/hoteldetail/${id}`);
+  };
   return (
     <>
       {roomLists?.map((it) => (
@@ -96,6 +98,14 @@ const RoomListItems = ({ roomLists, edit, ...props }) => {
           )}
         </li>
       ))}
+      <Dialog open={isPopup} close={() => setIsPopup(false)}>
+        <div className="text-center">
+          <div className="text-center pb-3">{popupMessage}</div>
+          <button className="btn-blue" onClick={() => onConfirm(hotelId)}>
+            확인
+          </button>
+        </div>
+      </Dialog>
     </>
   );
 };
