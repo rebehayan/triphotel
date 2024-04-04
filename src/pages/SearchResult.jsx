@@ -8,8 +8,8 @@ import Destinations from "../components/Destinations";
 import Heading from "../components/Heading";
 import ResultList from "../components/Hotel/ResultList";
 import SearchDetail from "../components/Search/SearchDetail";
-import { useVisualStore } from "../store/visualStore";
 import { useSearchStore } from "../store/searchStore";
+import { useVisualStore } from "../store/visualStore";
 
 const SearchResult = () => {
   const { setTitle } = useVisualStore();
