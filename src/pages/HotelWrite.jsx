@@ -168,7 +168,6 @@ const HotelWrite = () => {
     }));
   };
 
-  // console.log(hotelInfo);
   //예약가능
   const handleRadioChange = (value) => {
     setHotelInfo({ ...hotelInfo, active_status: value });

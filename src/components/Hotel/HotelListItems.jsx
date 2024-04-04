@@ -17,8 +17,6 @@ const HotelListItems = ({ hotel, checkFav }) => {
   const [isFav, setIsFav] = useState(hotel.favorite || checkFav);
   const { fetchHotels } = request;
 
-  // console.log(hotel.favorite);
-  // console.log(hotel);
   const favData = {
     id: hotel.id,
   };

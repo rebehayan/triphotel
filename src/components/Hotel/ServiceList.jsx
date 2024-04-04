@@ -1,41 +1,33 @@
-import '../../styles/components/servicelist.css';
+import "../../styles/components/servicelist.css";
 
-import React from 'react';
+import React from "react";
 
-import { BiSolidDrink } from 'react-icons/bi';
-import { CgGym } from 'react-icons/cg';
-import { FaSwimmer } from 'react-icons/fa';
-import { FaShower } from 'react-icons/fa6';
-import { GiBugleCall } from 'react-icons/gi';
-import { ImSpoonKnife } from 'react-icons/im';
-import { IoWifi } from 'react-icons/io5';
+import { BiSolidDrink } from "react-icons/bi";
+import { CgGym } from "react-icons/cg";
+import { FaSwimmer } from "react-icons/fa";
+import { FaShower } from "react-icons/fa6";
+import { GiBugleCall } from "react-icons/gi";
+import { ImSpoonKnife } from "react-icons/im";
+import { IoWifi } from "react-icons/io5";
 import {
   LuBaggageClaim,
   LuLampDesk,
   LuParkingCircle,
   LuShoppingBasket,
-} from 'react-icons/lu';
-import {
-  MdLock,
-  MdOutlineDryCleaning,
-  MdSportsBar,
-} from 'react-icons/md';
-import { PiTelevisionBold } from 'react-icons/pi';
-import { SlCup } from 'react-icons/sl';
-import {
-  TbAirConditioning,
-  TbIroningSteam,
-} from 'react-icons/tb';
-import { useParams } from 'react-router-dom';
+} from "react-icons/lu";
+import { MdLock, MdOutlineDryCleaning, MdSportsBar } from "react-icons/md";
+import { PiTelevisionBold } from "react-icons/pi";
+import { SlCup } from "react-icons/sl";
+import { TbAirConditioning, TbIroningSteam } from "react-icons/tb";
+import { useParams } from "react-router-dom";
 
-import { usehotelListStore } from '../../store/hotelListStore';
+import { usehotelListStore } from "../../store/hotelListStore";
 
 const ServiceList = ({ options, className, ...props }) => {
   let { hotelId } = useParams();
   const { totalHotels } = usehotelListStore();
   const thisHotel = totalHotels.find((hotel) => hotel.id === Number(hotelId));
-  // console.log("thishotel", thisHotel);
-  // const options = thisHotel?.options;
+
   return (
     <ul className={"service-list " + className}>
       {options?.swimming_pool ? (
