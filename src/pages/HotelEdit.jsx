@@ -82,7 +82,9 @@ const HotelEdit = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const response = await axios.get(`http://52.78.12.252:8080/api/hotels/${hotelId}`);
+        const response = await axios.get(
+          `http://52.78.12.252:8080/api/hotels/${hotelId}`
+        );
         setHotelData(response.data.result);
       } catch (error) {
         console.log(error);
@@ -107,6 +109,7 @@ const HotelEdit = () => {
   const [locationText, setLocationText] = useState("");
   const [price, setPrice] = useState("");
   const [isPopup, setIsPopup] = useState(false);
+  const [isPopup2, setIsPopup2] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hotelInfo, setHotelInfo] = useState({});
@@ -253,13 +256,15 @@ const HotelEdit = () => {
   const handleCheckIn = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_in: selectedValue });
   };
   const handleCheckOut = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_out: selectedValue });
   };
   //흡연
@@ -273,20 +278,26 @@ const HotelEdit = () => {
   const handlePoolOpen = (e) => {
     const selectedValue = e.target.value;
     // 'where' 대신 'checkOption' 배열을 사용합니다.
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_opening_time: selectedValue });
   };
   const handlePoolClose = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_closing_time: selectedValue });
   };
 
   //수정저장
   const token = localStorage.getItem("token");
   const saveHotel = async () => {
-    if (hotelInfo.name == "" || hotelInfo.price == "" || hotelInfo.description == "") {
+    if (
+      hotelInfo.name == "" ||
+      hotelInfo.price == "" ||
+      hotelInfo.description == ""
+    ) {
       setIsPopup(true);
       setErrorMessage("호텔 기본정보를 모두 입력해 주세요.");
       return;
@@ -297,13 +308,18 @@ const HotelEdit = () => {
     // if (imageFile4) formData.append("file", imageFile4);
 
     try {
-      const response = await axios.patch(`http://52.78.12.252:8080/api/hotels/${hotelId}`, hotelInfo, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.patch(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}`,
+        hotelInfo,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      alert("호텔 수정 성공!");
+      await setErrorMessage("호텔수정이 완료되었습니다.");
+      await setIsPopup2(true);
     } catch (error) {
       console.error(error);
     }
@@ -341,14 +357,20 @@ const HotelEdit = () => {
           },
         }
       );
-
-      alert("이미지 수정 성공!");
     } catch (error) {
-      console.error("성공", error);
+      console.error("실패", error);
     }
   };
   const toPrevious = () => {
     navigate(`/hoteldetail/${hotelId}`);
+  };
+  const onConfirm = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/");
+    }, 2000);
+    setIsPopup(false);
   };
   return (
     <>
@@ -356,7 +378,11 @@ const HotelEdit = () => {
         <div className="container mb-32">
           <Heading tag={"h3"} text={"호텔 수정"} className={"xl my-5"} />
           <Box>
-            <Heading tag={"h3"} text={"호텔 대표이미지"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 대표이미지"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid tablet:grid-cols-2  desktop:grid-cols-4 gap-5">
                 <li>
@@ -367,28 +393,52 @@ const HotelEdit = () => {
                     className={"mb-3 bg-gray-50"}
                   />
                   <Input type={"file"} onChange={handleFileChange1} />
-                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(0)}>
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(0)}
+                  >
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage bringImage={bringImage2} props={{ image: imageFile2 }} className={"mb-3 bg-gray-50"} />
+                  <Noimage
+                    bringImage={bringImage2}
+                    props={{ image: imageFile2 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
                   <Input type={"file"} onChange={handleFileChange2} />
-                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(1)}>
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(1)}
+                  >
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage bringImage={bringImage3} props={{ image: imageFile3 }} className={"mb-3 bg-gray-50"} />
+                  <Noimage
+                    bringImage={bringImage3}
+                    props={{ image: imageFile3 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
                   <Input type={"file"} onChange={handleFileChange3} />
-                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(2)}>
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(2)}
+                  >
                     이미지 저장
                   </button>
                 </li>
                 <li>
-                  <Noimage bringImage={bringImage4} props={{ image: imageFile4 }} className={"mb-3 bg-gray-50"} />
+                  <Noimage
+                    bringImage={bringImage4}
+                    props={{ image: imageFile4 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
                   <Input type={"file"} onChange={handleFileChange4} />
-                  <button className="btn-blue btn-blue mt-1" onClick={() => saveImage(3)}>
+                  <button
+                    className="btn-blue btn-blue mt-1"
+                    onClick={() => saveImage(3)}
+                  >
                     이미지 저장
                   </button>
                 </li>
@@ -397,16 +447,28 @@ const HotelEdit = () => {
           </Box>
 
           <Box className={"mt-10"}>
-            <Heading tag={"h3"} text={"호텔 기본정보"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 기본정보"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-5">
                 <li className="grid gap-3">
                   호텔 위치
-                  <Select selectValue={hotelInfo.nation} options={where} onChange={handleLocationChange} />
+                  <Select
+                    selectValue={hotelInfo.nation}
+                    options={where}
+                    onChange={handleLocationChange}
+                  />
                 </li>
                 <li className="grid gap-3">
                   호텔 이름
-                  <Input type={"text"} value={hotelInfo?.name} onChange={handleName} />
+                  <Input
+                    type={"text"}
+                    value={hotelInfo?.name}
+                    onChange={handleName}
+                  />
                 </li>
                 {/* <li className="grid gap-3">
                   호텔 가격
@@ -442,7 +504,11 @@ const HotelEdit = () => {
                 </li>
                 <li className="grid gap-3 col-span-3">
                   호텔 안내
-                  <Input type={"textarea"} onChange={handleContent} value={hotelInfo.description} />
+                  <Input
+                    type={"textarea"}
+                    onChange={handleContent}
+                    value={hotelInfo.description}
+                  />
                 </li>
               </ul>
             </Box>
@@ -451,7 +517,11 @@ const HotelEdit = () => {
           <Box className={"mt-10"}>
             <div className="grid gap-5 mobile:grid-cols-1 desktop:grid-cols-2 ">
               <div>
-                <Heading tag={"h3"} text={"호텔 편의 시설"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 편의 시설"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid mobile:grid-cols-2 tablet:grid-cols-3 gap-4">
                     <li>
@@ -674,23 +744,37 @@ const HotelEdit = () => {
                 </Box>
               </div>
               <div>
-                <Heading tag={"h3"} text={"호텔 규칙"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 규칙"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid gap-5">
                     <li className=" grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>체크인</strong>
-                      <Select selectValue={hotelInfo.check_in} options={checkOption} onChange={handleCheckIn} />
+                      <Select
+                        selectValue={hotelInfo.check_in}
+                        options={checkOption}
+                        onChange={handleCheckIn}
+                      />
                     </li>
                     <li className="grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>체크아웃</strong>
-                      <Select selectValue={hotelInfo.check_out} options={checkOption} onChange={handleCheckOut} />
+                      <Select
+                        selectValue={hotelInfo.check_out}
+                        options={checkOption}
+                        onChange={handleCheckOut}
+                      />
                     </li>
                     <li className="grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
                       <strong>흡연</strong>
                       <div className="flex justify-start mobile:whitespace-nowrap mobile:flex-wrap tablet:flex-nowrap">
                         <Radio
                           color={"red"}
-                          checked={hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"}
+                          checked={
+                            hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"
+                          }
                           value={"전객실 불가능"}
                           id={"hotel_reser3"}
                           name={"rag2"}
@@ -704,7 +788,9 @@ const HotelEdit = () => {
                           name={"rag2"}
                           onChange={() => handleSmoking("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red ml-2"}>일부객실 선택시 현장에서 방을 배정합니다.</Badge>
+                        <Badge color={"red ml-2"}>
+                          일부객실 선택시 현장에서 방을 배정합니다.
+                        </Badge>
                       </div>
                     </li>
                     <li className="grid grid-cols-[8rem_1fr] items-center">
@@ -726,7 +812,9 @@ const HotelEdit = () => {
                           name={"rag3"}
                           onChange={() => handlePet("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red ml-2"}>일부객실 선택시 현장에서 방을 배정합니다.</Badge>
+                        <Badge color={"red ml-2"}>
+                          일부객실 선택시 현장에서 방을 배정합니다.
+                        </Badge>
                       </div>
                     </li>
                     {hotelInfo.basic_options?.swimming_pool && (
@@ -757,7 +845,10 @@ const HotelEdit = () => {
             <div className="flex justify-between items-center">
               <Heading tag={"h3"} text={"객실관리"} className={"base"} />
               {!isToggle && !isEdit && (
-                <button className="btn-blue" onClick={() => setIsToggle(!isToggle)}>
+                <button
+                  className="btn-blue"
+                  onClick={() => setIsToggle(!isToggle)}
+                >
                   객실등록
                 </button>
               )}
@@ -784,6 +875,14 @@ const HotelEdit = () => {
         <div className="text-center">
           <div className="text-center pb-3">{errorMessage}</div>
           <button className="btn-blue" onClick={() => setIsPopup(false)}>
+            확인
+          </button>
+        </div>
+      </Dialog>
+      <Dialog open={isPopup2} close={() => setIsPopup2(false)}>
+        <div className="text-center">
+          <div className="text-center pb-3">{errorMessage}</div>
+          <button className="btn-blue" onClick={onConfirm}>
             확인
           </button>
         </div>

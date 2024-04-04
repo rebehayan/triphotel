@@ -16,6 +16,7 @@ import Guest from "./Guest";
 import Loading2 from "./Loading2";
 import Select from "./Select";
 import Toast from "./Toast";
+import Dialog from "./Dialog";
 
 const where = [
   {
@@ -131,6 +132,9 @@ const Search = ({ ...props }) => {
   const [isLoading2, setIsLoading2] = useState(false);
   const [searchError, setSearchError] = useState("");
   const [searchToast, setSearchToast] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
+  const [errrorMessage, setErrrorMessage] = useState("");
+
   const navigate = useNavigate();
 
   const setSearchResults = useSearchStore((state) => state.setSearchResults);
@@ -196,7 +200,9 @@ const Search = ({ ...props }) => {
         `http://52.78.12.252:8080/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`
       );
       if (response.data.result.content.length === 0) {
-        alert("검색 결과가 없습니다.");
+        alert(`검색 결과가 없습니다.`);
+        // setErrrorMessage(`검색 결과가 없습니다.`);
+        // setIsPopup(true);
         return;
       } else {
         setSearchResults(response.data.result.content);
@@ -289,6 +295,14 @@ const Search = ({ ...props }) => {
       >
         {searchError}
       </Toast>
+      <Dialog open={isPopup} close={() => setIsPopup(false)}>
+        {errrorMessage}
+        <div className="flex justify-center gap-2 mt-5">
+          <button className="btn-blue" onClick={() => setIsPopup(false)}>
+            확인
+          </button>
+        </div>
+      </Dialog>
     </form>
   );
 };
