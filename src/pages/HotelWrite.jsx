@@ -159,7 +159,8 @@ const HotelWrite = () => {
   //호텔위치
   const handleLocationChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedText = where.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      where.find((option) => option.value === selectedValue)?.text || "";
 
     setHotelInfo((prevHotelInfo) => ({
       ...prevHotelInfo,
@@ -206,13 +207,15 @@ const HotelWrite = () => {
   const handleCheckIn = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_in: selectedValue });
   };
   const handleCheckOut = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, check_out: selectedValue });
   };
   //흡연
@@ -227,13 +230,15 @@ const HotelWrite = () => {
   const handlePoolOpen = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_opening_time: selectedValue });
   };
   const handlePoolClose = (e) => {
     const selectedValue = e.target.value;
 
-    const selectedText = checkOption.find((option) => option.value === selectedValue)?.text || "";
+    const selectedText =
+      checkOption.find((option) => option.value === selectedValue)?.text || "";
     setHotelInfo({ ...hotelInfo, pool_closing_time: selectedValue });
   };
   //호텔등록
@@ -251,8 +256,10 @@ const HotelWrite = () => {
     } else if (
       hotelInfo.check_in == "" ||
       hotelInfo.check_out == "" ||
-      (hotelInfo.basic_options.swimming_pool === true && hotelInfo.basic_options.pool_opening_time == "") ||
-      (hotelInfo.basic_options.swimming_pool == true && hotelInfo.basic_options.pool_closing_time == "")
+      (hotelInfo.basic_options.swimming_pool === true &&
+        hotelInfo.basic_options.pool_opening_time == "") ||
+      (hotelInfo.basic_options.swimming_pool == true &&
+        hotelInfo.basic_options.pool_closing_time == "")
     ) {
       setIsPopup(true);
       setErrorMessage("호텔 규칙을 모두 입력해 주세요.");
@@ -272,19 +279,27 @@ const HotelWrite = () => {
     if (file) roomFormData.append("file", file);
     roomFormData.append("request", JSON.stringify(roomInfo));
     try {
-      const response = await axios.post("http://52.78.12.252:8080/api/hotels", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        "http://52.78.12.252:8080/api/hotels",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const hotelId = response.data.result.id;
       console.log(response);
-      const roomResponse = await axios.post(`http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`, roomFormData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
-        },
-      });
+      const roomResponse = await axios.post(
+        `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms`,
+        roomFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // FormData를 사용할 때 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않아도 됩니다.
+          },
+        }
+      );
       console.log(roomResponse);
       await setErrorMessage("호텔을 등록 했습니다. ");
       await setIsPopup(true);
@@ -308,31 +323,67 @@ const HotelWrite = () => {
         <div className="container mb-32">
           <Heading tag={"h3"} text={"호텔 등록"} className={"xl my-5"} />
           <Box>
-            <Heading tag={"h3"} text={"호텔 대표이미지"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 대표이미지"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-4 gap-5">
                 <li>
-                  <Noimage props={{ image: imageFile1 }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleFileChange1} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: imageFile1 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleFileChange1}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: imageFile2 }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleFileChange2} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: imageFile2 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleFileChange2}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: imageFile3 }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleFileChange3} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: imageFile3 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleFileChange3}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
                 <li>
-                  <Noimage props={{ image: imageFile4 }} className={"mb-3 bg-gray-50"} />
-                  <Input type={"file"} onChange={handleFileChange4} className={"mobile:!w-full"} />
+                  <Noimage
+                    props={{ image: imageFile4 }}
+                    className={"mb-3 bg-gray-50"}
+                  />
+                  <Input
+                    type={"file"}
+                    onChange={handleFileChange4}
+                    className={"mobile:!w-full"}
+                  />
                 </li>
               </ul>
             </Box>
           </Box>
 
           <Box className={"mt-10"}>
-            <Heading tag={"h3"} text={"호텔 기본정보"} className={"base mb-5"} />
+            <Heading
+              tag={"h3"}
+              text={"호텔 기본정보"}
+              className={"base mb-5"}
+            />
             <Box className={"white"}>
               <ul className="grid mobile:grid-cols-1 tablet:grid-cols-3 gap-5">
                 <li className="grid gap-3">
@@ -341,7 +392,11 @@ const HotelWrite = () => {
                 </li>
                 <li className="grid gap-3">
                   호텔 이름
-                  <Input type={"text"} value={hotelInfo.name} onChange={handleName} />
+                  <Input
+                    type={"text"}
+                    value={hotelInfo.name}
+                    onChange={handleName}
+                  />
                 </li>
                 {/* <li className="grid gap-3">
                   호텔 가격
@@ -378,7 +433,11 @@ const HotelWrite = () => {
                 </li>
                 <li className="grid gap-3 tablet:col-span-3">
                   호텔 안내
-                  <Input type={"textarea"} onChange={handleContent} value={hotelInfo.description} />
+                  <Input
+                    type={"textarea"}
+                    onChange={handleContent}
+                    value={hotelInfo.description}
+                  />
                 </li>
               </ul>
             </Box>
@@ -387,7 +446,11 @@ const HotelWrite = () => {
           <Box className={"mt-10"}>
             <div className="grid gap-5 mobile:grid-cols-1 desktop:grid-cols-2 ">
               <div>
-                <Heading tag={"h3"} text={"호텔 편의 시설"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 편의 시설"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid mobile:grid-cols-2 tablet:grid-cols-3 gap-4">
                     <li>
@@ -610,7 +673,11 @@ const HotelWrite = () => {
                 </Box>
               </div>
               <div>
-                <Heading tag={"h3"} text={"호텔 규칙"} className={"base mb-5"} />
+                <Heading
+                  tag={"h3"}
+                  text={"호텔 규칙"}
+                  className={"base mb-5"}
+                />
                 <Box className={"white"}>
                   <ul className="grid gap-5">
                     <li className=" grid mobile:grid-cols-1 tablet:grid-cols-[8rem_1fr] mobile:gap-2 tablet:gap-0 items-center">
@@ -626,7 +693,9 @@ const HotelWrite = () => {
                       <div className="flex justify-start mobile:whitespace-nowrap mobile:flex-wrap tablet:flex-nowrap">
                         <Radio
                           color={"red"}
-                          checked={hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"}
+                          checked={
+                            hotelInfo.smoking_rule === "TOTAL_IMPOSSIBLE"
+                          }
                           value={"전객실 불가능"}
                           id={"hotel_reser3"}
                           name={"rag2"}
@@ -640,7 +709,11 @@ const HotelWrite = () => {
                           name={"rag2"}
                           onChange={() => handleSmoking("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"}>
+                        <Badge
+                          color={
+                            "red mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"
+                          }
+                        >
                           일부객실 선택시 현장에서 방을 배정합니다.
                         </Badge>
                       </div>
@@ -664,7 +737,11 @@ const HotelWrite = () => {
                           name={"rag3"}
                           onChange={() => handlePet("SOME_POSSIBLE")}
                         />{" "}
-                        <Badge color={"red  mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"}>
+                        <Badge
+                          color={
+                            "red  mobile:ml-0 tablet:ml-2 mobile:mt-2 tablet:mt-0"
+                          }
+                        >
                           일부객실 선택시 현장에서 방을 배정합니다.
                         </Badge>
                       </div>
@@ -673,9 +750,15 @@ const HotelWrite = () => {
                       <li className="grid grid-cols-[8rem_1fr] items-center">
                         <strong>수영장 이용시간</strong>
                         <div className="grid grid-cols-[1fr_2rem_1fr] items-center">
-                          <Select options={checkOption} onChange={handlePoolOpen} />
+                          <Select
+                            options={checkOption}
+                            onChange={handlePoolOpen}
+                          />
                           <span className="justify-self-center">~</span>
-                          <Select options={checkOption} onChange={handlePoolClose} />
+                          <Select
+                            options={checkOption}
+                            onChange={handlePoolClose}
+                          />
                         </div>
                       </li>
                     )}
@@ -695,15 +778,20 @@ const HotelWrite = () => {
                 객실등록
               </button> */}
             </div>
-            <RoomWrite file={file} setFile={setFile} roomInfo={roomInfo} setRoomInfo={setRoomInfo} />
+            <RoomWrite
+              file={file}
+              setFile={setFile}
+              roomInfo={roomInfo}
+              setRoomInfo={setRoomInfo}
+            />
           </Box>
           <div className="flex justify-between mt-10">
-            <button className="btn-gray xl">이전</button>
+            {/* <button className="btn-gray xl">이전</button> */}
+            <div></div>
             <div className="flex  gap-3">
               <button onClick={onSendClick} className="btn-blue xl">
                 호텔 등록
               </button>
-              <button className="btn-green xl">호텔 수정</button>
             </div>
           </div>
         </div>

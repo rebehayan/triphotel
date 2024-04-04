@@ -12,6 +12,7 @@ const HotelList = ({ className, ...props }) => {
   const [hotels, setHotels] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
   const handleMore = () => {
@@ -24,13 +25,14 @@ const HotelList = ({ className, ...props }) => {
         `http://52.78.12.252:8080/api/hotels?page=${currentPage}&size=${pageSize}`
       )
       .then((response) => {
-        // 기존 호텔 목록에 새로운 호텔 목록 추가
+        const newHotels = response.data.result.content;
         setHotels((prevHotels) => [
           ...prevHotels,
           ...response.data.result.content,
         ]);
         // 페이지 번호 증가
         setCurrentPage((prevPage) => prevPage + 1);
+        setHasMore(newHotels.length === pageSize);
       })
       .finally(() => {
         setIsLoading(false);
@@ -42,7 +44,9 @@ const HotelList = ({ className, ...props }) => {
       await axios
         .get(`http://52.78.12.252:8080/api/hotels?page=0&size=${pageSize}`)
         .then((response) => {
+          const initialHotels = response.data.result.content;
           setHotels(response.data.result.content);
+          setHasMore(initialHotels.length === pageSize);
         });
     };
     fetchData();
@@ -56,14 +60,16 @@ const HotelList = ({ className, ...props }) => {
         ))}
       </ul>
       <div className="text-center mt-10">
-        <button className="btn-blue xl" onClick={handleMore}>
-          {isLoading ? (
-            <TbRotateClockwise2 className="animate-spin" />
-          ) : (
-            <FaArrowDownShortWide />
-          )}
-          {isLoading ? "Loading..." : "호텔 더보기"}
-        </button>{" "}
+        {hasMore && (
+          <button className="btn-blue xl" onClick={handleMore}>
+            {isLoading ? (
+              <TbRotateClockwise2 className="animate-spin" />
+            ) : (
+              <FaArrowDownShortWide />
+            )}
+            {isLoading ? "Loading..." : "호텔 더보기"}
+          </button>
+        )}
       </div>
     </>
   );

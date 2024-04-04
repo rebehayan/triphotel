@@ -79,7 +79,6 @@ const HotelDetail = () => {
           },
         }
       );
-      alert("호텔 삭제 성공!");
     } catch (error) {
       console.error(error);
     }
