@@ -12,14 +12,14 @@
     <div style="text-align: left;">
     <h2 style="border-bottom: 1px solid #21262d; color: #c9d1d9;"> 🛠️ 기술 스택 </h2> 
     <div> 
-        <h4>FE</h4>
+        <h4>• FE</h4>
           <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white">
           <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
           <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">
           <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=for-the-badge&logo=Tailwind CSS&logoColor=white">
           <img src="https://img.shields.io/badge/Zustand-000000?style=for-the-badge&logo=Zustand&logoColor=white">
           <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white">
-        <h4>BE</h4>
+        <h4>• BE</h4>
           <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
           <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">
           <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
@@ -37,13 +37,13 @@
     <br>
 
 ## 🧑🏻‍💻 팀원 소개 및 역할
-<h4>FE</h4>
+<h4>• FE</h4>
 
 |   [하성필](https://github.com/hasungpil)   |   [최훙주](https://github.com/Zojo24)   |   [심소망](https://github.com/ssmv713)   |   [이재혁](https://github.com/Now-h)   |
 |-----------|----------|----------|-----------|
 |    역할    |    역할    |    역할    |    역할    |
 
-<h4>BE</h4>
+<h4>• BE</h4>
 
 |   김경호   |   여관구   |   황찬희   |
 |-----------|----------|----------|
