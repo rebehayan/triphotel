@@ -42,7 +42,7 @@ const HotelListItems = ({ hotel, checkFav }) => {
   };
 
   const handleResetStore = () => {
-    addInfo("");
+    addInfo({});
   };
 
   return (

@@ -1,10 +1,6 @@
-import "../../styles/pages/reservation.css";
-
 import React, { useEffect, useRef, useState } from "react";
-
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-
 import instance from "../../api/axios";
 import request from "../../api/request";
 import { digit3 } from "../../store/digit3";
@@ -17,6 +13,7 @@ import Loading from "../Loading";
 import Loading2 from "../Loading2";
 import Toast from "../Toast";
 import Box from "../Box";
+import "../../styles/pages/reservation.css";
 
 // 달력 현재날짜 고정
 const Today = (nextDay = 0) => {
@@ -34,7 +31,7 @@ const ReservationFirst = () => {
   const token = localStorage.getItem("token");
   const { fetchOrders } = request; // 필요한 요청 URL을 추출
   const navigate = useNavigate();
-  const { addInfo, addAdditionalInfo } = useReservationStore();
+  const { addInfo } = useReservationStore();
   const [isWidth, setIsWidth] = useState(window.innerWidth);
   const ref = useRef();
   const [isToggle, setIsToggle] = useState(false);
@@ -47,15 +44,22 @@ const ReservationFirst = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
   const { reservedRoom } = useReserveRoomStore();
+  const dayPrice = reservedRoom.standard_price; //객실기준가
+
+  const [price1, setPrice1] = useState(""); // 1박가격 x 숙박일
+  const [price2, setPrice2] = useState("");
+  const [price3, setPrice3] = useState("");
+
   // console.log(reservedRoom);
 
-  const [myId, setMyId] = useState("");
   const [isPayInfo, setIsPayInfo] = useState({
     adult_count: 0, //성인
     child_count: 0, //어린이
-    adult_fare: "", //성인요금
-    child_fare: "", //어린이요금
-    total_price: "", // 총금액
+    adult_pay: reservedRoom.adult_fare, //성인요금
+    child_pay: reservedRoom.child_fare, //어린이요금
+    adult_fare: 0,
+    child_fare: 0,
+    total_price: reservedRoom.standard_price, // 총금액
   });
   const [orderFirst, setOrderFirst] = useState({
     room_id: reservedRoom.id,
@@ -113,9 +117,7 @@ const ReservationFirst = () => {
       isValid = false;
     } else if (isPayInfo.adult_count + isPayInfo.child_count > reservedRoom.maximum_capacity) {
       setIsPopup(true);
-      setErrrorMessage(
-        `해당 객실은 ${reservedRoom.maximum_capacity}명까지 수용가능한 객실입니다. 인원수를 조절해주세요.`
-      );
+      setErrrorMessage(`해당 객실은 ${reservedRoom.maximum_capacity}명까지 수용가능한 객실입니다. 인원수를 조절해주세요.`);
       isValid = false;
     } else if (isPayInfo.adult_count + isPayInfo.child_count === 0) {
       setIsPopup(true);
@@ -135,25 +137,43 @@ const ReservationFirst = () => {
     };
 
     const handleCalculate = () => {
-      const countMember = parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count);
-      const adult_fare = parseInt(isPayInfo.adult_count) * reservedRoom.adult_fare;
-      const childrenPay = parseInt(isPayInfo.child_count) * reservedRoom.child_fare;
+      const countMember = parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count); // 총인원수
       const checkIn = new Date(isPayInfo.check_in);
       const checkOut = new Date(isPayInfo.check_out);
-      const days = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
-      const total_price = days * (adult_fare + childrenPay);
+      const days = (checkOut - checkIn) / (1000 * 60 * 60 * 24); // 일수
+      const basePrice = days * parseInt(dayPrice); // 1박가격 x 숙박일
+      setPrice1(basePrice);
 
+      // 인원수초과
       if (reservedRoom.maximum_capacity < countMember) {
         setIsToast(true);
-        setIsPayInfo({ ...isPayInfo, adult_fare, childrenPay, total_price });
-      } else if (reservedRoom.standard_capacity < countMember && reservedRoom.maximum_capacity >= countMember) {
-        setIsToast2(true);
-        setIsPayInfo({ ...isPayInfo, adult_fare, childrenPay, total_price });
-      } else {
+
+        // 추가금액범위
+      } else if (countMember > reservedRoom.standard_capacity && countMember <= reservedRoom.maximum_capacity) {
+        if (isPayInfo.adult_count === reservedRoom.maximum_capacity) {
+          setIsPayInfo({ ...isPayInfo, child_fare: 0 });
+          // console.log("같을경우 아이0원");
+        } else {
+          // console.log("실제계산");
+          let adult = (parseInt(isPayInfo.adult_count) - reservedRoom.standard_capacity) * isPayInfo.adult_pay * parseInt(days); // 어른수 x 어른가격 * 숙박일
+          let child = parseInt(isPayInfo.child_count) * isPayInfo.child_pay * parseInt(days); // 아이수 x 아이가격 * 숙박일
+          setIsPayInfo({ ...isPayInfo, adult_fare: adult, child_fare: child });
+          // console.log("어른 : " + adult);
+          // console.log("아이 : " + child);
+        }
+      } else if (countMember <= reservedRoom.standard_capacity) {
         setIsToast(false);
-        setIsToast2(false);
-        setIsPayInfo({ ...isPayInfo, adult_fare, childrenPay, total_price });
+        setIsPayInfo({ ...isPayInfo, adult_fare: 0, child_fare: 0, total_price: price1 });
+        // setIsToast2(true);
+        // setIsToast2(false);
       }
+      const totalPay = isPayInfo.adult_fare + isPayInfo.child_fare + price1;
+      setIsPayInfo({ ...isPayInfo, total_price: totalPay });
+
+      //       console.log(`
+      // 총인원 : ${countMember}
+      // 공짜기준 : ${reservedRoom.standard_capacity},
+      // 어른돈 : ${isPayInfo.adult_fare}, 어른수 : ${isPayInfo.adult_count}, 아이돈 : ${isPayInfo.child_fare}, 아이수 : ${isPayInfo.child_count}`);
     };
 
     window.addEventListener("resize", handleResize);
@@ -161,7 +181,7 @@ const ReservationFirst = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out]);
+  }, [price2, isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out, isPayInfo.adult_fare, isPayInfo.child_fare]);
 
   // 결제다음단계 넘기기
   const handleReservation = async (e) => {
@@ -191,7 +211,7 @@ const ReservationFirst = () => {
       orderId = responseOrder.data.result.id;
       // setMyId(orderId);
       await addInfo(responseOrder); // 예약결과전역상태로 넘기기
-      await console.log(orderId); //post이후 병합데이터
+      // await console.log(orderId); //post이후 병합데이터
     } catch (error) {
       console.log(`submitReservation :`, error);
     } finally {
@@ -245,10 +265,7 @@ const ReservationFirst = () => {
           </ul>
         </Box>
         <form className="reservation-write" onSubmit={handleSubmit}>
-          <ul
-            ref={ref}
-            className="mobile:overflow-hidden mobile:h-0 tablet:overflow-visible tablet:h-[auto] transition-all duration-300"
-          >
+          <ul ref={ref} className="mobile:overflow-hidden mobile:h-0 tablet:overflow-visible tablet:h-[auto] transition-all duration-300">
             <li>
               <label htmlFor="reser1" className="--title">
                 체크인
@@ -271,40 +288,27 @@ const ReservationFirst = () => {
             </li>
             <li className="!grid grid-cols-2">
               <strong className="--title">성인 ⨉ {isPayInfo.adult_count ? isPayInfo.adult_count : 0}</strong>
-              <span className="--total justify-self-end">
-                ₩ {isPayInfo.adult_fare ? digit3(isPayInfo.adult_fare) : 0}
-              </span>
+              <span className="--total justify-self-end">₩ {isPayInfo.adult_fare ? digit3(isPayInfo.adult_fare) : 0}</span>
               <strong className="--title">어린이 ⨉ {isPayInfo.child_count ? isPayInfo.child_count : 0}</strong>
-              <span className="--total justify-self-end">
-                ₩ {isPayInfo.childrenPay ? digit3(isPayInfo.childrenPay) : "0"}
-              </span>
+              <span className="--total justify-self-end">₩ {isPayInfo.child_fare ? digit3(isPayInfo.child_fare) : 0}</span>
+              <strong className="--title">기본숙박료</strong>
+              <span className="--total justify-self-end">₩ {price1 ? digit3(price1) : 0}</span>
             </li>
             <li>
-              <strong className="--title !text-lg">총 금액</strong>{" "}
-              <span className="--total justify-self-end">
-                ₩ {isPayInfo.total_price ? digit3(isPayInfo.total_price) : 0}
-              </span>
+              <strong className="--title !text-lg">총 금액</strong>
+              <span className="--total justify-self-end">₩ {isPayInfo.total_price ? digit3(isPayInfo.total_price) : 0}</span>
             </li>
           </ul>
           <div className="grid grid-cols-[1.7fr_1fr] gap-3">
             {isWidth < 1024 && (
-              <button
-                onClick={handleToggle}
-                className="absolute left-2/4 -top-9 z-10 -translate-x-2/4 w-12 h-8 bg-gray-100 rounded-full flex justify-center pt-[0.3rem] text-2xl"
-              >
+              <button onClick={handleToggle} className="absolute left-2/4 -top-9 z-10 -translate-x-2/4 w-12 h-8 bg-gray-100 rounded-full flex justify-center pt-[0.3rem] text-2xl">
                 <MdKeyboardDoubleArrowUp className={`ico-toggle ${!isToggle ? "active" : ""}`} />
               </button>
             )}
-            <button
-              className="btn-blue xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center"
-              onClick={handleReservation}
-            >
+            <button className="btn-blue xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center" onClick={handleReservation}>
               예약하기
             </button>
-            <button
-              className="btn-green-outline xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center whitespace-nowrap"
-              onClick={handleCart}
-            >
+            <button className="btn-green-outline xl2 mobile:h-12 tablet:h-auto mobile:!text-base tablet:!text-xl justify-center whitespace-nowrap" onClick={handleCart}>
               장바구니
             </button>
           </div>
@@ -318,8 +322,7 @@ const ReservationFirst = () => {
       )}
       {isToast2 && (
         <Toast onOpen={isToast2} onClose={() => setIsToast(false)} color={"blue"}>
-          해당 숙소는 {reservedRoom.standard_capacity + 1}인이상 {reservedRoom.maximum_capacity}이하면 추가금액이
-          발생합니다.
+          해당 숙소는 {reservedRoom.standard_capacity + 1}인이상 {reservedRoom.maximum_capacity}이하면 추가금액이 발생합니다.
         </Toast>
       )}
       <Dialog open={isPopup} close={() => setIsPopup(false)}>
