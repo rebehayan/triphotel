@@ -62,7 +62,7 @@
 
 ## ✏️ 프로젝트 소개
 
-► 구현사항 <br>
+### ► 구현사항 
 ![image](https://github.com/Now-h/FE7_Mini_Team4/assets/150241213/288f57ab-cfef-4adb-8753-34aee5756989)
 
 
