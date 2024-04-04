@@ -94,7 +94,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     child_fare: roomData.child_fare,
     // thumbnailId: roomData.thumbnails?.[0]?.id,
   });
-  console.log(roomData.thumbnails);
+  // console.log(roomData.thumbnails);
   useEffect(() => {
     setImage(
       roomData.thumbnails.length < 1 ? "" : roomData.thumbnails?.[0].img_url
@@ -145,7 +145,7 @@ const RoomEditfromEdit = ({ roomData, roomId, setIsEdit }) => {
     const formData = new FormData();
     if (image) formData.append("file", image);
     formData.append("request", JSON.stringify(roomInfo));
-    console.log(formData);
+
     try {
       const response = await axios.patch(
         `http://52.78.12.252:8080/api/hotels/${hotelId}/rooms/${roomInfo.id}`,

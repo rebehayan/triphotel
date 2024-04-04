@@ -15,7 +15,7 @@ const HotelList = ({ className, ...props }) => {
     });
   }, []);
 
-  console.log(hotels);
+  // console.log(hotels);
 
   return (
     <>

@@ -85,7 +85,7 @@ const HotelEdit = () => {
         const response = await axios.get(
           `http://52.78.12.252:8080/api/hotels/${hotelId}`
         );
-        console.log(response);
+        // console.log(response);
         setHotelData(response.data.result);
       } catch (error) {
         console.log(error);
@@ -168,7 +168,7 @@ const HotelEdit = () => {
       setImageFile4(hotelData?.thumbnails?.[3]?.img_url);
     }
   }, [hotelData]);
-  console.log("이미지파일" + imageFile1);
+
   const addHotel = usehotelListStore((state) => state.addHotel);
   //이미지
 
