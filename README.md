@@ -1,5 +1,3 @@
-# ✈️ 숙박 예약 서비스 플랫폼 
-
 <div align= "center">
     <img src="https://capsule-render.vercel.app/api?type=waving&color=ffffff&height=120&text=Mini-Team4&animation=fadeIn&fontColor=ffffff&fontSize=50" />
     </div>
