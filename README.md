@@ -36,7 +36,7 @@
     <br>
     <br>
 
-## 🧑🏻‍💻 팀원 소개
+## 🧑🏻‍💻 팀원 소개 및 역할
 <h4>FE</h4>
 
 |   [하성필](https://github.com/hasungpil)   |   [최훙주](https://github.com/Zojo24)   |   [심소망](https://github.com/ssmv713)   |   [이재혁](https://github.com/Now-h)   |
