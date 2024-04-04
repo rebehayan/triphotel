@@ -1,5 +1,5 @@
 <div align= "center">
-    <img src="https://capsule-render.vercel.app/api?type=waving&color=ffffff&height=120&text=숙박 예약 서비스 플랫폼&animation=fadeIn&fontColor=ffffff&fontSize=50" />
+    <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&text=✈️%20숙박%20예약%20서비스%20플랫폼&animation=fadeIn&fontColor=ffffff&fontSize=40" />
     </div>
     <div style="text-align: left;">
     <h2 style="border-bottom: 1px solid #21262d; color: #c9d1d9;"> 🛠️ Tech Stacks </h2> <br> 
@@ -13,11 +13,5 @@
           <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white">
           </div>
     </div>
-    <div style="text-align: left;">
-    <h2 style="border-bottom: 1px solid #21262d; color: #c9d1d9;"> 🧑‍💻 Contact me </h2> <br> 
-    <div align= "center">  </div>  <br> 
-    <div align= "center">  </div> 
-    </div>
-
     
     
