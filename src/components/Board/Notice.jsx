@@ -17,17 +17,21 @@ const Notice = ({ className, notices, myId }) => {
   return (
     <div>
       <ul className={`notice-list ${className}`}>
-        {notices.map((item, index) => (
-          <NoticeItem
-            myId={myId}
-            key={index}
-            index={index}
-            item={item}
-            activeIndex={activeIndex}
-            setActiveIndex={setActiveIndex}
-            onDelete={handleDelete}
-          />
-        ))}
+        {notices.length > 0 ? (
+          notices.map((item, index) => (
+            <NoticeItem
+              myId={myId}
+              key={index}
+              index={index}
+              item={item}
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <li className="bg-white text-center">등록된 공지사항이 없습니다.</li>
+        )}
       </ul>
     </div>
   );
