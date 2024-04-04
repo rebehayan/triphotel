@@ -200,15 +200,16 @@ const Search = ({ ...props }) => {
         `http://52.78.12.252:8080/api/hotels/search/?nation=${location}&roomType=${roomType}&viewType=${viewType}`
       );
       if (response.data.result.content.length === 0) {
-        setErrrorMessage(`검색 결과가 없습니다.`);
-        setIsPopup(true);
+        alert(`검색 결과가 없습니다.`);
+        // setErrrorMessage(`검색 결과가 없습니다.`);
+        // setIsPopup(true);
+        return;
       } else {
         setSearchResults(response.data.result.content);
         const selectedWhereOption = where.find(
           (option) => option.value === location
         );
         setSearchTerm(selectedWhereOption ? selectedWhereOption.value : "");
-        setIsPopup(false);
         navigate("/search/result");
       }
     } catch (error) {
