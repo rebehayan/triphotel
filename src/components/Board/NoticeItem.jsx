@@ -38,10 +38,9 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
         }
       );
       console.log(response);
+      window.location.reload(); // 저장 후 페이지를 새로고침
     } catch (error) {
       console.error("공지사항 추가 실패:", error);
-    } finally {
-      //onAddNotice({ title, description }); // 부모 컴포넌트로 새로운 공지사항 전달
     }
   };
 
@@ -50,6 +49,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
     setIsEditing(false);
     setEditedTitle(item.title); // 수정된 제목 초기화
     setEditedDescription(item.description);
+    window.location.reload(); // 페이지를 새로고침
   };
 
   const handleDelete = () => {

@@ -26,6 +26,10 @@ const NoticeWrite = ({ myId }) => {
     }
   };
 
+  const handleCancel = () => {
+    window.location.reload(); // 취소 버튼을 눌렀을 때 페이지를 새로고침
+  };
+
   return (
     <form onSubmit={handleSubmit} className="notice-write">
       <div>
@@ -40,7 +44,7 @@ const NoticeWrite = ({ myId }) => {
         <button type="submit" className="btn-blue">
           작성
         </button>
-        <button type="button" className="btn-gray" onClick={() => {}}>
+        <button type="button" className="btn-gray" onClick={handleCancel}>
           취소
         </button>
       </div>
@@ -49,3 +53,4 @@ const NoticeWrite = ({ myId }) => {
 };
 
 export default NoticeWrite;
+
