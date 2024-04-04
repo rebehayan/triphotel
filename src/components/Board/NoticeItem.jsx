@@ -66,6 +66,7 @@ const NoticeItem = ({ index, myId, item, activeIndex, setActiveIndex, onDelete, 
       });
       console.log("삭제 완료");
       onDelete(hotelId, noticeId); // 삭제 함수 호출 시 hotelId와 noticeId 모두 전달
+      window.location.reload(); // 삭제 후에 페이지를 새로고침
     } catch (error) {
       //console.error("공지사항 삭제 실패:", error);
     }
