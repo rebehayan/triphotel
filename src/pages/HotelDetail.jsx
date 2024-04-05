@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
+
 import instance from "../api/axios";
 import request from "../api/request";
 import pic1 from "../assets/img1.webp";
@@ -25,7 +27,12 @@ import { usehotelListStore } from "../store/hotelListStore";
 import { useLoginStore } from "../store/loginStore";
 import { useVisualStore } from "../store/visualStore";
 
-const pictures = [{ img_url: pic1 }, { img_url: pic2 }, { img_url: pic3 }, { img_url: pic4 }];
+const pictures = [
+  { img_url: pic1 },
+  { img_url: pic2 },
+  { img_url: pic3 },
+  { img_url: pic4 },
+];
 
 const HotelDetail = () => {
   const { userRole } = useLoginStore();
@@ -59,16 +66,22 @@ const HotelDetail = () => {
   const token = localStorage.getItem("token");
 
   const onDelete = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
-      const response = await instance.delete(`${fetchHotels}/${hotelId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await instance.delete(
+        `${fetchHotels}/${hotelId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error(error);
     }
+    setIsPopup(true);
+    setPopupMessage("해당 호텔을 삭제하였습니다.");
     deleteHotel(hotelId);
   };
 
@@ -101,11 +114,15 @@ const HotelDetail = () => {
     setIsFav(!isFav);
     let myfav = "";
     try {
-      const isfavs = await instance.post(`${fetchHotels}/${hotelId}/favorite`, favData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const isfavs = await instance.post(
+        `${fetchHotels}/${hotelId}/favorite`,
+        favData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       myfav = isfavs;
     } catch (error) {
       console.log(error);
@@ -137,7 +154,12 @@ const HotelDetail = () => {
             </div>
           </div>
         </div>
-        <HotelGallery pictures={hotelInfo.thumbnails?.length < 4 ? pictures : hotelInfo.thumbnails} className="mt-10" />
+        <HotelGallery
+          pictures={
+            hotelInfo.thumbnails?.length < 4 ? pictures : hotelInfo.thumbnails
+          }
+          className="mt-10"
+        />
         <div className="mobile:block tablet:flex relative gap-8 pt-8">
           <div className="min-h-lvh flex-1 flex gap-8  flex-col">
             <Box>
@@ -157,7 +179,9 @@ const HotelDetail = () => {
               </div>
               {/* {isWrite && <NoticeWrite myId={hotelId} write={handleWrite} className="mt-5" />} */}
               {isWrite && <NoticeWrite myId={hotelId} className="mt-5" />}
-              {!isWrite && <Notice className="mt-5" myId={hotelId} notices={notices} />}
+              {!isWrite && (
+                <Notice className="mt-5" myId={hotelId} notices={notices} />
+              )}
             </Box>
             <Box>
               <Heading tag="h3" text="편의시설 및 서비스" className="base" />
@@ -173,7 +197,11 @@ const HotelDetail = () => {
             </Box>
           </div>
           <div className="mobile:fixed mobile:top-[inherit] mobile:bottom-0 z-50 mobile:left-0 tablet:left-[inherit] tablet:bottom-[inherit] tablet:sticky tablet:top-28 self-start mobile:w-full tablet:w-[25rem] desktop:w-[30rem] mobile:mt-0 tablet:mt-0">
-            <Box className={"mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"}>
+            <Box
+              className={
+                "mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"
+              }
+            >
               <ReservationFirst />
             </Box>
           </div>
