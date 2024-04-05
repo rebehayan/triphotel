@@ -5,6 +5,7 @@ let reservationStore = (set) => ({
   paymentInfos: {},
   totalInfos: [],
   noticeId: "",
+  allCountStore: 0,
 
   // 결제정보
   addInfo: (paymentState) =>
@@ -18,10 +19,16 @@ let reservationStore = (set) => ({
       totalInfos: [...state.totalInfos, additionalText],
     })),
 
-  // 결재할 장바구니 아이디
+  // 호텔공지사항 아이디
   addNotice: (id) =>
     set((state) => ({
       noticeId: id,
+    })),
+
+  // 예약총인원수
+  addCount: (num) =>
+    set((state) => ({
+      allCountStore: num,
     })),
 });
 

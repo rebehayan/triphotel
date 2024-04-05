@@ -14,6 +14,7 @@ import Loading2 from "../Loading2";
 import Toast from "../Toast";
 import Box from "../Box";
 import "../../styles/pages/reservation.css";
+import GuestCounterChild from "../GuestCounterChild";
 
 // 달력 현재날짜 고정
 const Today = (nextDay = 0) => {
@@ -43,14 +44,14 @@ const ReservationFirst = () => {
   const [isPopup, setIsPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
-  const { reservedRoom } = useReserveRoomStore();
+  const { reservedRoom, addRoom } = useReserveRoomStore();
   const dayPrice = reservedRoom.standard_price; //객실기준가
-
+  const [allCount, setAllCount] = useState("");
   const [price1, setPrice1] = useState(""); // 1박가격 x 숙박일
   const [price2, setPrice2] = useState("");
   const [price3, setPrice3] = useState("");
 
-  // console.log(reservedRoom);
+  console.log(reservedRoom.id);
 
   const [isPayInfo, setIsPayInfo] = useState({
     adult_count: 0, //성인
@@ -59,15 +60,20 @@ const ReservationFirst = () => {
     child_pay: reservedRoom.child_fare, //어린이요금
     adult_fare: 0,
     child_fare: 0,
+    check_in: Today(),
+    check_out: Today(1),
+    room_id: "",
     total_price: reservedRoom.standard_price, // 총금액
   });
   const [orderFirst, setOrderFirst] = useState({
-    room_id: reservedRoom.id,
-    check_in: "",
-    check_out: "",
+    room_id: "",
+    check_in: Today(),
+    check_out: Today(1),
     adult_count: "",
     child_count: "",
   });
+
+  console.log(isPayInfo.room_id);
   const isLoggedIn = () => {
     const token = localStorage.getItem("token");
     return !!token;
@@ -97,7 +103,7 @@ const ReservationFirst = () => {
 
     setIsToggle(!isToggle);
     if (isToggle) {
-      ref.current.style.height = "27rem";
+      ref.current.style.height = "29rem";
       setIsToggle(false);
     } else {
       ref.current.style.height = "0";
@@ -135,6 +141,9 @@ const ReservationFirst = () => {
         setIsToggle(true);
       }
     };
+    if (reservedRoom.id) {
+      setOrderFirst({ ...orderFirst, room_id: reservedRoom.id });
+    }
 
     const handleCalculate = () => {
       const countMember = parseInt(isPayInfo.adult_count) + parseInt(isPayInfo.child_count); // 총인원수
@@ -143,34 +152,30 @@ const ReservationFirst = () => {
       const days = (checkOut - checkIn) / (1000 * 60 * 60 * 24); // 일수
       const basePrice = days * parseInt(dayPrice); // 1박가격 x 숙박일
       setPrice1(basePrice);
-
+      setAllCount(countMember);
       // 인원수초과
       if (reservedRoom.maximum_capacity < countMember) {
         setIsToast(true);
 
         // 추가금액범위
-      } else if (countMember > reservedRoom.standard_capacity && countMember <= reservedRoom.maximum_capacity) {
-        if (isPayInfo.adult_count === reservedRoom.maximum_capacity) {
-          setIsPayInfo({ ...isPayInfo, child_fare: 0 });
-          // console.log("같을경우 아이0원");
-        } else {
-          // console.log("실제계산");
-          let adult = (parseInt(isPayInfo.adult_count) - reservedRoom.standard_capacity) * isPayInfo.adult_pay * parseInt(days); // 어른수 x 어른가격 * 숙박일
-          let child = parseInt(isPayInfo.child_count) * isPayInfo.child_pay * parseInt(days); // 아이수 x 아이가격 * 숙박일
-          setIsPayInfo({ ...isPayInfo, adult_fare: adult, child_fare: child });
-          // console.log("어른 : " + adult);
-          // console.log("아이 : " + child);
-        }
+      } else if (countMember > reservedRoom.standard_capacity) {
+        let adult = (parseInt(isPayInfo.adult_count) - reservedRoom.standard_capacity) * isPayInfo.adult_pay * parseInt(days); // 어른수 x 어른가격 * 숙박일
+        // let child = parseInt(isPayInfo.child_count) * isPayInfo.child_pay * parseInt(days); // 아이수 x 아이가격 * 숙박일
+        // setIsPayInfo({ ...isPayInfo, adult_fare: adult, child_fare: child });
+        setIsPayInfo((prev) => ({ ...prev, adult_fare: adult }));
+
+        // console.log("어른 : " + adult);
+        // console.log("아이 : " + child);
       } else if (countMember <= reservedRoom.standard_capacity) {
         setIsToast(false);
-        setIsPayInfo({ ...isPayInfo, adult_fare: 0, child_fare: 0, total_price: price1 });
+        setIsPayInfo((prev) => ({ ...prev, adult_fare: 0, child_fare: 0, total_price: price1 }));
         // setIsToast2(true);
         // setIsToast2(false);
       }
       const totalPay = isPayInfo.adult_fare + isPayInfo.child_fare + price1;
-      setIsPayInfo({ ...isPayInfo, total_price: totalPay });
+      setIsPayInfo((prev) => ({ ...prev, total_price: totalPay }));
 
-      //       console.log(`
+      // console.log(`
       // 총인원 : ${countMember}
       // 공짜기준 : ${reservedRoom.standard_capacity},
       // 어른돈 : ${isPayInfo.adult_fare}, 어른수 : ${isPayInfo.adult_count}, 아이돈 : ${isPayInfo.child_fare}, 아이수 : ${isPayInfo.child_count}`);
@@ -181,7 +186,7 @@ const ReservationFirst = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [price2, isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out, isPayInfo.adult_fare, isPayInfo.child_fare]);
+  }, [reservedRoom.id, price2, isPayInfo.adult_count, isPayInfo.child_count, isPayInfo.check_in, isPayInfo.check_out, isPayInfo.adult_fare, isPayInfo.child_fare]);
 
   // 결제다음단계 넘기기
   const handleReservation = async (e) => {
@@ -198,7 +203,7 @@ const ReservationFirst = () => {
       return;
     } else if (!isValidCheck) return;
     let orderId = "";
-
+    console.log(orderFirst);
     try {
       setIsLoading2(true);
       const responseOrder = await instance.post(fetchOrders, orderFirst, {
@@ -207,19 +212,20 @@ const ReservationFirst = () => {
         },
       });
 
-      await setIsLoading(true);
+      setIsLoading(true);
       orderId = responseOrder.data.result.id;
       // setMyId(orderId);
-      await addInfo(responseOrder); // 예약결과전역상태로 넘기기
-      // await console.log(orderId); //post이후 병합데이터
+      addInfo(responseOrder); // 예약결과전역상태로 넘기기
+      await console.log(orderId); //post이후 병합데이터
     } catch (error) {
       console.log(`submitReservation :`, error);
     } finally {
-      setTimeout(async () => {
+      setTimeout(() => {
         setIsLoading2(false);
         setIsLoading(false);
-        await navigate(`/reservation/?${orderId}`);
-      }, 2000);
+        addRoom({});
+        navigate(`/reservation/?${orderId}`);
+      }, 1500);
     }
   };
 
@@ -280,11 +286,11 @@ const ReservationFirst = () => {
             </li>
             <li>
               <strong className="--title">성인(청소년)</strong>
-              <GuestCounter iscount={handleAdult} max={reservedRoom.maximum_capacity} />
+              <GuestCounter iscount={handleAdult} max={reservedRoom.maximum_capacity} allCount={allCount} />
             </li>
             <li>
               <strong className="--title">어린이</strong>
-              <GuestCounter kids iscount={handleChildren} max={reservedRoom.maximum_capacity} />
+              <GuestCounterChild kids iscount={handleChildren} max={reservedRoom.maximum_capacity} allCount={allCount} />
             </li>
             <li className="!grid grid-cols-2">
               <strong className="--title">성인 ⨉ {isPayInfo.adult_count ? isPayInfo.adult_count : 0}</strong>

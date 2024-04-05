@@ -5,11 +5,11 @@ import "../styles/components/guestcounter.css";
 import Toast from "./Toast";
 import { useReservationStore } from "../store/reservationStore";
 
-const GuestCounter = ({ iscount, max, defaultValue, kids, className, allCount }) => {
-  const { addCount, allCountStore } = useReservationStore;
+const GuestCounterChild = ({ iscount, max, defaultValue, kids, className, allCount }) => {
   const [count, setCount] = useState(defaultValue || 0);
   const [toast, setToast] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const { allCountStore } = useReservationStore;
 
   const handleDecrease = () => {
     if (count > 0) {
@@ -18,6 +18,7 @@ const GuestCounter = ({ iscount, max, defaultValue, kids, className, allCount })
     } else {
       setToast(true);
     }
+    // console.log(max, count - 1);
     if (max > count - 1) {
       setIsDisabled(false);
     }
@@ -28,7 +29,6 @@ const GuestCounter = ({ iscount, max, defaultValue, kids, className, allCount })
     if (max < count + 1) {
       setIsDisabled(true);
       setCount(count);
-      // addCount(max);
     }
   };
   const handleChange = (e) => {
@@ -36,11 +36,16 @@ const GuestCounter = ({ iscount, max, defaultValue, kids, className, allCount })
     setCount(value);
     iscount(value);
   };
-
+  // if (allCountStore === max) {
+  //   setIsDisabled(true);
+  // } else if (allCountStore < max) {
+  //   setIsDisabled(false);
+  // }
+  // console.log(allCountStore);
   return (
     <>
       <div className={`guest-counter ${className}`}>
-        <button onClick={handleDecrease}>
+        <button onClick={handleDecrease} disabled={isDisabled}>
           <TbMinus />
         </button>
         <input type="number" min={kids ? "0" : "1"} className="input" value={count} readOnly onChange={handleChange} />
@@ -57,4 +62,4 @@ const GuestCounter = ({ iscount, max, defaultValue, kids, className, allCount })
   );
 };
 
-export default GuestCounter;
+export default GuestCounterChild;
