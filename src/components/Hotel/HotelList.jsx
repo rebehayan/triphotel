@@ -1,10 +1,13 @@
 import "../../styles/components/hotel.css";
+
 import React, { useEffect, useState } from "react";
+
 import { FaArrowDownShortWide } from "react-icons/fa6";
 import { TbRotateClockwise2 } from "react-icons/tb";
-import HotelListItems from "./HotelListItems";
-import request from "../../api/request";
+
 import instance from "../../api/axios";
+import request from "../../api/request";
+import HotelListItems from "./HotelListItems";
 
 const HotelList = ({ className, ...props }) => {
   const [hotels, setHotels] = useState([]);
@@ -13,17 +16,22 @@ const HotelList = ({ className, ...props }) => {
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
-  const handleMore = () => {
+  const handleMore = async () => {
     setIsLoading(true);
     const loading = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
     try {
-      const response = instance.get(`${fetchHotels}?page=${currentPage}&size=${pageSize}`);
-
+      const response = await instance.get(
+        `${fetchHotels}?page=${currentPage}&size=${pageSize}`
+      );
+      console.log(response);
       const newHotels = response.data.result.content;
-      setHotels((prevHotels) => [...prevHotels, ...response.data.result.content]);
-      // 페이지 번호 증가
+      setHotels((prevHotels) => [
+        ...prevHotels,
+        ...response.data.result.content,
+      ]);
+
       setCurrentPage((prevPage) => prevPage + 1);
       setHasMore(newHotels.length === pageSize);
     } catch (error) {
@@ -36,7 +44,9 @@ const HotelList = ({ className, ...props }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await instance.get(`${fetchHotels}?page=0&size=${pageSize}`);
+        const response = await instance.get(
+          `${fetchHotels}?page=0&size=${pageSize}`
+        );
 
         const initialHotels = response.data.result.content;
         setHotels(response.data.result.content);
@@ -58,7 +68,11 @@ const HotelList = ({ className, ...props }) => {
       <div className="text-center mt-10">
         {hasMore && (
           <button className="btn-blue xl" onClick={handleMore}>
-            {isLoading ? <TbRotateClockwise2 className="animate-spin" /> : <FaArrowDownShortWide />}
+            {isLoading ? (
+              <TbRotateClockwise2 className="animate-spin" />
+            ) : (
+              <FaArrowDownShortWide />
+            )}
             {isLoading ? "Loading..." : "호텔 더보기"}
           </button>
         )}
