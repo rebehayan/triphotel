@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
+
 import instance from "../api/axios";
 import request from "../api/request";
 import pic1 from "../assets/img1.webp";
@@ -42,6 +44,7 @@ const HotelDetail = () => {
   const [isPopup, setIsPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const thisHotel = totalHotels.find((hotel) => hotel.id === 4595);
+  const [roomInfoDetail, setroomInfoDetail] = useState({});
 
   useEffect(() => {
     instance.get(`${fetchHotels}/${hotelId}`).then((response) => {
@@ -59,16 +62,22 @@ const HotelDetail = () => {
   const token = localStorage.getItem("token");
 
   const onDelete = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
-      const response = await instance.delete(`${fetchHotels}/${hotelId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await instance.delete(
+        `${fetchHotels}/${hotelId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error(error);
     }
+    setIsPopup(true);
+    setPopupMessage("해당 호텔을 삭제하였습니다.");
     deleteHotel(hotelId);
   };
 
@@ -116,6 +125,10 @@ const HotelDetail = () => {
 
   const handleWrite = (blooan) => {
     setIsWrite(blooan);
+  };
+  const handleCheckRommInfo = (data) => {
+    // console.log(data);
+    setroomInfoDetail(data);
   };
 
   return (
@@ -169,12 +182,12 @@ const HotelDetail = () => {
             </Box>
             <Box>
               <Heading tag="h3" text="예약 가능한 객실" className="base" />
-              <RoomListToRead roomLists={hotelInfo?.rooms} className="mt-5" />
+              <RoomListToRead roomLists={hotelInfo?.rooms} className="mt-5" checkRommInfo={handleCheckRommInfo} />
             </Box>
           </div>
           <div className="mobile:fixed mobile:top-[inherit] mobile:bottom-0 z-50 mobile:left-0 tablet:left-[inherit] tablet:bottom-[inherit] tablet:sticky tablet:top-28 self-start mobile:w-full tablet:w-[25rem] desktop:w-[30rem] mobile:mt-0 tablet:mt-0">
             <Box className={"mobile:!rounded-[.75rem_.75rem_0_0] tablet:!rounded-xl mobile:!p-3 tablet:!p-5"}>
-              <ReservationFirst />
+              <ReservationFirst roomInfoDetail={roomInfoDetail} />
             </Box>
           </div>
         </div>

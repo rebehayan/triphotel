@@ -13,7 +13,7 @@ import Toast from "../../Toast";
 import request from "../../../api/request";
 import instance from "../../../api/axios";
 
-const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
+const RoomListItemsToRead = ({ roomLists, edit, checkRommInfo, ...props }) => {
   const show = { able: "disabled" };
   const { fetchHotels } = request;
   const { totalHotels } = usehotelListStore();
@@ -37,7 +37,8 @@ const RoomListItemsToRead = ({ roomLists, edit, ...props }) => {
   const clickToReserve = (id, type) => {
     const clickedItem = roomsInfo?.find((it) => it.id === id);
     setToast(!toast);
-    addRoom(clickedItem);
+    // addRoom(clickedItem);
+    checkRommInfo(clickedItem);
     setToastInfo(type);
   };
 

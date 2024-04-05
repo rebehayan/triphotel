@@ -22,9 +22,7 @@ const Cart = ({ mypage, close, show }) => {
   const handleCart = () => {
     close();
   };
-  const cartTotalPrice = digit3(
-    isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0)
-  );
+  const cartTotalPrice = digit3(isCartItmes.reduce((acc, curr) => acc + curr.total_price, 0));
 
   useEffect(() => {
     if (show) {
@@ -45,7 +43,7 @@ const Cart = ({ mypage, close, show }) => {
   }, [show]);
 
   const handleDelete = async (id) => {
-    console.log(id);
+    // console.log(id);
     try {
       await instance.patch(`${fetchMembersMyCart}/${id}`, null, {
         headers: {
@@ -74,12 +72,7 @@ const Cart = ({ mypage, close, show }) => {
       <form onSubmit={handleSubmit}>
         <ul className="cart__list">
           {isCartItmes.map((items, index) => (
-            <CartItems
-              close={handleCart}
-              key={index}
-              items={items}
-              onDelid={handleDelete}
-            />
+            <CartItems close={handleCart} key={index} items={items} onDelid={handleDelete} />
           ))}
         </ul>
         <div className="cart-price">

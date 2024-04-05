@@ -35,7 +35,7 @@ const HotelFavoriteList = ({ className, ...props }) => {
     <>
       <ul className={`hotel ${className}`} {...props}>
         {myFavList.map((hotel) => (
-          <HotelListItems key={hotel.id} hotel={hotel} checkFav={true} />
+          <HotelListItems key={hotel.id} hotel={hotel} />
         ))}
       </ul>
     </>

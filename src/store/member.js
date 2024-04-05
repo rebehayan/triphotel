@@ -27,6 +27,9 @@ export const membersData = [
       {
         title: "상품 결제",
       },
+      {
+        title: "호텔 즐겨찾기",
+      },
     ],
     sns: [
       {
@@ -55,6 +58,9 @@ export const membersData = [
       {
         title: "호텔 상품 CRUD",
       },
+      {
+        title: "호텔 룸 CRUD",
+      },
     ],
     sns: [
       {
@@ -82,9 +88,6 @@ export const membersData = [
     position: [
       {
         title: "게시판 CRUD",
-      },
-      {
-        title: "호텔 즐겨찾기",
       },
       {
         title: "Git Manager",
@@ -118,10 +121,7 @@ export const membersData = [
         title: "로그인/회원가입",
       },
       {
-        title: "PageRouter",
-      },
-      {
-        title: "호텔 룸 CRUD",
+        title: "검색기능",
       },
       {
         title: "회의록",
@@ -152,13 +152,10 @@ export const membersData = [
     picture: actor5,
     position: [
       {
-        title: "Team Leader",
+        title: "Member, Security",
       },
       {
-        title: "로그인/회원가입",
-      },
-      {
-        title: "마스터권한",
+        title: "Test Code, CI/CD",
       },
     ],
     sns: [
@@ -186,7 +183,10 @@ export const membersData = [
     picture: actor6,
     position: [
       {
-        title: "마이페이지",
+        title: "Reservation, Payment",
+      },
+      {
+        title: "Test Code",
       },
     ],
     sns: [
@@ -214,10 +214,10 @@ export const membersData = [
     picture: actor7,
     position: [
       {
-        title: "즐겨찾기",
+        title: "ShoppingCart, Bookmark",
       },
       {
-        title: "장바구니",
+        title: "Presentation",
       },
     ],
     sns: [
