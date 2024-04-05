@@ -67,6 +67,10 @@
 ### ► 구현사항 
 ![image](https://github.com/Now-h/FE7_Mini_Team4/assets/150241213/288f57ab-cfef-4adb-8753-34aee5756989)
 
+### ► API 명세서
+![image](https://github.com/Now-h/FE7_Mini_Team4/assets/150241213/cc1d1fdd-557f-445f-abe7-bed6c4ec69ab)
+
+
 
 
 
