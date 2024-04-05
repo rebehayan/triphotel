@@ -5,8 +5,7 @@
 ## 🏠 배포 링크
 
 [ 『 TripHotel 』 ](https://triphotel.netlify.app/)
-#### 테스트계정 
-#### ID: speed1127@naver.com / PW: 123
+#### 테스트계정 ( ID: speed1127@naver.com / PW: 123 )
             
 
 <br>
