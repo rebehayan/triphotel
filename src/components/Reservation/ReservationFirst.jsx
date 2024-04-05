@@ -51,7 +51,7 @@ const ReservationFirst = () => {
   const [price2, setPrice2] = useState("");
   const [price3, setPrice3] = useState("");
 
-  console.log(reservedRoom.id);
+  // console.log(reservedRoom.id);
 
   const [isPayInfo, setIsPayInfo] = useState({
     adult_count: 0, //성인
@@ -203,7 +203,7 @@ const ReservationFirst = () => {
       return;
     } else if (!isValidCheck) return;
     let orderId = "";
-    console.log(orderFirst);
+    // console.log(orderFirst);
     try {
       setIsLoading2(true);
       const responseOrder = await instance.post(fetchOrders, orderFirst, {
@@ -216,7 +216,7 @@ const ReservationFirst = () => {
       orderId = responseOrder.data.result.id;
       // setMyId(orderId);
       addInfo(responseOrder); // 예약결과전역상태로 넘기기
-      await console.log(orderId); //post이후 병합데이터
+      // await console.log(orderId); //post이후 병합데이터
     } catch (error) {
       console.log(`submitReservation :`, error);
     } finally {
