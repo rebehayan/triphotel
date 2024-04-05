@@ -1,7 +1,7 @@
 
 /* 결재 */
 .reservation {
-  @apply grid gap-10 mobile:grid-cols-1 tablet:grid-cols-[1fr_2.2fr];
+  @apply grid gap-10 mobile:grid-cols-1 desktop:grid-cols-[1fr_2.2fr];
   &__hotel-info {
     @apply self-start;
     &__list {
