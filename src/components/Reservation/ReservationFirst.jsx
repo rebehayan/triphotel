@@ -28,7 +28,7 @@ const Today = (nextDay = 0) => {
   return `${year}-${month}-${day}`;
 };
 
-const ReservationFirst = ({ roomInfoDetail }) => {
+const ReservationFirst = () => {
   const token = localStorage.getItem("token");
   const { fetchOrders } = request;
   const navigate = useNavigate();
@@ -44,14 +44,18 @@ const ReservationFirst = ({ roomInfoDetail }) => {
   const [isPopup, setIsPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
-  // const { reservedRoom, addRoom } = useReserveRoomStore();
+  const [isLoading3, setIsLoading3] = useState(false);
+  const { reservedRoom, addRoom } = useReserveRoomStore();
   const [allCount, setAllCount] = useState("");
   const [price1, setPrice1] = useState(); // 1박가격 x 숙박일
   const [price2, setPrice2] = useState();
-  const [price3, setPrice3] = useState();
+
+  // console.log(reservedRoom.standard_price);
+  // const [isRoomInfoList, setIsRoomInfoList] = useState({});
+  // setIsRoomInfoList((prev) => ({ ...prev, reservedRoom }));
 
   // const reservedRoom = roomInfoDetail;
-  const { adult_fare, child_fare, bed_type, hotel_id, id, maximum_capacity, standard_capacity, standard_price, type, view_type } = roomInfoDetail;
+  const { adult_fare, child_fare, bed_type, hotel_id, id, maximum_capacity, standard_capacity, standard_price, type, view_type } = reservedRoom;
 
   const [isPayInfo, setIsPayInfo] = useState({
     adult_count: 0, //성인
@@ -232,7 +236,7 @@ const ReservationFirst = ({ roomInfoDetail }) => {
       setTimeout(() => {
         setIsLoading2(false);
         setIsLoading(false);
-        // addRoom({});
+        addRoom({});
         navigate(`/reservation/?${orderId}`);
       }, 1500);
     }
@@ -299,7 +303,7 @@ const ReservationFirst = ({ roomInfoDetail }) => {
             </li>
             <li>
               <strong className="--title">어린이</strong>
-              <GuestCounterChild kids iscount={handleChildren} max={maximum_capacity} allCount={allCount} />
+              <GuestCounterChild iscount={handleChildren} max={maximum_capacity} allCount={allCount} />
             </li>
             <li className="!grid grid-cols-2">
               <strong className="--title">성인 ⨉ {isPayInfo.adult_count ? isPayInfo.adult_count : 0}</strong>
