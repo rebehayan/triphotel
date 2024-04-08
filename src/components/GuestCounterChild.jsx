@@ -11,7 +11,7 @@ const GuestCounterChild = ({ iscount, max, defaultValue, className, allCount }) 
   const [isDisabled, setIsDisabled] = useState(false);
   const { allCountStore } = useReservationStore;
 
-  console.log(allCount);
+  // console.log(allCount);
 
   useEffect(() => {
     if (allCount >= max) {
